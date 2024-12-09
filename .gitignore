@@ -1,43 +1,40 @@
-# Crash log files
+# Log files
+*.log
 hs_err_pid*
 
 # Java class files
 *.class
 
-# Ignore Gradle files
-gradle
+# Gradle files
 gradlew*
-.gradle
 .gradle/
 build/
 
-# generated files
+# Generated files
 bin/
 gen/
 
-#  configuration
-.iws
-.ipr
-.iml
-# local configuration files
+# Local configuration files
 local.properties
 /local.properties
 
-# built generated package files
+# Package files
 *.apk
 *.ap_
-# Android Studio / IntelliJ IDEA
+
+# Android Studio / IntelliJ
 *.iws
-.idea
-.idea/libraries
-.idea/tasks.xml
-.idea/vcs.xml
-.idea/workspace.xml
-.idea/caches
-.idea/modules.xml
-.idea/navEditor.xml
-.idea/assetWizardSettings.xml
+*.iml
+*.ipr
+.idea/
 /out/
+captures/
+.externalNativeBuild/
+.cxx/
+output.json
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
 
 # OS temporary files
 .DS_Store
@@ -58,12 +55,12 @@ libs
 *.war
 *.ear
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
+# Keystore files
+*.jks
+*.keystore
 
-# Other
-/captures
-.externalNativeBuild
-.cxx
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
