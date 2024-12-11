@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard
+package com.sobolevkir.aipostcard.ui.screen.imagegeneration
 
 sealed interface UiState {
 

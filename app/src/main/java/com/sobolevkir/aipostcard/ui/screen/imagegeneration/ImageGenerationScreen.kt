@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard
+package com.sobolevkir.aipostcard.ui.screen.imagegeneration
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.ui.theme.AIPostcardTheme
 
 @Composable

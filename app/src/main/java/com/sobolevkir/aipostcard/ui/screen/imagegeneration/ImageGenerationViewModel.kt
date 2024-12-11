@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard
+package com.sobolevkir.aipostcard.ui.screen.imagegeneration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
