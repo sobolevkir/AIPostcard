@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -18,19 +18,13 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.sobolevkir.aipostcard.HiltCustomTestRunner"
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix = ".debug"
-            isDebuggable = true
-            isMinifyEnabled = false
-            isShrinkResources = false
-        }
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            //isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -44,6 +38,9 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    hilt {
+        enableAggregatingTask = true
     }
 }
 
@@ -64,11 +61,16 @@ dependencies {
     implementation(libs.bundles.retrofit)
     // Testing
     testImplementation(libs.junit)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+
+    kspAndroidTest(libs.hilt.android.compiler)
+    kspAndroidTest(libs.hilt.compiler)
+    testImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.hilt.android.testing)
 
 }
