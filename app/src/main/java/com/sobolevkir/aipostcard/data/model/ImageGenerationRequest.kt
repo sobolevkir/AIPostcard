@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.data.network.model
+package com.sobolevkir.aipostcard.data.model
 
 import com.google.gson.annotations.SerializedName
 import com.sobolevkir.aipostcard.data.network.ApiConstants.IMAGE_SIZE

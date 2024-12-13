@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.data.network.model
+package com.sobolevkir.aipostcard.data.model
 
 data class ImageGenerationResult(
     val uuid: String = "",
