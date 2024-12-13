@@ -33,7 +33,7 @@ class FusionBrainRepositoryIntegrationTest {
         val negativePrompt = "blurry, low quality"
         val style = "DEFAULT"
         val modelId = "4"
-        val result = repository.sendImageGenerationRequest(prompt, negativePrompt, style, modelId)
+        val result = repository.requestImageGeneration(prompt, negativePrompt, style, modelId)
 
         when (result) {
             is Resource.Success -> {
@@ -51,7 +51,7 @@ class FusionBrainRepositoryIntegrationTest {
     @Test
     fun testLatestModelIdFromRealApi() = runBlocking {
 
-        when (val result = repository.getLatestGenerationModelId()) {
+        when (val result = repository.getLatestModelId()) {
             is Resource.Success -> {
                 assertNotNull(result.data)
                 println("Model id: " + result.data.toString())
