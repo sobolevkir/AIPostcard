@@ -1,5 +1,9 @@
 package com.sobolevkir.aipostcard.data.network
 
+import com.sobolevkir.aipostcard.data.network.ApiConstants.CHECK_GENERATION_RESULT_ENDPOINT
+import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_MODELS_ENDPOINT
+import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_STYLES_URL
+import com.sobolevkir.aipostcard.data.network.ApiConstants.IMAGE_GENERATION_REQUEST_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.model.GenerationModel
 import com.sobolevkir.aipostcard.data.network.model.ImageGenerationResult
 import com.sobolevkir.aipostcard.data.network.model.ImageStyle
@@ -13,20 +17,20 @@ import retrofit2.http.Path
 
 interface FusionBrainApiService {
 
-    @GET(ApiConstants.GET_STYLES_URL)
+    @GET(GET_STYLES_URL)
     suspend fun getImageStyles(): Response<List<ImageStyle>>
 
-    @GET(ApiConstants.GET_MODELS_ENDPOINT)
+    @GET(GET_MODELS_ENDPOINT)
     suspend fun getImageGenerationModels(): Response<List<GenerationModel>>
 
     @Multipart
-    @POST(ApiConstants.IMAGE_GENERATION_REQUEST_ENDPOINT)
+    @POST(IMAGE_GENERATION_REQUEST_ENDPOINT)
     suspend fun sendImageGenerationRequest(
         @Part("model_id") modelId: RequestBody,
         @Part("params") params: RequestBody
     ): Response<ImageGenerationResult>
 
-    @GET(ApiConstants.CHECK_GENERATION_RESULT_ENDPOINT)
+    @GET(CHECK_GENERATION_RESULT_ENDPOINT)
     suspend fun checkStatusOrGetImage(
         @Path("id") id: String
     ): Response<ImageGenerationResult>
