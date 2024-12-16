@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard
 
 import androidx.test.core.app.ActivityScenario
-import com.sobolevkir.aipostcard.data.repository.FusionBrainRepository
+import com.sobolevkir.aipostcard.data.repository.FBImageGenerationRepositoryImpl
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert
@@ -21,7 +21,7 @@ class MainActivityTest {
     }
 
     @Inject
-    lateinit var repository: FusionBrainRepository
+    lateinit var repository: FBImageGenerationRepositoryImpl
 
     @Test
     fun testApp() {

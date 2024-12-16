@@ -73,16 +73,16 @@ fun ImageGenerationScreen(
             }
         }
 
-        if (uiState is UiState.Loading) {
+        if (uiState is ImageGenerationUiState.Loading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
         } else {
             var textColor = MaterialTheme.colorScheme.onSurface
-            if (uiState is UiState.Error) {
+            if (uiState is ImageGenerationUiState.Error) {
                 textColor = MaterialTheme.colorScheme.error
-                result = (uiState as UiState.Error).errorMessage
-            } else if (uiState is UiState.Success) {
+                result = (uiState as ImageGenerationUiState.Error).errorMessage
+            } else if (uiState is ImageGenerationUiState.Success) {
                 textColor = MaterialTheme.colorScheme.onSurface
-                result = (uiState as UiState.Success).outputText
+                result = (uiState as ImageGenerationUiState.Success).outputText
             }
             val scrollState = rememberScrollState()
             Text(

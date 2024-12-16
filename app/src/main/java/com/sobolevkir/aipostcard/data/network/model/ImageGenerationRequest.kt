@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.data.model
+package com.sobolevkir.aipostcard.data.network.model
 
 import com.google.gson.annotations.SerializedName
 import com.sobolevkir.aipostcard.data.network.ApiConstants.IMAGE_SIZE
@@ -12,5 +12,5 @@ data class ImageGenerationRequest(
     @SerializedName("num_images")
     val numImages: Int = 1,
     val negativePromptUnclip: String,
-    val generateParams: GenerateParams
+    val generateParams: GenerateParamsRequest
 )

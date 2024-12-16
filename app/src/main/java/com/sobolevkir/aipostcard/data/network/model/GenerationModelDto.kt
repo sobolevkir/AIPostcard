@@ -1,6 +1,6 @@
-package com.sobolevkir.aipostcard.data.model
+package com.sobolevkir.aipostcard.data.network.model
 
-data class GenerationModel(
+data class GenerationModelDto(
     val id: Long,
     val name: String,
     val version: Double,

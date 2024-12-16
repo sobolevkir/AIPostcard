@@ -11,8 +11,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideGson(): Gson = Gson()
 
 }
