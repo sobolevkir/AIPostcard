@@ -1,12 +1,12 @@
 package com.sobolevkir.aipostcard.domain.usecase
 
-import com.sobolevkir.aipostcard.data.repository.FusionBrainRepository
+import com.sobolevkir.aipostcard.data.repository.FBImageGenerationRepositoryImpl
 import javax.inject.Inject
 
 class GetImageStylesUseCase @Inject constructor(
-    private val repository: FusionBrainRepository
+    private val repository: FBImageGenerationRepositoryImpl
 ) {
 
-    suspend fun invoke() = repository.getImageStyles()
+    fun invoke() = repository.getImageStyles()
 
 }

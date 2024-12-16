@@ -1,26 +1,38 @@
 package com.sobolevkir.aipostcard.data.network
 
+import com.sobolevkir.aipostcard.data.network.ResultCode.Companion.BAD_REQUEST_CODE
+import com.sobolevkir.aipostcard.data.network.ResultCode.Companion.NOT_FOUND_CODE
+import com.sobolevkir.aipostcard.data.network.ResultCode.Companion.SERVER_ERROR_CODE
+import com.sobolevkir.aipostcard.data.network.ResultCode.Companion.UNAUTHORIZED_CODE
+import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.util.Resource
 import retrofit2.Response
 
 class ApiErrorHandler {
 
     suspend fun <T> safeApiCall(api: suspend () -> Response<T>): Resource<T> {
-        try {
+        return try {
             val response = api()
             if (response.isSuccessful) {
                 val body = response.body()
                 body?.let {
-                    return Resource.Success(body)
-                } ?: return errorMessage("Body is empty")
+                    Resource.Success(body)
+                } ?: Resource.Error(ErrorType.UNKNOWN_ERROR)
             } else {
-                return errorMessage("${response.code()} ${response.message()}")
+                Resource.Error(mapErrorCode(response.code()))
             }
         } catch (e: Exception) {
-            return errorMessage(e.message.toString())
+            Resource.Error(ErrorType.UNKNOWN_ERROR)
         }
     }
 
-    private fun <T> errorMessage(e: String): Resource.Error<T> =
-        Resource.Error(null, "Api call failed: $e")
+    private fun mapErrorCode(code: Int): ErrorType {
+        return when (code) {
+            UNAUTHORIZED_CODE -> ErrorType.CONNECTION_PROBLEM
+            NOT_FOUND_CODE -> ErrorType.NOT_FOUND
+            BAD_REQUEST_CODE -> ErrorType.BAD_REQUEST
+            SERVER_ERROR_CODE -> ErrorType.SERVER_ERROR
+            else -> ErrorType.UNKNOWN_ERROR
+        }
+    }
 }

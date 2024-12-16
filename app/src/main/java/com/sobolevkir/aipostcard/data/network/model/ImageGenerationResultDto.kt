@@ -1,6 +1,6 @@
-package com.sobolevkir.aipostcard.data.model
+package com.sobolevkir.aipostcard.data.network.model
 
-data class ImageGenerationResult(
+data class ImageGenerationResultDto(
     val uuid: String = "",
     val status: String = "",
     val images: List<String> = listOf(),

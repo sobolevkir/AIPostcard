@@ -59,6 +59,9 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     // Network
     implementation(libs.bundles.retrofit)
+    // KoTEA
+    implementation(libs.tinkoff.kotea.core)
+    implementation(libs.tinkoff.kotea.android)
     // Testing
     testImplementation(libs.junit)
     debugImplementation(libs.androidx.ui.tooling)
@@ -67,7 +70,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-
     kspAndroidTest(libs.hilt.android.compiler)
     kspAndroidTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
