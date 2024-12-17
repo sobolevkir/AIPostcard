@@ -26,6 +26,8 @@ class FBImageGenerationRepositoryImpl @Inject constructor(
     private val gson: Gson
 ) : ImageGenerationRepository {
 
+    private var cachedModelId: String? = null
+
     override fun getImageStyles(): Flow<Resource<List<ImageStyle>>> = flow {
         when (val result = errorHandler.safeApiCall { apiService.getImageStyles() }) {
             is Resource.Success -> emit(Resource.Success(result.data?.let { stylesDto ->
@@ -40,8 +42,8 @@ class FBImageGenerationRepositoryImpl @Inject constructor(
 
     override fun requestImageGeneration(prompt: String, negativePrompt: String, styleTitle: String):
             Flow<Resource<ImageGenerationResult>> = flow {
-        val modelId = getLatestModelId()
-            ?: return@flow emit(Resource.Error(ErrorType.UNKNOWN_ERROR))
+        val modelId = cachedModelId ?: getLatestModelId().also { cachedModelId = it }
+        ?: return@flow emit(Resource.Error(ErrorType.UNKNOWN_ERROR))
         val modelIdBody = modelId.toRequestBody("text/plain".toMediaType())
         val paramsBody = gson.toJson(
             ImageGenerationRequest(
@@ -51,7 +53,7 @@ class FBImageGenerationRepositoryImpl @Inject constructor(
             )
         ).toRequestBody("application/json".toMediaType())
         val result = errorHandler.safeApiCall {
-            apiService.sendImageGenerationRequest(
+            apiService.requestImageGeneration(
                 modelIdBody,
                 paramsBody
             )
