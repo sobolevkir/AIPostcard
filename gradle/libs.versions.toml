@@ -10,9 +10,12 @@ googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 ksp = "2.1.0-1.0.29"
 # DI
 hilt = "2.53.1"
+hiltNavigationCompose = "1.2.0"
 # Network
 retrofit = "2.11.0"
 okhttp = "4.12.0"
+# Images displaying
+coil = "2.7.0"
 # KoTEA
 kotea = "1.1.0"
 # Testing
@@ -35,10 +38,13 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 # Network
 retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref = "retrofit" }
 retrofit-converterJson = { group = "com.squareup.retrofit2", name="converter-gson", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name="okhttp", version.ref = "okhttp" }
+# Images displaying
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 # KoTEA
 tinkoff-kotea-core = { module = "ru.tinkoff.kotea:core", version.ref = "kotea" }
 tinkoff-kotea-android = { module = "ru.tinkoff.kotea:android", version.ref = "kotea" }

@@ -1,13 +1,21 @@
 package com.sobolevkir.aipostcard.domain.usecase
 
 import com.sobolevkir.aipostcard.data.repository.FBImageGenerationRepositoryImpl
+import com.sobolevkir.aipostcard.domain.model.ImageGenerationResult
+import com.sobolevkir.aipostcard.util.Resource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RequestImageGenerationUseCase @Inject constructor(
     private val repository: FBImageGenerationRepositoryImpl
 ) {
 
-    fun invoke(prompt: String, negativePrompt: String, styleTitle: String) =
-        repository.requestImageGeneration(prompt, negativePrompt, styleTitle)
+    fun invoke(
+        prompt: String,
+        negativePrompt: String,
+        styleName: String
+    ): Flow<Resource<ImageGenerationResult>> {
+        return repository.requestImageGeneration(prompt, negativePrompt, styleName)
+    }
 
 }

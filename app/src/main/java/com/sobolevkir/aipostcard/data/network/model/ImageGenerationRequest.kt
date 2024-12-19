@@ -6,11 +6,11 @@ import com.sobolevkir.aipostcard.data.network.ApiConstants.REQUEST_PARAMETER_TYP
 
 data class ImageGenerationRequest(
     val type: String = REQUEST_PARAMETER_TYPE_GENERATE,
-    val style: String,
+    val style: String = "",
     val width: Int = IMAGE_SIZE,
     val height: Int = IMAGE_SIZE,
     @SerializedName("num_images")
     val numImages: Int = 1,
-    val negativePromptUnclip: String,
+    val negativePromptUnclip: String? = "",
     val generateParams: GenerateParamsRequest
 )

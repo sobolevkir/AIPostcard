@@ -1,13 +1,14 @@
 package com.sobolevkir.aipostcard.ui.screen.imagegeneration
 
-sealed interface ImageGenerationUiState {
+import android.graphics.Bitmap
+import com.sobolevkir.aipostcard.domain.model.ImageStyle
 
-    data object Initial : ImageGenerationUiState
-
-    data object Loading : ImageGenerationUiState
-
-    data class Success(val outputText: String) : ImageGenerationUiState
-
-    data class Error(val errorMessage: String) : ImageGenerationUiState
-
-}
+data class ImageGenerationUiState(
+    val prompt: String = "",
+    val negativePrompt: String = "",
+    val imageStyles: List<ImageStyle> = emptyList(),
+    val errorMessage: String? = null,
+    val selectedStyle: ImageStyle? = null,
+    val isLoading: Boolean = false,
+    val generatedImage: Bitmap? = null
+)

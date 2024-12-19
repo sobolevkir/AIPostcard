@@ -25,7 +25,7 @@ interface FBApiService {
 
     @Multipart
     @POST(IMAGE_GENERATION_REQUEST_ENDPOINT)
-    suspend fun sendImageGenerationRequest(
+    suspend fun requestImageGeneration(
         @Part("model_id") modelId: RequestBody,
         @Part("params") params: RequestBody
     ): Response<ImageGenerationResultDto>
