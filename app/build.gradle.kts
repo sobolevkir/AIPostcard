@@ -57,8 +57,11 @@ dependencies {
     // DI
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.navigation.compose)
     // Network
     implementation(libs.bundles.retrofit)
+    // Images displaying
+    implementation(libs.coil.compose)
     // KoTEA
     implementation(libs.tinkoff.kotea.core)
     implementation(libs.tinkoff.kotea.android)

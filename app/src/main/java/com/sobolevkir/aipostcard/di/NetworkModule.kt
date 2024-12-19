@@ -1,5 +1,6 @@
 package com.sobolevkir.aipostcard.di
 
+import android.content.Context
 import com.sobolevkir.aipostcard.BuildConfig
 import com.sobolevkir.aipostcard.data.network.ApiConstants
 import com.sobolevkir.aipostcard.data.network.ApiErrorHandler
@@ -8,6 +9,7 @@ import com.sobolevkir.aipostcard.data.network.FBApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -46,6 +48,7 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideApiErrorHandler(): ApiErrorHandler = ApiErrorHandler()
+    fun provideApiErrorHandler(@ApplicationContext context: Context): ApiErrorHandler =
+        ApiErrorHandler(context)
 
 }

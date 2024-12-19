@@ -40,14 +40,14 @@ class FBImageGenerationRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun requestImageGeneration(prompt: String, negativePrompt: String, styleTitle: String):
+    override fun requestImageGeneration(prompt: String, negativePrompt: String, styleName: String):
             Flow<Resource<ImageGenerationResult>> = flow {
         val modelId = cachedModelId ?: getLatestModelId().also { cachedModelId = it }
         ?: return@flow emit(Resource.Error(ErrorType.UNKNOWN_ERROR))
         val modelIdBody = modelId.toRequestBody("text/plain".toMediaType())
         val paramsBody = gson.toJson(
             ImageGenerationRequest(
-                style = styleTitle,
+                style = styleName,
                 negativePromptUnclip = negativePrompt,
                 generateParams = GenerateParamsRequest(query = prompt)
             )
