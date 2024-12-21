@@ -17,7 +17,7 @@
         android:theme="@style/Theme.AIPostcard"
         tools:targetApi="34">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AIPostcard">
             <intent-filter>

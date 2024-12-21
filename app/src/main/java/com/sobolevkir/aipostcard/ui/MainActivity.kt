@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard
+package com.sobolevkir.aipostcard.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.sobolevkir.aipostcard.ui.screen.imagegeneration.ImageGenerationScreen
+import com.sobolevkir.aipostcard.ui.screen.ImageGenerationScreen
 import com.sobolevkir.aipostcard.ui.theme.AIPostcardTheme
 import dagger.hilt.android.AndroidEntryPoint
 

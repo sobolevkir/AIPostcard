@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.ui.screen.imagegeneration
+package com.sobolevkir.aipostcard.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import com.sobolevkir.aipostcard.presentation.imagegeneration.ImageGenerationViewModel
+import com.sobolevkir.aipostcard.ui.component.StylesDropdownMenu
 
 @Composable
 fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel()) {
@@ -35,16 +39,36 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+
         TextField(
             value = uiState.prompt,
-            onValueChange = { viewModel.onPromptChanged(it) },
-            label = { Text("Запрос") },
-            modifier = Modifier.fillMaxWidth()
+            onValueChange = { if (it.length <= REQUEST_MAX_CHAR) viewModel.onPromptChanged(it) },
+            enabled = !uiState.isLoading,
+            maxLines = 3,
+            label = {
+                if (uiState.isCensored) {
+                    Text(
+                        text = "Запрос не соответствует политике в отношении контента!",
+                        color = Color.Red
+                    )
+                } else {
+                    Text("Запрос")
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = {
+                Text(
+                    text = "${uiState.prompt.length} / $REQUEST_MAX_CHAR",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End,
+                )
+            }
         )
 
         TextField(
             value = uiState.negativePrompt,
             onValueChange = { viewModel.onNegativePromptChanged(it) },
+            enabled = !uiState.isLoading,
             label = { Text("Негативный промпт") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -55,10 +79,12 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
             onItemSelected = { newStyle ->
                 viewModel.onStyleSelected(newStyle)
             },
+            enabled = !uiState.isLoading,
         )
 
         Button(
             onClick = { viewModel.generateImage() },
+            enabled = !uiState.isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp)
@@ -81,19 +107,20 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
         }
 
-        uiState.generatedImage?.let { bitmap ->
+        uiState.generatedImage?.let { stringImageUri ->
             Image(
-                bitmap = bitmap.asImageBitmap(),
+                painter = rememberAsyncImagePainter(stringImageUri.toUri()),
                 contentDescription = "Сгенерированное изображение",
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-
             )
         }
     }
 
 }
+
+const val REQUEST_MAX_CHAR = 1000
 
 /*
 @Composable

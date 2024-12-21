@@ -1,7 +1,5 @@
-package com.sobolevkir.aipostcard.ui.screen.imagegeneration
+package com.sobolevkir.aipostcard.presentation.imagegeneration
 
-import android.graphics.BitmapFactory
-import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,52 +24,11 @@ open class ImageGenerationViewModel @Inject constructor(
     private val getStatusOrImageUseCase: GetStatusOrImageUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ImageGenerationUiState())
-    val uiState: StateFlow<ImageGenerationUiState> = _uiState
+    private val _uiState = MutableStateFlow(ImageGenerationState())
+    val uiState: StateFlow<ImageGenerationState> = _uiState
 
     init {
         loadImageStyles()
-    }
-
-    private fun loadImageStyles() {
-        _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            getImageStylesUseCase.invoke()
-                .collect { resource ->
-                    when (resource) {
-                        is Resource.Success -> {
-                            val stylesList = resource.data.orEmpty()
-                            _uiState.update {
-                                it.copy(
-                                    imageStyles = stylesList,
-                                    selectedStyle = stylesList.first(),
-                                    errorMessage = null,
-                                    isLoading = false
-                                )
-                            }
-                        }
-
-                        is Resource.Error -> {
-                            val errorType = resource.errorType.toString()
-                            _uiState.update {
-                                it.copy(errorMessage = errorType, isLoading = false)
-                            }
-                        }
-                    }
-                }
-        }
-    }
-
-    fun onStyleSelected(style: ImageStyle) {
-        _uiState.update { it.copy(selectedStyle = style) }
-    }
-
-    fun onPromptChanged(text: String) {
-        _uiState.update { it.copy(prompt = text) }
-    }
-
-    fun onNegativePromptChanged(text: String) {
-        _uiState.update { it.copy(negativePrompt = text) }
     }
 
     fun generateImage() {
@@ -79,7 +36,6 @@ open class ImageGenerationViewModel @Inject constructor(
             _uiState.update { it.copy(errorMessage = "Введите текст запроса!", isLoading = false) }
             return
         }
-
         _uiState.update { it.copy(errorMessage = null, isLoading = true, generatedImage = null) }
 
         viewModelScope.launch {
@@ -110,18 +66,23 @@ open class ImageGenerationViewModel @Inject constructor(
 
     private suspend fun getStatusOrImage(uuid: String) {
         var isCompleted = false
-        repeat(7) {
+        repeat(10) {
             if (isCompleted) return
-            delay(7_000)
+            delay(8_000)
             getStatusOrImageUseCase.invoke(uuid).collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
                         val result = resource.data
-                        Log.d("MY_VM", result?.generatedImages.toString())
+                        Log.d("MY_VM", result?.generatedImagesStringUri.toString())
                         when (result?.status) {
                             ImageGenerationStatus.DONE -> {
-                                _uiState.update { it.copy(isLoading = false) }
-                                decodeImage(result.generatedImages.firstOrNull())
+                                _uiState.update {
+                                    it.copy(
+                                        isLoading = false,
+                                        isCensored = result.censored,
+                                        generatedImage = result.generatedImagesStringUri.firstOrNull()
+                                    )
+                                }
                                 isCompleted = true
                                 return@collect
                             }
@@ -156,35 +117,49 @@ open class ImageGenerationViewModel @Inject constructor(
         if (!isCompleted) {
             _uiState.update {
                 it.copy(
-                    errorMessage = "Превышено количество попыток!",
-                    isLoading = false
+                    errorMessage = "Превышено количество попыток!", isLoading = false
                 )
             }
         }
+
     }
 
-    private fun decodeImage(base64String: String?) {
-        if (base64String.isNullOrEmpty()) {
-            _uiState.update { it.copy(errorMessage = "Пустое изображение", isLoading = false) }
-            return
-        }
+    fun onStyleSelected(style: ImageStyle) {
+        _uiState.update { it.copy(selectedStyle = style) }
+    }
 
-        try {
-            val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
-            val image = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-            _uiState.update {
-                it.copy(
-                    errorMessage = null,
-                    isLoading = false,
-                    generatedImage = image
-                )
-            }
-        } catch (e: Exception) {
-            _uiState.update {
-                it.copy(
-                    errorMessage = "Ошибка декодирования изображения",
-                    isLoading = false
-                )
+    fun onPromptChanged(text: String) {
+        _uiState.update { it.copy(prompt = text) }
+    }
+
+    fun onNegativePromptChanged(text: String) {
+        _uiState.update { it.copy(negativePrompt = text) }
+    }
+
+    private fun loadImageStyles() {
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            getImageStylesUseCase.invoke().collect { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        val stylesList = resource.data.orEmpty()
+                        _uiState.update {
+                            it.copy(
+                                imageStyles = stylesList,
+                                selectedStyle = stylesList.first(),
+                                errorMessage = null,
+                                isLoading = false
+                            )
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        val errorType = resource.errorType.toString()
+                        _uiState.update {
+                            it.copy(errorMessage = errorType, isLoading = false)
+                        }
+                    }
+                }
             }
         }
     }

@@ -1,12 +1,13 @@
 package com.sobolevkir.aipostcard.data.repository
 
 import com.google.gson.Gson
-import com.sobolevkir.aipostcard.data.mapper.ImageGenerationResultMapper
-import com.sobolevkir.aipostcard.data.mapper.ImageStyleMapper
+import com.sobolevkir.aipostcard.data.mapper.ToDomainMapper
 import com.sobolevkir.aipostcard.data.network.ApiErrorHandler
 import com.sobolevkir.aipostcard.data.network.FBApiService
 import com.sobolevkir.aipostcard.data.network.model.GenerateParamsRequest
 import com.sobolevkir.aipostcard.data.network.model.ImageGenerationRequest
+import com.sobolevkir.aipostcard.data.network.model.ImageGenerationResultDto
+import com.sobolevkir.aipostcard.data.network.model.ImageStyleDto
 import com.sobolevkir.aipostcard.domain.ImageGenerationRepository
 import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.ImageGenerationResult
@@ -23,7 +24,9 @@ import javax.inject.Inject
 class FBImageGenerationRepositoryImpl @Inject constructor(
     private val apiService: FBApiService,
     private val errorHandler: ApiErrorHandler,
-    private val gson: Gson
+    private val gson: Gson,
+    private val imageStylesMapper: ToDomainMapper<List<ImageStyleDto>, List<ImageStyle>>,
+    private val imageGenerationResultMapper: ToDomainMapper<ImageGenerationResultDto, ImageGenerationResult>
 ) : ImageGenerationRepository {
 
     private var cachedModelId: String? = null
@@ -31,7 +34,7 @@ class FBImageGenerationRepositoryImpl @Inject constructor(
     override fun getImageStyles(): Flow<Resource<List<ImageStyle>>> = flow {
         when (val result = errorHandler.safeApiCall { apiService.getImageStyles() }) {
             is Resource.Success -> emit(Resource.Success(result.data?.let { stylesDto ->
-                ImageStyleMapper.toDomainList(stylesDto)
+                imageStylesMapper.toDomain(stylesDto)
             } ?: emptyList()))
 
             is Resource.Error -> emit(
@@ -61,7 +64,7 @@ class FBImageGenerationRepositoryImpl @Inject constructor(
         emit(
             when (result) {
                 is Resource.Success -> result.data?.let { resultDto ->
-                    Resource.Success(ImageGenerationResultMapper.toDomain(resultDto))
+                    Resource.Success(imageGenerationResultMapper.toDomain(resultDto))
                 } ?: Resource.Error(ErrorType.UNKNOWN_ERROR)
 
                 is Resource.Error -> Resource.Error(
@@ -75,7 +78,7 @@ class FBImageGenerationRepositoryImpl @Inject constructor(
         emit(
             when (val result = errorHandler.safeApiCall { apiService.getStatusOrImage(uuid) }) {
                 is Resource.Success -> result.data?.let {
-                    Resource.Success(ImageGenerationResultMapper.toDomain(it))
+                    Resource.Success(imageGenerationResultMapper.toDomain(it))
                 } ?: Resource.Error(ErrorType.UNKNOWN_ERROR)
 
                 is Resource.Error -> Resource.Error(

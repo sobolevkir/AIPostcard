@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.ui.screen.imagegeneration
+package com.sobolevkir.aipostcard.ui.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
@@ -23,7 +23,8 @@ import com.sobolevkir.aipostcard.domain.model.ImageStyle
 fun StylesDropdownMenu(
     styles: List<ImageStyle>,
     selectedStyle: ImageStyle? = null,
-    onItemSelected: (ImageStyle) -> Unit
+    onItemSelected: (ImageStyle) -> Unit,
+    enabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -42,12 +43,12 @@ fun StylesDropdownMenu(
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            enabled = styles.isNotEmpty()
+            enabled = styles.isNotEmpty() && enabled
         )
 
         ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+            expanded = expanded && enabled,
+            onDismissRequest = { expanded = false },
         ) {
             if (styles.isNotEmpty()) {
                 styles.forEach { item ->
@@ -88,7 +89,8 @@ fun SimpleDropdownMenuPreview() {
         StylesDropdownMenu(
             styles = items,
             selectedStyle = items.first(),
-            onItemSelected = { selectedItem = it }
+            onItemSelected = { selectedItem = it },
+            enabled = true
         )
     }
 }
