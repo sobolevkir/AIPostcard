@@ -28,3 +28,4 @@ class ImageGenerationResultMapper @Inject constructor(private val decoder: Base6
         }
     }
 }
+

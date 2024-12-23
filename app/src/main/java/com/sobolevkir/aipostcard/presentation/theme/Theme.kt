@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.ui.theme
+package com.sobolevkir.aipostcard.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.imagegeneration
+package com.sobolevkir.aipostcard.presentation.screen.image_generation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

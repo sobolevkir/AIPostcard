@@ -2,7 +2,6 @@ package com.sobolevkir.aipostcard
 
 import androidx.test.core.app.ActivityScenario
 import com.sobolevkir.aipostcard.data.repository.FBImageGenerationRepositoryImpl
-import com.sobolevkir.aipostcard.ui.MainActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert
