@@ -11,7 +11,7 @@ import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.util.Resource
 import retrofit2.Response
 
-class ApiErrorHandler(private val context: Context) {
+class NetworkErrorHandler(private val context: Context) {
 
     suspend fun <T> safeApiCall(api: suspend () -> Response<T>): Resource<T> {
         return if (!isConnected()) {
