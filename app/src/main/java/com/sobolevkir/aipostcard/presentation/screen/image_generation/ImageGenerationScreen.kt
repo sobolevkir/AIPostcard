@@ -12,11 +12,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -102,25 +108,68 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
                         color = Color.Red
                     )
                 } else {
-                    Text("Запрос")
+                    Text("Опишите ваш запрос")
                 }
             },
             modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            shape = RoundedCornerShape(16.dp),
             supportingText = {
                 Text(
                     text = "${uiState.prompt.length} / $REQUEST_MAX_CHAR",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
                 )
+            },
+            trailingIcon = {
+                if (uiState.prompt.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.onPromptChanged("") }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Очистить ввод"
+                        )
+                    }
+                }
             }
         )
 
         TextField(
             value = uiState.negativePrompt,
-            onValueChange = { viewModel.onNegativePromptChanged(it) },
+            onValueChange = {
+                if (it.length <= REQUEST_MAX_CHAR) viewModel.onNegativePromptChanged(
+                    it
+                )
+            },
             enabled = !uiState.isLoading,
-            label = { Text("Негативный промпт") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Что хотели бы исключить?") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            shape = RoundedCornerShape(16.dp),
+            supportingText = {
+                Text(
+                    text = "${uiState.negativePrompt.length} / $REQUEST_MAX_CHAR",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End,
+                )
+            },
+            trailingIcon = {
+                if (uiState.negativePrompt.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.onNegativePromptChanged("") }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Очистить ввод"
+                        )
+                    }
+                }
+            }
         )
 
         StylesDropdownMenu(
@@ -136,20 +185,21 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
             onClick = { viewModel.generateImage() },
             enabled = !uiState.isLoading,
             modifier = Modifier
-                .padding(top = 16.dp)
+                .padding(top = 16.dp, bottom = 16.dp)
                 .fillMaxWidth()
-                .height(64.dp)
+                .height(64.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 text = "Сгенерировать",
-                fontSize = 16.sp
+                fontSize = 18.sp
             )
         }
     }
 
 }
 
-const val REQUEST_MAX_CHAR = 1000
+const val REQUEST_MAX_CHAR = 500
 
 /*
 @Composable
