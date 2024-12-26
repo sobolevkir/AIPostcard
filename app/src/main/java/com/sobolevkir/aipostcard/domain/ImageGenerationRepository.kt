@@ -12,7 +12,7 @@ interface ImageGenerationRepository {
     fun requestImageGeneration(
         prompt: String,
         negativePrompt: String,
-        styleName: String,
+        styleName: String
     ): Flow<Resource<ImageGenerationResult>>
 
     fun getStatusOrImage(uuid: String): Flow<Resource<ImageGenerationResult>>

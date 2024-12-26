@@ -1,14 +1,13 @@
 package com.sobolevkir.aipostcard
 
 import androidx.test.core.app.ActivityScenario
-import com.sobolevkir.aipostcard.data.repository.FBImageGenerationRepositoryImpl
+import com.sobolevkir.aipostcard.presentation.MainActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Inject
 
 @HiltAndroidTest
 class MainActivityTest {
@@ -19,9 +18,6 @@ class MainActivityTest {
     fun init() {
         hiltRule.inject()
     }
-
-    @Inject
-    lateinit var repository: FBImageGenerationRepositoryImpl
 
     @Test
     fun testApp() {

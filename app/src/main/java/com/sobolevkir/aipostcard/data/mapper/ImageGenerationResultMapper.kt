@@ -15,7 +15,7 @@ class ImageGenerationResultMapper @Inject constructor(private val decoder: Base6
         return ImageGenerationResult(
             uuid = dto.uuid,
             status = convertStatus(dto.status),
-            generatedImagesStringUri = dto.images.map { decoder.decodeBase64ToStringUri(it) ?: "" },
+            generatedImagesUri = dto.images.map { decoder.decodeBase64ToStringUri(it) ?: "" },
             censored = dto.censored
         )
     }

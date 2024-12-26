@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard
 
 import android.util.Log
-import com.sobolevkir.aipostcard.data.repository.FBImageGenerationRepositoryImpl
+import com.sobolevkir.aipostcard.data.repository.ImageGenerationRepositoryImpl
 import com.sobolevkir.aipostcard.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 
 @HiltAndroidTest
-class FBImageGenerationRepositoryImplIntegrationTest {
+class ImageGenerationRepositoryImplIntegrationTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -27,7 +27,7 @@ class FBImageGenerationRepositoryImplIntegrationTest {
     }
 
     @Inject
-    lateinit var repository: FBImageGenerationRepositoryImpl
+    lateinit var repository: ImageGenerationRepositoryImpl
 
     @Test
     fun testImageGenerationWithRealApi(): Unit = runBlocking {
@@ -40,21 +40,21 @@ class FBImageGenerationRepositoryImplIntegrationTest {
             is Resource.Success -> {
                 assertNotNull(requestResult.data)
                 Log.d("ON_REQUEST", requestResult.data.toString())
-                val uuid = requestResult.data?.uuid
-                when (val result = repository.getStatusOrImage(uuid.toString()).first()) {
+                val uuid = requestResult.data.uuid
+                when (val result = repository.getStatusOrImage(uuid).first()) {
                     is Resource.Success -> {
                         assertNotNull(result.data)
                         Log.d("ON_RESULT", result.data.toString())
                     }
 
                     is Resource.Error -> {
-                        fail("API request failed: ${result.errorType}")
+                        fail("API request failed: ${result.error}")
                     }
                 }
             }
 
             is Resource.Error -> {
-                fail("API request failed: ${requestResult.errorType}")
+                fail("API request failed: ${requestResult.error}")
             }
         }
 

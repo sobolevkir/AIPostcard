@@ -53,7 +53,7 @@ fun StylesDropdownMenu(
         onExpandedChange = { expanded = it },
     ) {
         TextField(
-            value = selectedStyle?.title ?: "Loading...",
+            value = selectedStyle?.title ?: "Загрузка...",
             onValueChange = {},
             modifier = Modifier
                 .fillMaxWidth()
