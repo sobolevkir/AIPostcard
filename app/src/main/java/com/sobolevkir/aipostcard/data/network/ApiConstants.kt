@@ -13,6 +13,7 @@ object ApiConstants {
     const val CHECK_GENERATION_RESULT_ENDPOINT = "/key/api/v1/text2image/status/{id}"
     const val REQUEST_PARAMETER_TYPE_GENERATE = "GENERATE"
     const val IMAGE_SIZE = 1024
+    const val IMAGES_NUMBER = 1
     const val STATUS_PROCESSING = "FAIL"
     const val STATUS_DONE = "DONE"
     const val STATUS_INITIAL = "INITIAL"

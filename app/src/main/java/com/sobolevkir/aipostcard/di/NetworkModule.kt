@@ -3,9 +3,10 @@ package com.sobolevkir.aipostcard.di
 import android.content.Context
 import com.sobolevkir.aipostcard.BuildConfig
 import com.sobolevkir.aipostcard.data.network.ApiConstants
-import com.sobolevkir.aipostcard.data.network.NetworkErrorHandler
+import com.sobolevkir.aipostcard.data.network.ApiErrorHandler
 import com.sobolevkir.aipostcard.data.network.AuthInterceptor
 import com.sobolevkir.aipostcard.data.network.FBApiService
+import com.sobolevkir.aipostcard.data.network.NetworkStatusTracker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,7 +49,10 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideNetworkErrorHandler(@ApplicationContext context: Context): NetworkErrorHandler =
-        NetworkErrorHandler(context)
+    fun provideApiErrorHandler(): ApiErrorHandler = ApiErrorHandler()
+
+    @Provides
+    fun provideNetworkStatusTracker(@ApplicationContext context: Context): NetworkStatusTracker =
+        NetworkStatusTracker(context)
 
 }

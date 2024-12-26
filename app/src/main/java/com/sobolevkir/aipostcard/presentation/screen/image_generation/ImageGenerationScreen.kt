@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
@@ -25,11 +28,18 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +62,7 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
         Box(
@@ -61,15 +71,10 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
                 .weight(1f),
             contentAlignment = Alignment.Center
         ) {
-
             Image(
                 painter = rememberAsyncImagePainter(uiState.generatedImage?.toUri()),
                 contentDescription = "Сгенерированное изображение",
                 modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
                     .then(
                         if (uiState.generatedImage.isNullOrEmpty()) {
                             Modifier.border(
@@ -81,95 +86,108 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
                             Modifier
                         }
                     )
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
             )
 
-            if (uiState.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-
-            uiState.errorMessage?.let {
-                Text(
-                    text = it,
-                    color = Color.Red,
-                    modifier = Modifier.align(Alignment.Center)
+            if (uiState.isGenerating) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(64.dp)
                 )
             }
         }
 
+        uiState.errorMessage?.let {
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+
+        val focusRequester = remember { FocusRequester() }
+        val focusManager = LocalFocusManager.current
         TextField(
             value = uiState.prompt,
-            onValueChange = { if (it.length <= REQUEST_MAX_CHAR) viewModel.onPromptChanged(it) },
-            enabled = !uiState.isLoading,
-            maxLines = 3,
-            label = {
-                if (uiState.isCensored) {
-                    Text(
-                        text = "Запрос не соответствует политике в отношении контента!",
-                        color = Color.Red
-                    )
-                } else {
-                    Text("Опишите ваш запрос")
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
+            onValueChange = { if (it.length <= REQUEST_MAX_CHAR) viewModel.onPromptChange(it) },
+            enabled = !uiState.isGenerating,
+            maxLines = 2,
+            isError = uiState.isPromptError,
+            label = { Text(text = "Опишите ваш запрос") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(16.dp),
             supportingText = {
                 Text(
                     text = "${uiState.prompt.length} / $REQUEST_MAX_CHAR",
                     modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.End,
                 )
             },
             trailingIcon = {
                 if (uiState.prompt.isNotEmpty()) {
-                    IconButton(onClick = { viewModel.onPromptChanged("") }) {
+                    IconButton(onClick = { viewModel.onPromptChange("") }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Очистить ввод"
                         )
                     }
                 }
-            }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) })
         )
 
         TextField(
             value = uiState.negativePrompt,
             onValueChange = {
-                if (it.length <= REQUEST_MAX_CHAR) viewModel.onNegativePromptChanged(
-                    it
-                )
+                if (it.length <= REQUEST_MAX_CHAR) viewModel.onNegativePromptChange(it)
             },
-            enabled = !uiState.isLoading,
+            enabled = !uiState.isGenerating,
+            maxLines = 1,
             label = { Text("Что хотели бы исключить?") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(16.dp),
             supportingText = {
                 Text(
                     text = "${uiState.negativePrompt.length} / $REQUEST_MAX_CHAR",
                     modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.End,
                 )
             },
             trailingIcon = {
                 if (uiState.negativePrompt.isNotEmpty()) {
-                    IconButton(onClick = { viewModel.onNegativePromptChanged("") }) {
+                    IconButton(onClick = { viewModel.onNegativePromptChange("") }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Очистить ввод"
                         )
                     }
                 }
-            }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) })
         )
 
         StylesDropdownMenu(
@@ -178,21 +196,32 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
             onItemSelected = { newStyle ->
                 viewModel.onStyleSelected(newStyle)
             },
-            enabled = !uiState.isLoading,
+            enabled = !uiState.isGenerating,
         )
 
         Button(
-            onClick = { viewModel.generateImage() },
-            enabled = !uiState.isLoading,
+            onClick = {
+                if (uiState.isGenerating) viewModel.stopGeneration() else viewModel.generateImage()
+                focusRequester.requestFocus()
+            },
+            enabled = uiState.isGenerateButtonEnabled,
             modifier = Modifier
-                .padding(top = 16.dp, bottom = 16.dp)
+                .padding(top = 24.dp)
                 .fillMaxWidth()
                 .height(64.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = if (uiState.isGenerating) {
+                ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+            } else {
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            }
+
         ) {
             Text(
-                text = "Сгенерировать",
-                fontSize = 18.sp
+                text = if (uiState.isGenerating) "Остановить" else "Сгенерировать",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal
             )
         }
     }

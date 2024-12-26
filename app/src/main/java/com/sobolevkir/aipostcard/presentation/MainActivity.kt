@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard
+package com.sobolevkir.aipostcard.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

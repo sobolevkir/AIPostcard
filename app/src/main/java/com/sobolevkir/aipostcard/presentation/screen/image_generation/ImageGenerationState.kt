@@ -9,6 +9,7 @@ data class ImageGenerationState(
     val selectedStyle: ImageStyle? = null,
     val generatedImage: String? = null,
     val errorMessage: String? = null,
-    val isLoading: Boolean = false,
-    val isCensored: Boolean = false
+    val isGenerating: Boolean = false,
+    val isPromptError: Boolean = false,
+    val isGenerateButtonEnabled: Boolean = false
 )
