@@ -30,19 +30,20 @@ open class ImageGenerationViewModel @Inject constructor(
         loadImageStyles()
     }
 
-    fun generateImage() {
+    fun onGenerateButtonClick() {
         generationJob?.cancel()
         if (_uiState.value.prompt.isBlank()) {
             _uiState.update { it.copy(isGenerating = false, isPromptError = true) }
             return
-        }
-        _uiState.update {
-            it.copy(
-                errorMessage = null,
-                isPromptError = false,
-                isGenerating = true,
-                generatedImage = null
-            )
+        } else {
+            _uiState.update {
+                it.copy(
+                    errorMessage = null,
+                    isPromptError = false,
+                    isGenerating = true,
+                    generatedImage = null
+                )
+            }
         }
 
         generationJob = viewModelScope.launch {
@@ -55,7 +56,7 @@ open class ImageGenerationViewModel @Inject constructor(
                 when (error) {
                     ErrorType.CONNECTION_PROBLEM -> _uiState.update {
                         it.copy(
-                            errorMessage = "Проверьте подключение к интернету",
+                            errorMessage = "Ожидается подключение к интернету",
                             isGenerateButtonEnabled = false
                         )
                     }
@@ -86,7 +87,7 @@ open class ImageGenerationViewModel @Inject constructor(
 
     }
 
-    fun stopGeneration() {
+    fun onStopButtonClick() {
         generationJob?.cancel()
         generationJob = null
         _uiState.update { it.copy(isGenerating = false, errorMessage = null) }
@@ -120,7 +121,7 @@ open class ImageGenerationViewModel @Inject constructor(
                 } else {
                     _uiState.update {
                         it.copy(
-                            errorMessage = "Проверьте подключение к интернету",
+                            errorMessage = "Ожидается подключение к интернету",
                             isGenerateButtonEnabled = false
                         )
                     }

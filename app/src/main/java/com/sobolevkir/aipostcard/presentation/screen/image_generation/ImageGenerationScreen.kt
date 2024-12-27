@@ -201,7 +201,7 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
 
         Button(
             onClick = {
-                if (uiState.isGenerating) viewModel.stopGeneration() else viewModel.generateImage()
+                if (uiState.isGenerating) viewModel.onStopButtonClick() else viewModel.onGenerateButtonClick()
                 focusRequester.requestFocus()
             },
             enabled = uiState.isGenerateButtonEnabled,
