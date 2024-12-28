@@ -1,12 +1,12 @@
-package com.sobolevkir.aipostcard.presentation.screen.image_generation
+package com.sobolevkir.aipostcard.presentation.screen.generation
 
-import com.sobolevkir.aipostcard.domain.model.ImageStyle
+import com.sobolevkir.aipostcard.domain.model.Style
 
-data class ImageGenerationState(
+data class GenerationUiState(
     val prompt: String = "",
     val negativePrompt: String = "",
-    val imageStyles: List<ImageStyle> = emptyList(),
-    val selectedStyle: ImageStyle? = null,
+    val styles: List<Style> = emptyList(),
+    val selectedStyle: Style? = null,
     val generatedImage: String? = null,
     val errorMessage: String? = null,
     val isGenerating: Boolean = false,

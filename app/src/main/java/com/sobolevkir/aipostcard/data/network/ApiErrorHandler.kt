@@ -1,5 +1,6 @@
 package com.sobolevkir.aipostcard.data.network
 
+import android.util.Log
 import com.sobolevkir.aipostcard.data.network.ResultCode.Companion.BAD_REQUEST_CODE
 import com.sobolevkir.aipostcard.data.network.ResultCode.Companion.NOT_FOUND_CODE
 import com.sobolevkir.aipostcard.data.network.ResultCode.Companion.SERVER_ERROR_CODE
@@ -23,6 +24,7 @@ class ApiErrorHandler {
                 Resource.Error(mapErrorCode(response.code()))
             }
         } catch (e: Exception) {
+            Log.d("ERROR_HANDLER", "$e ::: $api")
             Resource.Error(ErrorType.UNKNOWN_ERROR)
         }
     }

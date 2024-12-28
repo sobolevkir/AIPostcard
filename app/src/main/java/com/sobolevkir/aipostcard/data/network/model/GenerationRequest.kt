@@ -5,7 +5,7 @@ import com.sobolevkir.aipostcard.data.network.ApiConstants.IMAGES_NUMBER
 import com.sobolevkir.aipostcard.data.network.ApiConstants.IMAGE_SIZE
 import com.sobolevkir.aipostcard.data.network.ApiConstants.REQUEST_PARAMETER_TYPE_GENERATE
 
-data class ImageGenerationRequest(
+data class GenerationRequest(
     val type: String = REQUEST_PARAMETER_TYPE_GENERATE,
     val style: String = "",
     val width: Int = IMAGE_SIZE,

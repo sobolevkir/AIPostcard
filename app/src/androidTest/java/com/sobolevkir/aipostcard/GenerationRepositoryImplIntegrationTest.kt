@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard
 
 import android.util.Log
-import com.sobolevkir.aipostcard.data.repository.ImageGenerationRepositoryImpl
+import com.sobolevkir.aipostcard.data.repository.GenerationRepositoryImpl
 import com.sobolevkir.aipostcard.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 
 @HiltAndroidTest
-class ImageGenerationRepositoryImplIntegrationTest {
+class GenerationRepositoryImplIntegrationTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -27,7 +27,7 @@ class ImageGenerationRepositoryImplIntegrationTest {
     }
 
     @Inject
-    lateinit var repository: ImageGenerationRepositoryImpl
+    lateinit var repository: GenerationRepositoryImpl
 
     @Test
     fun testImageGenerationWithRealApi(): Unit = runBlocking {
@@ -35,7 +35,7 @@ class ImageGenerationRepositoryImplIntegrationTest {
         val negativePrompt = "blurry, low quality"
         val styleTitle = "DEFAULT"
         val requestResult =
-            repository.requestImageGeneration(prompt, negativePrompt, styleTitle).first()
+            repository.requestGeneration(prompt, negativePrompt, styleTitle).first()
         when (requestResult) {
             is Resource.Success -> {
                 assertNotNull(requestResult.data)
@@ -50,12 +50,14 @@ class ImageGenerationRepositoryImplIntegrationTest {
                     is Resource.Error -> {
                         fail("API request failed: ${result.error}")
                     }
+                    else -> Unit
                 }
             }
 
             is Resource.Error -> {
                 fail("API request failed: ${requestResult.error}")
             }
+            else -> Unit
         }
 
 
