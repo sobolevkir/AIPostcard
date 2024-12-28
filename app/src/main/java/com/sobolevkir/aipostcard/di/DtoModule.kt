@@ -1,12 +1,12 @@
 package com.sobolevkir.aipostcard.di
 
-import com.sobolevkir.aipostcard.data.mapper.ImageGenerationResultMapper
-import com.sobolevkir.aipostcard.data.mapper.ImageStylesMapper
+import com.sobolevkir.aipostcard.data.mapper.GenerationResultMapper
+import com.sobolevkir.aipostcard.data.mapper.StylesMapper
 import com.sobolevkir.aipostcard.data.mapper.ToDomainMapper
-import com.sobolevkir.aipostcard.data.network.model.ImageGenerationResultDto
-import com.sobolevkir.aipostcard.data.network.model.ImageStyleDto
-import com.sobolevkir.aipostcard.domain.model.ImageGenerationResult
-import com.sobolevkir.aipostcard.domain.model.ImageStyle
+import com.sobolevkir.aipostcard.data.network.model.GenerationResultDto
+import com.sobolevkir.aipostcard.data.network.model.StyleDto
+import com.sobolevkir.aipostcard.domain.model.GenerationResult
+import com.sobolevkir.aipostcard.domain.model.Style
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,12 +19,12 @@ abstract class DtoModule {
 
     @Binds
     @Singleton
-    abstract fun bindImageGenerationResultMapper(impl: ImageGenerationResultMapper):
-            ToDomainMapper<ImageGenerationResultDto, ImageGenerationResult>
+    abstract fun bindGenerationResultMapper(impl: GenerationResultMapper):
+            ToDomainMapper<GenerationResultDto, GenerationResult>
 
     @Binds
     @Singleton
-    abstract fun bindImageStylesMapper(impl: ImageStylesMapper):
-            ToDomainMapper<List<ImageStyleDto>, List<ImageStyle>>
+    abstract fun bindStylesMapper(impl: StylesMapper):
+            ToDomainMapper<List<StyleDto>, List<Style>>
 
 }

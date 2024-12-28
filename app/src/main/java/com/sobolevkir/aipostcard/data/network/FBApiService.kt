@@ -3,10 +3,10 @@ package com.sobolevkir.aipostcard.data.network
 import com.sobolevkir.aipostcard.data.network.ApiConstants.CHECK_GENERATION_RESULT_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_MODELS_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_STYLES_URL
-import com.sobolevkir.aipostcard.data.network.ApiConstants.IMAGE_GENERATION_REQUEST_ENDPOINT
+import com.sobolevkir.aipostcard.data.network.ApiConstants.GENERATION_REQUEST_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.model.GenerationModelDto
-import com.sobolevkir.aipostcard.data.network.model.ImageGenerationResultDto
-import com.sobolevkir.aipostcard.data.network.model.ImageStyleDto
+import com.sobolevkir.aipostcard.data.network.model.GenerationResultDto
+import com.sobolevkir.aipostcard.data.network.model.StyleDto
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.GET
@@ -18,21 +18,19 @@ import retrofit2.http.Path
 interface FBApiService {
 
     @GET(GET_STYLES_URL)
-    suspend fun getImageStyles(): Response<List<ImageStyleDto>>
+    suspend fun getStyles(): Response<List<StyleDto>>
 
     @GET(GET_MODELS_ENDPOINT)
-    suspend fun getImageGenerationModels(): Response<List<GenerationModelDto>>
+    suspend fun getGenerationModels(): Response<List<GenerationModelDto>>
 
     @Multipart
-    @POST(IMAGE_GENERATION_REQUEST_ENDPOINT)
-    suspend fun requestImageGeneration(
+    @POST(GENERATION_REQUEST_ENDPOINT)
+    suspend fun requestGeneration(
         @Part("model_id") modelId: RequestBody,
         @Part("params") params: RequestBody
-    ): Response<ImageGenerationResultDto>
+    ): Response<GenerationResultDto>
 
     @GET(CHECK_GENERATION_RESULT_ENDPOINT)
-    suspend fun getStatusOrImage(
-        @Path("id") id: String
-    ): Response<ImageGenerationResultDto>
+    suspend fun getStatusOrImage(@Path("id") id: String): Response<GenerationResultDto>
 
 }

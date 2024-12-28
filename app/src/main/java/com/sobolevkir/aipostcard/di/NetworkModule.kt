@@ -36,10 +36,7 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideFusionBrainApiService(
-        baseUrl: String,
-        httpClient: OkHttpClient
-    ): FBApiService {
+    fun provideFBApiService(baseUrl: String, httpClient: OkHttpClient): FBApiService {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(httpClient)

@@ -29,14 +29,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.sobolevkir.aipostcard.domain.model.ImageStyle
+import com.sobolevkir.aipostcard.domain.model.Style
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StylesDropdownMenu(
-    styles: List<ImageStyle>,
-    selectedStyle: ImageStyle? = null,
-    onItemSelected: (ImageStyle) -> Unit,
+    styles: List<Style>,
+    selectedStyle: Style? = null,
+    onItemSelected: (Style) -> Unit,
     enabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -112,7 +112,7 @@ fun StylesDropdownMenu(
 fun SimpleDropdownMenuPreview() {
     var selectedItem by remember {
         mutableStateOf(
-            ImageStyle(
+            Style(
                 "https://via.placeholder.com/150",
                 "Style 1",
                 "Реализм"
@@ -121,9 +121,9 @@ fun SimpleDropdownMenuPreview() {
     }
 
     val items = listOf(
-        ImageStyle("https://via.placeholder.com/150", "Style 1", "Реализм"),
-        ImageStyle("https://via.placeholder.com/150", "Style 2", "Импрессионизм"),
-        ImageStyle("https://via.placeholder.com/150", "Style 3", "Аниме")
+        Style("https://via.placeholder.com/150", "Style 1", "Реализм"),
+        Style("https://via.placeholder.com/150", "Style 2", "Импрессионизм"),
+        Style("https://via.placeholder.com/150", "Style 3", "Аниме")
     )
 
     MaterialTheme {

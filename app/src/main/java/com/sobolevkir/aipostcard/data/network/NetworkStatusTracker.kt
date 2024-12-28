@@ -16,7 +16,10 @@ class NetworkStatusTracker(context: Context) {
     val networkStatus: StateFlow<Boolean> get() = _networkStatus
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
             _networkStatus.value = hasInternetCapability(networkCapabilities)
         }
 

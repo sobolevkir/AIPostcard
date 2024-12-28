@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard.di
 
-import com.sobolevkir.aipostcard.data.repository.ImageGenerationRepositoryImpl
-import com.sobolevkir.aipostcard.domain.ImageGenerationRepository
+import com.sobolevkir.aipostcard.data.repository.GenerationRepositoryImpl
+import com.sobolevkir.aipostcard.domain.GenerationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,8 +14,8 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindImageGenerationRepository(
-        imageGenerationRepositoryImpl: ImageGenerationRepositoryImpl
-    ): ImageGenerationRepository
+    fun bindGenerationRepository(
+        generationRepositoryImpl: GenerationRepositoryImpl
+    ): GenerationRepository
 
 }

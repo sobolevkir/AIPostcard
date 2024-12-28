@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.screen.image_generation
+package com.sobolevkir.aipostcard.presentation.screen.generation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,7 +50,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 
 @Composable
-fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel()) {
+fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -138,7 +138,7 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
             },
             trailingIcon = {
                 if (uiState.prompt.isNotEmpty()) {
-                    IconButton(onClick = { viewModel.onPromptChange("") }) {
+                    IconButton(onClick = { if (!uiState.isGenerating) viewModel.onPromptChange("") }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Очистить ввод"
@@ -177,7 +177,9 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
             },
             trailingIcon = {
                 if (uiState.negativePrompt.isNotEmpty()) {
-                    IconButton(onClick = { viewModel.onNegativePromptChange("") }) {
+                    IconButton(onClick = {
+                        if (!uiState.isGenerating) viewModel.onNegativePromptChange("")
+                    }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Очистить ввод"
@@ -191,7 +193,7 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
         )
 
         StylesDropdownMenu(
-            styles = uiState.imageStyles,
+            styles = uiState.styles,
             selectedStyle = uiState.selectedStyle,
             onItemSelected = { newStyle ->
                 viewModel.onStyleSelected(newStyle)
@@ -201,8 +203,12 @@ fun ImageGenerationScreen(viewModel: ImageGenerationViewModel = hiltViewModel())
 
         Button(
             onClick = {
-                if (uiState.isGenerating) viewModel.stopGeneration() else viewModel.generateImage()
-                focusRequester.requestFocus()
+                if (uiState.isGenerating) {
+                    viewModel.onStopButtonClick()
+                } else {
+                    viewModel.onGenerateButtonClick()
+                    if (uiState.isPromptError) focusRequester.requestFocus()
+                }
             },
             enabled = uiState.isGenerateButtonEnabled,
             modifier = Modifier

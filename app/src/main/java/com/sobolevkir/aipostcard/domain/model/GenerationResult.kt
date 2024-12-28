@@ -1,8 +1,8 @@
 package com.sobolevkir.aipostcard.domain.model
 
-data class ImageGenerationResult(
+data class GenerationResult(
     val uuid: String = "",
-    val status: ImageGenerationStatus,
+    val status: GenerationStatus,
     val generatedImagesUri: List<String> = listOf(),
     val censored: Boolean = false
 )

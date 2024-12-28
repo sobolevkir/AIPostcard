@@ -1,6 +1,6 @@
 package com.sobolevkir.aipostcard.domain.model
 
-enum class ImageGenerationStatus {
+enum class GenerationStatus {
     IN_PROGRESS,
     DONE,
     FAIL,
