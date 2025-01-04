@@ -10,6 +10,6 @@ data class GenerationUiState(
     val generatedImage: String? = null,
     val errorMessage: String? = null,
     val isGenerating: Boolean = false,
-    val isPromptError: Boolean = false,
+    val isCensored: Boolean = false,
     val isGenerateButtonEnabled: Boolean = false
 )

@@ -11,10 +11,10 @@ interface GenerationRepository {
 
     fun requestGeneration(
         prompt: String,
-        negativePrompt: String,
-        styleName: String
+        negativePrompt: String?,
+        styleName: String?
     ): Flow<Resource<GenerationResult>>
 
-    fun getStatusOrImage(uuid: String): Flow<Resource<GenerationResult>>
+    suspend fun getStatusOrImage(uuid: String): Resource<GenerationResult>
 
 }
