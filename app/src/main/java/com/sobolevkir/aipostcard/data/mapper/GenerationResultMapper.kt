@@ -12,10 +12,12 @@ import javax.inject.Inject
 class GenerationResultMapper @Inject constructor(private val decoder: Base64Decoder) :
     ToDomainMapper<GenerationResultDto, GenerationResult> {
     override fun toDomain(dto: GenerationResultDto): GenerationResult {
+        val convertedStatus = convertStatus(dto.status)
+        val imageUri = dto.images.firstOrNull()?.let { decoder.decodeBase64ToStringUri(it) }
         return GenerationResult(
             uuid = dto.uuid,
-            status = convertStatus(dto.status),
-            generatedImagesUri = dto.images.map { decoder.decodeBase64ToStringUri(it) ?: "" },
+            status = convertedStatus,
+            generatedImageUri = imageUri ?: "",
             censored = dto.censored
         )
     }

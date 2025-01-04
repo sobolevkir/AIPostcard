@@ -28,13 +28,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
@@ -92,6 +89,14 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
                     .aspectRatio(1f)
             )
 
+            uiState.errorMessage?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+
             if (uiState.isGenerating) {
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -101,26 +106,15 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
             }
         }
 
-        uiState.errorMessage?.let {
-            Text(
-                text = it,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        }
-
-        val focusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
         TextField(
             value = uiState.prompt,
             onValueChange = { if (it.length <= REQUEST_MAX_CHAR) viewModel.onPromptChange(it) },
             enabled = !uiState.isGenerating,
             maxLines = 2,
-            isError = uiState.isPromptError,
+            isError = uiState.isCensored,
             label = { Text(text = "Опишите ваш запрос") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -207,7 +201,6 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
                     viewModel.onStopButtonClick()
                 } else {
                     viewModel.onGenerateButtonClick()
-                    if (uiState.isPromptError) focusRequester.requestFocus()
                 }
             },
             enabled = uiState.isGenerateButtonEnabled,
