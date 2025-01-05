@@ -13,37 +13,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.sobolevkir.aipostcard.R
+import com.sobolevkir.aipostcard.presentation.component.QueryTextField
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 
 @Composable
@@ -107,83 +98,26 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
         }
 
         val focusManager = LocalFocusManager.current
-        TextField(
+        QueryTextField(
             value = uiState.prompt,
-            onValueChange = { if (it.length <= REQUEST_MAX_CHAR) viewModel.onPromptChange(it) },
+            maxChar = REQUEST_MAX_CHAR,
+            onQueryChange = viewModel::onPromptChange,
             enabled = !uiState.isGenerating,
             maxLines = 2,
             isError = uiState.isCensored,
-            label = { Text(text = "Опишите ваш запрос") },
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(16.dp),
-            supportingText = {
-                Text(
-                    text = "${uiState.prompt.length} / $REQUEST_MAX_CHAR",
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.secondary,
-                    textAlign = TextAlign.End,
-                )
-            },
-            trailingIcon = {
-                if (uiState.prompt.isNotEmpty()) {
-                    IconButton(onClick = { if (!uiState.isGenerating) viewModel.onPromptChange("") }) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Очистить ввод"
-                        )
-                    }
-                }
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) })
+            labelText = stringResource(R.string.label_prompt),
+            focusManager = focusManager
         )
 
-        TextField(
+        QueryTextField(
             value = uiState.negativePrompt,
-            onValueChange = {
-                if (it.length <= REQUEST_MAX_CHAR) viewModel.onNegativePromptChange(it)
-            },
+            maxChar = REQUEST_MAX_CHAR,
+            onQueryChange = viewModel::onNegativePromptChange,
             enabled = !uiState.isGenerating,
             maxLines = 1,
-            label = { Text("Что хотели бы исключить?") },
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(16.dp),
-            supportingText = {
-                Text(
-                    text = "${uiState.negativePrompt.length} / $REQUEST_MAX_CHAR",
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.secondary,
-                    textAlign = TextAlign.End,
-                )
-            },
-            trailingIcon = {
-                if (uiState.negativePrompt.isNotEmpty()) {
-                    IconButton(onClick = {
-                        if (!uiState.isGenerating) viewModel.onNegativePromptChange("")
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Очистить ввод"
-                        )
-                    }
-                }
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) })
+            isError = uiState.isCensored,
+            labelText = stringResource(R.string.label_negative_prompt),
+            focusManager = focusManager
         )
 
         StylesDropdownMenu(
