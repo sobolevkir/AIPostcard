@@ -9,6 +9,7 @@ import com.sobolevkir.aipostcard.data.network.model.GenerationRequest
 import com.sobolevkir.aipostcard.data.network.model.GenerationResultDto
 import com.sobolevkir.aipostcard.data.network.model.StyleDto
 import com.sobolevkir.aipostcard.domain.GenerationRepository
+import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.Style
 import com.sobolevkir.aipostcard.util.Resource
@@ -29,12 +30,11 @@ class GenerationRepositoryImpl @Inject constructor(
     private val gson: Gson
 ) : GenerationRepository {
 
-    private var cachedModelId: String? = null
+    private var cachedModeId: String = ""
 
     override fun getStyles(): Flow<Resource<List<Style>>> = flow {
         emit(Resource.Loading)
-        val result = errorHandler
-            .safeApiCall { apiService.getStyles() }
+        val result = errorHandler.safeApiCall { apiService.getStyles() }
             .mapResource { stylesMapper.toDomain(it) }
         emit(result)
     }.flowOn(Dispatchers.IO)
@@ -45,8 +45,18 @@ class GenerationRepositoryImpl @Inject constructor(
         styleName: String?
     ): Flow<Resource<GenerationResult>> = flow {
         emit(Resource.Loading)
-        val modelId = cachedModelId ?: getLatestModelId().also { cachedModelId = it }
-        val modelIdBody = modelId.toRequestBody(MEDIA_TYPE_TEXT.toMediaType())
+        if (cachedModeId.isBlank()) {
+            when (val modelIdResource = getLatestModelId()) {
+                is Resource.Success -> cachedModeId = modelIdResource.data
+                is Resource.Error -> {
+                    emit(Resource.Error(modelIdResource.error))
+                    return@flow
+                }
+
+                else -> emit(Resource.Error(ErrorType.UNKNOWN_ERROR))
+            }
+        }
+        val modelIdBody = cachedModeId.toRequestBody(MEDIA_TYPE_TEXT.toMediaType())
         val paramsBody = createParamsBody(prompt, negativePrompt, styleName)
         val result = errorHandler
             .safeApiCall { apiService.requestGeneration(modelIdBody, paramsBody) }
@@ -55,14 +65,13 @@ class GenerationRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
     override suspend fun getStatusOrImage(uuid: String): Resource<GenerationResult> {
-        return errorHandler
-            .safeApiCall { apiService.getStatusOrImage(uuid) }
+        return errorHandler.safeApiCall { apiService.getStatusOrImage(uuid) }
             .mapResource { generationResultMapper.toDomain(it) }
     }
 
-    private suspend fun getLatestModelId(): String {
-        val result = errorHandler.safeApiCall { apiService.getGenerationModels() }
-        return (result as Resource.Success).data.maxBy { it.version }.id.toString()
+    private suspend fun getLatestModelId(): Resource<String> {
+        return errorHandler.safeApiCall { apiService.getGenerationModels() }
+            .mapResource { resource -> resource.maxBy { it.version }.id.toString() }
     }
 
     private fun createParamsBody(
