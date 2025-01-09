@@ -32,21 +32,21 @@ class GenerationViewModel @Inject constructor(
     }
 
     fun onGenerateButtonClick() {
-        generateJob = viewModelScope.launch {
-            generateUseCase(
-                prompt = _uiState.value.prompt,
-                negativePrompt = _uiState.value.negativePrompt,
-                styleName = _uiState.value.selectedStyle?.name
-            ).collect { result ->
-                Log.d("VIEWMODEL", result.toString())
-                processResult(result)
+        if(uiState.value.isGenerating) {
+            generateJob?.cancel()
+            _uiState.update { it.copy(isGenerating = false, errorMessage = null) }
+        } else {
+            generateJob = viewModelScope.launch {
+                generateUseCase(
+                    prompt = _uiState.value.prompt,
+                    negativePrompt = _uiState.value.negativePrompt,
+                    styleName = _uiState.value.selectedStyle?.name
+                ).collect { result ->
+                    Log.d("VIEWMODEL", result.toString())
+                    processResult(result)
+                }
             }
         }
-    }
-
-    fun onStopButtonClick() {
-        generateJob?.cancel()
-        _uiState.update { it.copy(isGenerating = false, errorMessage = null) }
     }
 
     fun onStyleSelected(style: Style) {
