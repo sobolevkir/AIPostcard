@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">AI Postcard</string>
     <string name="action_go">Сгенерировать</string>
+    <string name="action_stop">Остановить</string>
     <string name="label_prompt">Опишите ваш запрос</string>
-    <string name="label_negative_prompt">Опишите ваш запрос</string>
+    <string name="label_negative_prompt">Что вы бы хотели исключить?</string>
     <string name="loading">Загрузка…</string>
+    <string name="generated_image">Сгенерированное изображение</string>
 </resources>

@@ -60,8 +60,9 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     // Network
     implementation(libs.bundles.retrofit)
-    // Images displaying
+    // Images & animations displaying
     implementation(libs.coil.compose)
+    implementation(libs.dotlottie.android)
     // KoTEA
     implementation(libs.tinkoff.kotea.core)
     implementation(libs.tinkoff.kotea.android)

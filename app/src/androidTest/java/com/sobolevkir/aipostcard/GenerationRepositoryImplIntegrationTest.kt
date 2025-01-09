@@ -41,7 +41,7 @@ class GenerationRepositoryImplIntegrationTest {
                 assertNotNull(requestResult.data)
                 Log.d("ON_REQUEST", requestResult.data.toString())
                 val uuid = requestResult.data.uuid
-                when (val result = repository.getStatusOrImage(uuid).first()) {
+                when (val result = repository.getStatusOrImage(uuid)) {
                     is Resource.Success -> {
                         assertNotNull(result.data)
                         Log.d("ON_RESULT", result.data.toString())
@@ -50,6 +50,7 @@ class GenerationRepositoryImplIntegrationTest {
                     is Resource.Error -> {
                         fail("API request failed: ${result.error}")
                     }
+
                     else -> Unit
                 }
             }
@@ -57,6 +58,7 @@ class GenerationRepositoryImplIntegrationTest {
             is Resource.Error -> {
                 fail("API request failed: ${requestResult.error}")
             }
+
             else -> Unit
         }
 
