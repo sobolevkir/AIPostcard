@@ -31,25 +31,23 @@ class GenerationViewModel @Inject constructor(
         loadImageStyles()
     }
 
-    fun onGenerateButtonClick() {
-        if(uiState.value.isGenerating) {
+    fun onSubmitButtonClick() {
+        if (uiState.value.isGenerating) {
             generateJob?.cancel()
-            _uiState.update { it.copy(isGenerating = false, errorMessage = null) }
+            _uiState.update { it.copy(isGenerating = false, error = null) }
         } else {
-            generateJob = viewModelScope.launch {
-                generateUseCase(
-                    prompt = _uiState.value.prompt,
-                    negativePrompt = _uiState.value.negativePrompt,
-                    styleName = _uiState.value.selectedStyle?.name
-                ).collect { result ->
-                    Log.d("VIEWMODEL", result.toString())
-                    processResult(result)
-                }
-            }
+            startGeneration()
         }
     }
 
-    fun onStyleSelected(style: Style) {
+    fun onRetryButtonClick() {
+        when {
+            _uiState.value.styles.isEmpty() -> loadImageStyles()
+            _uiState.value.prompt.isNotEmpty() -> startGeneration()
+        }
+    }
+
+    fun onStyleSelect(style: Style) {
         _uiState.update { it.copy(selectedStyle = style) }
     }
 
@@ -58,13 +56,26 @@ class GenerationViewModel @Inject constructor(
             it.copy(
                 prompt = text,
                 isCensored = false,
-                isGenerateButtonEnabled = text.isNotEmpty()
+                error = if (it.styles.isNotEmpty()) null else it.error
             )
         }
     }
 
     fun onNegativePromptChange(text: String) {
         _uiState.update { it.copy(negativePrompt = text) }
+    }
+
+    private fun startGeneration() {
+        generateJob = viewModelScope.launch {
+            generateUseCase(
+                prompt = _uiState.value.prompt,
+                negativePrompt = _uiState.value.negativePrompt,
+                styleName = _uiState.value.selectedStyle?.name
+            ).collect { result ->
+                Log.d("VIEWMODEL", result.toString())
+                processResult(result)
+            }
+        }
     }
 
     private fun processResult(result: Resource<GenerationResult?>) {
@@ -74,19 +85,19 @@ class GenerationViewModel @Inject constructor(
                     generatedImage = result.data?.generatedImageUri,
                     isGenerating = false,
                     isCensored = result.data?.censored ?: false,
-                    errorMessage = null
+                    error = null
                 )
             }
 
             is Resource.Error -> _uiState.update {
-                it.copy(isGenerating = false, errorMessage = result.error.toString())
+                it.copy(isGenerating = false, error = result.error)
             }
 
             is Resource.Loading -> _uiState.update {
                 it.copy(
                     isGenerating = true,
                     generatedImage = null,
-                    errorMessage = null,
+                    error = null,
                     isCensored = false,
                 )
             }
@@ -103,13 +114,13 @@ class GenerationViewModel @Inject constructor(
                             it.copy(
                                 styles = result.data,
                                 selectedStyle = result.data.first(),
-                                errorMessage = null,
+                                error = null
                             )
                         }
                     }
 
                     is Resource.Error -> _uiState.update {
-                        it.copy(errorMessage = result.error.toString())
+                        it.copy(error = result.error)
                     }
 
                     is Resource.Loading -> {}

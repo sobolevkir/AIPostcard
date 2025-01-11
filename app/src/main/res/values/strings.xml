@@ -2,8 +2,12 @@
     <string name="app_name">AI Postcard</string>
     <string name="action_go">Сгенерировать</string>
     <string name="action_stop">Остановить</string>
+    <string name="action_retry">Обновить</string>
     <string name="label_prompt">Опишите ваш запрос</string>
     <string name="label_negative_prompt">Что вы бы хотели исключить?</string>
     <string name="loading">Загрузка…</string>
     <string name="generated_image">Сгенерированное изображение</string>
+    <string name="message_generating">Подождите, идёт генерация…</string>
+    <string name="message_connection_problem">Проверьте подключение к интернету</string>
+    <string name="message_unknown_error">Что-то пошло не так :(\nПопробуйте повторить запрос позднее</string>
 </resources>

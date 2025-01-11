@@ -28,7 +28,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.Style
@@ -95,7 +94,7 @@ fun StylesDropdownMenu(
                                 modifier = imageModifier,
                                 contentScale = ContentScale.Crop
                             )
-                            Text(text = item.title, fontSize = 16.sp)
+                            Text(text = item.title)
                         }
                     },
                     onClick = {

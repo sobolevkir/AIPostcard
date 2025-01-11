@@ -1,9 +1,9 @@
 package com.sobolevkir.aipostcard.data.network
 
 import com.sobolevkir.aipostcard.data.network.ApiConstants.CHECK_GENERATION_RESULT_ENDPOINT
+import com.sobolevkir.aipostcard.data.network.ApiConstants.GENERATION_REQUEST_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_MODELS_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_STYLES_URL
-import com.sobolevkir.aipostcard.data.network.ApiConstants.GENERATION_REQUEST_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.model.GenerationModelDto
 import com.sobolevkir.aipostcard.data.network.model.GenerationResultDto
 import com.sobolevkir.aipostcard.data.network.model.StyleDto
