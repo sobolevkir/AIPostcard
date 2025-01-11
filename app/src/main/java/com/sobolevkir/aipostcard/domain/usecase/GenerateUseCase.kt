@@ -50,6 +50,6 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
 
     companion object {
         private const val ATTEMPTS_MAX_NUMBER = 20
-        private const val ATTEMPT_TIME_MILLIS = 4_000L
+        private const val ATTEMPT_TIME_MILLIS = 6_000L
     }
 }
