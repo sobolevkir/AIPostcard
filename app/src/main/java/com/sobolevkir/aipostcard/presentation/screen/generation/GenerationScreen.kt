@@ -63,7 +63,7 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
             Image(
                 painter = rememberAsyncImagePainter(uiState.generatedImage?.toUri()),
                 contentDescription = stringResource(R.string.generated_image),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxSize(),
             )
 
             if (uiState.isGenerating) {
