@@ -17,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.sobolevkir.aipostcard.R
 
 @Composable
 fun QueryTextField(
@@ -29,7 +31,7 @@ fun QueryTextField(
     enabled: Boolean,
     maxLines: Int,
     isError: Boolean? = null,
-    labelText: String,
+    labelTextResId: Int,
     focusManager: FocusManager? = null
 ) {
     TextField(
@@ -38,7 +40,7 @@ fun QueryTextField(
         enabled = enabled,
         maxLines = maxLines,
         isError = isError ?: false,
-        label = { Text(text = labelText) },
+        label = { Text(text = stringResource(labelTextResId)) },
         modifier = Modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
@@ -60,7 +62,7 @@ fun QueryTextField(
                 IconButton(onClick = { onQueryChange(EMPTY_STRING) }, enabled = enabled) {
                     Icon(
                         imageVector = Icons.Default.Clear,
-                        contentDescription = "Очистить ввод"
+                        contentDescription = stringResource(R.string.action_clear_input)
                     )
                 }
             }

@@ -8,13 +8,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SmallButton(
-    text: String,
+fun SmallTextButton(
+    textResId: Int,
     onClick: () -> Unit,
 ) {
     Button(
@@ -25,7 +26,7 @@ fun SmallButton(
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onBackground),
     ) {
         Text(
-            text = text,
+            text = stringResource(textResId),
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.background,
             fontWeight = FontWeight.Normal

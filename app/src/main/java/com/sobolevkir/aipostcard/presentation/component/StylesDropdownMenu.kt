@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -48,6 +49,7 @@ fun StylesDropdownMenu(
         .clip(RoundedCornerShape(8.dp))
         .background(MaterialTheme.colorScheme.surfaceVariant)
         .fillMaxSize()
+        .alpha(if (enabled) 1f else 0.3f)
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -110,7 +112,7 @@ fun StylesDropdownMenu(
 
 @Preview(showBackground = true)
 @Composable
-fun SimpleDropdownMenuPreview() {
+private fun SimpleDropdownMenuPreview() {
     var selectedItem by remember {
         mutableStateOf(
             Style(
