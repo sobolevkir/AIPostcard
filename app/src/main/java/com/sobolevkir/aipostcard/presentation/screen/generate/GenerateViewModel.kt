@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.screen.generation
+package com.sobolevkir.aipostcard.presentation.screen.generate
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -17,13 +17,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GenerationViewModel @Inject constructor(
+class GenerateViewModel @Inject constructor(
     private val getStylesUseCase: GetStylesUseCase,
     private val generateUseCase: GenerateUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GenerationUiState())
-    val uiState: StateFlow<GenerationUiState> = _uiState
+    private val _uiState = MutableStateFlow(GenerateUiState())
+    val uiState: StateFlow<GenerateUiState> = _uiState
 
     private var generateJob: Job? = null
 

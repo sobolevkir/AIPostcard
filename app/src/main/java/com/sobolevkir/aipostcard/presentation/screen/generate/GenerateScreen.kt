@@ -1,7 +1,8 @@
-package com.sobolevkir.aipostcard.presentation.screen.generation
+package com.sobolevkir.aipostcard.presentation.screen.generate
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,15 +37,17 @@ import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
 import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.ErrorType
+import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
 import com.sobolevkir.aipostcard.presentation.component.QueryTextField
-import com.sobolevkir.aipostcard.presentation.component.SmallButton
+import com.sobolevkir.aipostcard.presentation.component.SmallTextButton
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 import com.sobolevkir.aipostcard.presentation.component.SubmitButton
 
 @Composable
-fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
+fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var isFullScreen by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -60,12 +66,15 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(uiState.generatedImage?.toUri()),
-                contentDescription = stringResource(R.string.generated_image),
-                modifier = Modifier.fillMaxWidth(),
-            )
-
+            uiState.generatedImage?.let {
+                Image(
+                    painter = rememberAsyncImagePainter(it.toUri()),
+                    contentDescription = stringResource(R.string.generated_image),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable { isFullScreen = true },
+                )
+            }
             if (uiState.isGenerating) {
                 DotLottieAnimation(
                     source = DotLottieSource.Asset("animation_loading.lottie"),
@@ -102,11 +111,11 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
                             ErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
                             ErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
                         },
-                        color = MaterialTheme.colorScheme.error,
+                        color = MaterialTheme.colorScheme.tertiary,
                         textAlign = TextAlign.Center,
                     )
-                    SmallButton(
-                        text = stringResource(R.string.action_retry),
+                    SmallTextButton(
+                        textResId = R.string.action_retry,
                         onClick = viewModel::onRetryButtonClick
                     )
                 }
@@ -120,7 +129,7 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
             enabled = !uiState.isGenerating,
             maxLines = 2,
             isError = uiState.isCensored,
-            labelText = stringResource(R.string.label_prompt),
+            labelTextResId = R.string.label_prompt,
             focusManager = focusManager
         )
 
@@ -131,22 +140,21 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
             enabled = !uiState.isGenerating,
             maxLines = 1,
             isError = uiState.isCensored,
-            labelText = stringResource(R.string.label_negative_prompt),
+            labelTextResId = R.string.label_negative_prompt,
             focusManager = focusManager
         )
 
         StylesDropdownMenu(
             styles = uiState.styles,
             selectedStyle = uiState.selectedStyle,
-            onItemSelected = { newStyle ->
-                viewModel.onStyleSelect(newStyle)
-            },
+            onItemSelected = { newStyle -> viewModel.onStyleSelect(newStyle) },
             enabled = !uiState.isGenerating,
         )
 
         SubmitButton(
-            enabled = uiState.styles.isNotEmpty() && uiState.error == null && uiState.prompt.isNotEmpty(),
-            text = stringResource(if (uiState.isGenerating) R.string.action_stop else R.string.action_go),
+            enabled = uiState.styles.isNotEmpty() && uiState.prompt.isNotEmpty(),
+            textResId = if (uiState.isGenerating) R.string.action_stop else R.string.action_go,
+            imageResId = if (!uiState.isGenerating) R.drawable.ic_generate else null,
             onClick = viewModel::onSubmitButtonClick,
             backgroundColor = if (uiState.isGenerating) {
                 MaterialTheme.colorScheme.tertiary
@@ -156,6 +164,14 @@ fun GenerationScreen(viewModel: GenerationViewModel = hiltViewModel()) {
         )
     }
 
+    ImageFullScreenView(
+        isVisible = isFullScreen,
+        imageUri = uiState.generatedImage?.toUri(),
+        onSaveToGallery = {},
+        onAddToFaves = {},
+        onClick = { isFullScreen = false }
+    )
 }
+
 
 const val REQUEST_MAX_CHAR = 500

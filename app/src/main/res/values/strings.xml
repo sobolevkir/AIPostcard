@@ -8,6 +8,9 @@
     <string name="loading">Загрузка…</string>
     <string name="generated_image">Сгенерированное изображение</string>
     <string name="message_generating">Подождите, идёт генерация…</string>
-    <string name="message_connection_problem">Проверьте подключение к интернету</string>
-    <string name="message_unknown_error">Что-то пошло не так :(\nПопробуйте повторить запрос позднее</string>
+    <string name="message_connection_problem">Проверьте подключение\nк интернету</string>
+    <string name="message_unknown_error">Что-то пошло не так :(\nПопробуйте повторить\nзапрос позднее</string>
+    <string name="action_save_to_gallery">Сохранить\nв галерею</string>
+    <string name="action_add_to_faves">Добавить\nв избранное</string>
+    <string name="action_clear_input">Очистить ввод</string>
 </resources>

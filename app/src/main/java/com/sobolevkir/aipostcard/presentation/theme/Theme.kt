@@ -10,14 +10,14 @@ private val DarkColorScheme = darkColorScheme(
     primary = Mint,
     secondary = Grey,
     onPrimary = SoftBlack,
-    tertiary = Red
+    tertiary = Red,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = LightMint,
     secondary = LightGrey,
     onPrimary = AbsoluteWhite,
-    tertiary = LightRed
+    tertiary = LightRed,
 )
 
 @Composable
