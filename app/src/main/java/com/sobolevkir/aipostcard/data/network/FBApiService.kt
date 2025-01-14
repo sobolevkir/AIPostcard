@@ -4,9 +4,9 @@ import com.sobolevkir.aipostcard.data.network.ApiConstants.CHECK_GENERATION_RESU
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GENERATION_REQUEST_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_MODELS_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_STYLES_URL
-import com.sobolevkir.aipostcard.data.network.model.GenerationModelDto
-import com.sobolevkir.aipostcard.data.network.model.GenerationResultDto
-import com.sobolevkir.aipostcard.data.network.model.StyleDto
+import com.sobolevkir.aipostcard.data.network.dto.GenerationModelDto
+import com.sobolevkir.aipostcard.data.network.dto.GenerationResultDto
+import com.sobolevkir.aipostcard.data.network.dto.StyleDto
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.GET

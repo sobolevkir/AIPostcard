@@ -1,13 +1,13 @@
 package com.sobolevkir.aipostcard.data.repository
 
 import com.google.gson.Gson
-import com.sobolevkir.aipostcard.data.mapper.ToDomainMapper
+import com.sobolevkir.aipostcard.data.mapper.GenerationResultMapper
+import com.sobolevkir.aipostcard.data.mapper.StylesMapper
 import com.sobolevkir.aipostcard.data.network.FBApiService
 import com.sobolevkir.aipostcard.data.network.NetworkErrorHandler
-import com.sobolevkir.aipostcard.data.network.model.GenerateParamsRequest
-import com.sobolevkir.aipostcard.data.network.model.GenerationRequest
-import com.sobolevkir.aipostcard.data.network.model.GenerationResultDto
-import com.sobolevkir.aipostcard.data.network.model.StyleDto
+import com.sobolevkir.aipostcard.data.network.dto.GenerateParamsRequest
+import com.sobolevkir.aipostcard.data.network.dto.GenerationRequest
+import com.sobolevkir.aipostcard.data.storage.FileStorage
 import com.sobolevkir.aipostcard.domain.GenerationRepository
 import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
@@ -25,8 +25,7 @@ import javax.inject.Inject
 class GenerationRepositoryImpl @Inject constructor(
     private val apiService: FBApiService,
     private val errorHandler: NetworkErrorHandler,
-    private val stylesMapper: ToDomainMapper<List<StyleDto>, List<Style>>,
-    private val generationResultMapper: ToDomainMapper<GenerationResultDto, GenerationResult>,
+    private val fileStorage: FileStorage,
     private val gson: Gson
 ) : GenerationRepository {
 
@@ -35,7 +34,7 @@ class GenerationRepositoryImpl @Inject constructor(
     override fun getStyles(): Flow<Resource<List<Style>>> = flow {
         emit(Resource.Loading)
         val result = errorHandler.safeApiCall { apiService.getStyles() }
-            .mapResource { stylesMapper.toDomain(it) }
+            .mapResource { StylesMapper.map(it) }
         emit(result)
     }.flowOn(Dispatchers.IO)
 
@@ -60,13 +59,18 @@ class GenerationRepositoryImpl @Inject constructor(
         val paramsBody = createParamsBody(prompt, negativePrompt, styleName)
         val result = errorHandler
             .safeApiCall { apiService.requestGeneration(modelIdBody, paramsBody) }
-            .mapResource { generationResultMapper.toDomain(it) }
+            .mapResource { GenerationResultMapper.map(it) }
         emit(result)
     }.flowOn(Dispatchers.IO)
 
     override suspend fun getStatusOrImage(uuid: String): Resource<GenerationResult> {
         return errorHandler.safeApiCall { apiService.getStatusOrImage(uuid) }
-            .mapResource { generationResultMapper.toDomain(it) }
+            .mapResource { generationResult ->
+                val imageUri = generationResult.images.firstOrNull()?.let { base64String ->
+                    fileStorage.saveBase64ImageToCache(generationResult.uuid, base64String)
+                }
+                GenerationResultMapper.map(generationResult, imageUri)
+            }
     }
 
     private suspend fun getLatestModelId(): Resource<String> {
@@ -75,7 +79,9 @@ class GenerationRepositoryImpl @Inject constructor(
     }
 
     private fun createParamsBody(
-        prompt: String, negativePrompt: String?, styleName: String?
+        prompt: String,
+        negativePrompt: String?,
+        styleName: String?
     ): RequestBody {
         return gson.toJson(
             GenerationRequest(
