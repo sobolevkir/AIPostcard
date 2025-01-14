@@ -6,10 +6,8 @@ import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.GenerationStatus
 import com.sobolevkir.aipostcard.util.Resource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -19,7 +17,7 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
         prompt: String,
         negativePrompt: String?,
         styleName: String?
-    ): Flow<Resource<GenerationResult?>> {
+    ): Flow<Resource<GenerationResult>> {
         return repository.requestGeneration(prompt, negativePrompt, styleName)
             .map { result ->
                 Log.d("USECASE", "requestGeneration: $result")
@@ -28,10 +26,10 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
                     is Resource.Error -> Resource.Error(result.error)
                     is Resource.Loading -> Resource.Loading
                 }
-            }.flowOn(Dispatchers.IO)
+            }
     }
 
-    private suspend fun getGenerationResult(uuid: String): Resource<GenerationResult?> {
+    private suspend fun getGenerationResult(uuid: String): Resource<GenerationResult> {
         repeat(ATTEMPTS_MAX_NUMBER) {
             delay(ATTEMPT_TIME_MILLIS)
             val result = repository.getStatusOrImage(uuid)
@@ -49,7 +47,8 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
     }
 
     companion object {
-        private const val ATTEMPTS_MAX_NUMBER = 20
-        private const val ATTEMPT_TIME_MILLIS = 8_000L
+        private const val ATTEMPTS_MAX_NUMBER = 60
+        private const val ATTEMPT_TIME_MILLIS = 10_000L
     }
+
 }

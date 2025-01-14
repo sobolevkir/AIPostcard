@@ -78,13 +78,13 @@ class GenerateViewModel @Inject constructor(
         }
     }
 
-    private fun processResult(result: Resource<GenerationResult?>) {
+    private fun processResult(result: Resource<GenerationResult>) {
         when (result) {
             is Resource.Success -> _uiState.update {
                 it.copy(
-                    generatedImage = result.data?.generatedImageUri,
+                    generatedImage = result.data.generatedImageUri,
                     isGenerating = false,
-                    isCensored = result.data?.censored ?: false,
+                    isCensored = result.data.censored,
                     error = null
                 )
             }
