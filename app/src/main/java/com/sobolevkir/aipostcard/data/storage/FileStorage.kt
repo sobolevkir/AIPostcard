@@ -3,6 +3,7 @@ package com.sobolevkir.aipostcard.data.storage
 import android.content.Context
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -33,6 +34,26 @@ class FileStorage @Inject constructor(context: Context) {
         val file = Uri.parse(uri).path?.let {
             File(it).delete()
         }
+    }
+
+    suspend fun cleanCache() {
+        withContext(Dispatchers.IO) {
+            try {
+                val currentTime = System.currentTimeMillis()
+                cacheDir.listFiles()?.forEach { file ->
+                    if (file.isFile && currentTime - file.lastModified() > MAX_CACHE_FILE_AGE_MILLIS) {
+                        Log.d("FILESTORAGE", "Удаляем файл ${file.nameWithoutExtension}")
+                        file.delete()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    companion object {
+        private const val MAX_CACHE_FILE_AGE_MILLIS = 7 * 24 * 60 * 60 * 1000L
     }
 
 }
