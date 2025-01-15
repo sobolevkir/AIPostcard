@@ -1,13 +1,11 @@
 package com.sobolevkir.aipostcard.presentation.component
 
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,20 +19,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 import com.sobolevkir.aipostcard.R
 
 @Composable
 fun ImageFullScreenView(
-    imageUri: Uri?,
+    imageUri: String,
     onSaveToGallery: () -> Unit,
     onAddToFaves: () -> Unit,
     isVisible: Boolean = false,
-    onClick: () -> Unit
+    onFullScreenToggle: (Boolean) -> Unit,
 ) {
+
     AnimatedVisibility(
         visible = isVisible,
         enter = fadeIn(animationSpec = tween(durationMillis = 300)) + scaleIn(
@@ -52,15 +48,13 @@ fun ImageFullScreenView(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.8f))
-                .clickable { onClick.invoke() },
+                .clickable { onFullScreenToggle(false) },
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = stringResource(R.string.generated_image),
+            ZoomableImage(
+                imageStringUri = imageUri,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f, matchHeightConstraintsFirst = true),
-                contentScale = ContentScale.Fit
             )
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,

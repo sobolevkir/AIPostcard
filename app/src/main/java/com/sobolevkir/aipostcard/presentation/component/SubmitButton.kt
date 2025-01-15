@@ -56,7 +56,7 @@ fun SubmitButton(
             }
             Text(
                 text = stringResource(textResId),
-                fontSize = 16.sp,
+                fontSize = 17.sp,
                 fontWeight = FontWeight.Normal,
                 color = contentColor
             )

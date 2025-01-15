@@ -12,4 +12,5 @@ data class GenerateUiState(
     val error: ErrorType? = null,
     val isGenerating: Boolean = false,
     val isCensored: Boolean = false,
+    val isImageSaved: Boolean = false
 )

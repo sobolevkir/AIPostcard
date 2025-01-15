@@ -2,7 +2,6 @@ package com.sobolevkir.aipostcard.presentation.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -14,8 +13,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -32,7 +29,6 @@ fun QueryTextField(
     maxLines: Int,
     isError: Boolean? = null,
     labelTextResId: Int,
-    focusManager: FocusManager? = null
 ) {
     TextField(
         value = value,
@@ -67,9 +63,7 @@ fun QueryTextField(
                 }
             }
         },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        keyboardActions = KeyboardActions(
-            onNext = { focusManager?.moveFocus(FocusDirection.Down) })
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
     )
 
 }

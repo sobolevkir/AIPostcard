@@ -1,5 +1,6 @@
 package com.sobolevkir.aipostcard.presentation.screen.generate
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,28 +12,33 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
 import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import com.sobolevkir.aipostcard.R
@@ -48,7 +54,24 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isFullScreen by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val generatedImage = uiState.generatedImage
+    val loadingAnimationSource by remember {
+        mutableStateOf(
+            DotLottieSource.Asset("animation_loading.lottie")
+        )
+    }
+
+    LaunchedEffect(uiState.isImageSaved) {
+        if (uiState.isImageSaved) {
+            Toast.makeText(
+                context, context.getString(R.string.message_saved_to_gallery), Toast.LENGTH_SHORT
+            ).show()
+            viewModel.onSavedMessageShown()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -66,18 +89,35 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center
         ) {
-            uiState.generatedImage?.let {
-                Image(
-                    painter = rememberAsyncImagePainter(it.toUri()),
-                    contentDescription = stringResource(R.string.generated_image),
+
+            generatedImage?.let {
+                AsyncImage(
+                    model = it,
+                    contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clickable { isFullScreen = true },
+                        .clickable {
+                            isFullScreen = true
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }
+                )
+                Image(
+                    painter = painterResource(R.drawable.ic_fullscreen),
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .size(56.dp)
+                        .align(Alignment.BottomEnd),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(Color.White),
+                    alpha = 0.6f
                 )
             }
+
+
             if (uiState.isGenerating) {
                 DotLottieAnimation(
-                    source = DotLottieSource.Asset("animation_loading.lottie"),
+                    source = loadingAnimationSource,
                     autoplay = true,
                     loop = true,
                     modifier = Modifier
@@ -101,6 +141,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                     contentScale = ContentScale.FillWidth
                 )
             }
+
             uiState.error?.let {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -129,8 +170,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
             enabled = !uiState.isGenerating,
             maxLines = 2,
             isError = uiState.isCensored,
-            labelTextResId = R.string.label_prompt,
-            focusManager = focusManager
+            labelTextResId = R.string.label_prompt
         )
 
         QueryTextField(
@@ -140,8 +180,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
             enabled = !uiState.isGenerating,
             maxLines = 1,
             isError = uiState.isCensored,
-            labelTextResId = R.string.label_negative_prompt,
-            focusManager = focusManager
+            labelTextResId = R.string.label_negative_prompt
         )
 
         StylesDropdownMenu(
@@ -163,15 +202,15 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
             }
         )
     }
-
-    ImageFullScreenView(
-        isVisible = isFullScreen,
-        imageUri = uiState.generatedImage?.toUri(),
-        onSaveToGallery = {},
-        onAddToFaves = {},
-        onClick = { isFullScreen = false }
-    )
+    generatedImage?.let {
+        ImageFullScreenView(
+            isVisible = isFullScreen,
+            imageUri = generatedImage,
+            onSaveToGallery = viewModel::onSaveToGalleryClick,
+            onAddToFaves = {},
+            onFullScreenToggle = { isFullScreen = it },
+        )
+    }
 }
-
 
 const val REQUEST_MAX_CHAR = 500
