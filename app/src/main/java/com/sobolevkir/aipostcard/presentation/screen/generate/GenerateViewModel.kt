@@ -7,6 +7,7 @@ import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.Style
 import com.sobolevkir.aipostcard.domain.usecase.GenerateUseCase
 import com.sobolevkir.aipostcard.domain.usecase.GetStylesUseCase
+import com.sobolevkir.aipostcard.domain.usecase.SaveImageToGalleryUseCase
 import com.sobolevkir.aipostcard.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class GenerateViewModel @Inject constructor(
     private val getStylesUseCase: GetStylesUseCase,
-    private val generateUseCase: GenerateUseCase
+    private val generateUseCase: GenerateUseCase,
+    private val saveImageToGalleryUseCase: SaveImageToGalleryUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GenerateUiState())
@@ -63,6 +65,23 @@ class GenerateViewModel @Inject constructor(
 
     fun onNegativePromptChange(text: String) {
         _uiState.update { it.copy(negativePrompt = text) }
+    }
+
+    fun onSaveToGalleryClick() {
+        uiState.value.generatedImage?.let {
+            viewModelScope.launch {
+                val isSuccess = saveImageToGalleryUseCase(it)
+                if (isSuccess) {
+                    _uiState.update { it.copy(isImageSaved = true) }
+                } else {
+                    _uiState.update { it.copy(isImageSaved = false) }
+                }
+            }
+        }
+    }
+
+    fun onSavedMessageShown() {
+        _uiState.value = _uiState.value.copy(isImageSaved = false)
     }
 
     private fun startGeneration() {
