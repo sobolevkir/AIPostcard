@@ -36,15 +36,14 @@ fun SmallImageButton(
     ) {
         Image(
             painter = painterResource(id = imageResId),
-            modifier = Modifier
-                .size(64.dp)
-                .padding(bottom = 8.dp),
+            modifier = Modifier.size(56.dp),
             contentDescription = null,
             colorFilter = ColorFilter.tint(Color.White)
         )
         Text(
             text = stringResource(text),
-            fontSize = 14.sp,
+            fontSize = 13.sp,
+            lineHeight = 14.sp,
             softWrap = true,
             textAlign = TextAlign.Center,
             color = Color.White,

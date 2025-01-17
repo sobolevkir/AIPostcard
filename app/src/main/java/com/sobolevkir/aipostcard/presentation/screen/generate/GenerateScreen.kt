@@ -19,12 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -53,16 +50,10 @@ import com.sobolevkir.aipostcard.presentation.component.SubmitButton
 fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var isFullScreen by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val generatedImage = uiState.generatedImage
-    val loadingAnimationSource by remember {
-        mutableStateOf(
-            DotLottieSource.Asset("animation_loading.lottie")
-        )
-    }
 
     LaunchedEffect(uiState.isImageSaved) {
         if (uiState.isImageSaved) {
@@ -97,7 +88,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable {
-                            isFullScreen = true
+                            viewModel.onFullScreenToggle()
                             focusManager.clearFocus()
                             keyboardController?.hide()
                         }
@@ -105,19 +96,19 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                 Image(
                     painter = painterResource(R.drawable.ic_fullscreen),
                     modifier = Modifier
-                        .padding(12.dp)
-                        .size(56.dp)
-                        .align(Alignment.BottomEnd),
+                        .padding(8.dp)
+                        .size(40.dp)
+                        .align(Alignment.BottomEnd)
+                        .alpha(0.6f),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
-                    alpha = 0.6f
                 )
             }
 
 
             if (uiState.isGenerating) {
                 DotLottieAnimation(
-                    source = loadingAnimationSource,
+                    source = DotLottieSource.Asset("animation_loading.lottie"),
                     autoplay = true,
                     loop = true,
                     modifier = Modifier
@@ -204,11 +195,12 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
     }
     generatedImage?.let {
         ImageFullScreenView(
-            isVisible = isFullScreen,
+            isVisible = uiState.isFullScreen,
             imageUri = generatedImage,
+            onShare = viewModel::onShareClick,
             onSaveToGallery = viewModel::onSaveToGalleryClick,
             onAddToFaves = {},
-            onFullScreenToggle = { isFullScreen = it },
+            onFullScreenToggle = viewModel::onFullScreenToggle,
         )
     }
 }

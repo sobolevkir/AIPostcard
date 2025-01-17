@@ -7,17 +7,18 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
 import androidx.core.net.toUri
+import com.sobolevkir.aipostcard.domain.ImageFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-class FileStorage @Inject constructor(private val context: Context) {
+class ImageFileManagerImpl @Inject constructor(private val context: Context) : ImageFileManager {
 
     private val cacheDir: File = context.cacheDir
 
-    suspend fun saveBase64ImageToCache(fileName: String, base64String: String): String? {
+    override suspend fun saveBase64ImageToCache(fileName: String, base64String: String): String? {
         return withContext(Dispatchers.IO) {
             try {
                 val file = File(cacheDir, "$fileName.jpg")
@@ -33,7 +34,7 @@ class FileStorage @Inject constructor(private val context: Context) {
         }
     }
 
-    suspend fun saveToGallery(imageStringUri: String): Boolean {
+    override suspend fun saveToGallery(imageStringUri: String): Boolean {
         return withContext(Dispatchers.IO) {
             val contentResolver = context.contentResolver
             val fileName = "generated_${System.currentTimeMillis()}.jpg"
@@ -58,13 +59,13 @@ class FileStorage @Inject constructor(private val context: Context) {
         }
     }
 
-    suspend fun deleteFile(uri: String) {
-        val file = Uri.parse(uri).path?.let {
+    override suspend fun deleteFile(uri: String) {
+        Uri.parse(uri).path?.let {
             File(it).delete()
         }
     }
 
-    suspend fun cleanCache() {
+    override suspend fun cleanCache() {
         withContext(Dispatchers.IO) {
             try {
                 val currentTime = System.currentTimeMillis()
