@@ -7,8 +7,8 @@ import com.sobolevkir.aipostcard.data.network.FBApiService
 import com.sobolevkir.aipostcard.data.network.NetworkErrorHandler
 import com.sobolevkir.aipostcard.data.network.dto.GenerateParamsRequest
 import com.sobolevkir.aipostcard.data.network.dto.GenerationRequest
-import com.sobolevkir.aipostcard.data.storage.FileStorage
 import com.sobolevkir.aipostcard.domain.GenerationRepository
+import com.sobolevkir.aipostcard.domain.ImageFileManager
 import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.Style
@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -25,25 +26,25 @@ import javax.inject.Inject
 class GenerationRepositoryImpl @Inject constructor(
     private val apiService: FBApiService,
     private val errorHandler: NetworkErrorHandler,
-    private val fileStorage: FileStorage,
+    private val fileManager: ImageFileManager,
     private val gson: Gson
 ) : GenerationRepository {
 
     private var cachedModeId: String = ""
 
     override fun getStyles(): Flow<Resource<List<Style>>> = flow {
-        emit(Resource.Loading)
-        val result = errorHandler.safeApiCall { apiService.getStyles() }
-            .mapResource { StylesMapper.map(it) }
-        emit(result)
-    }.flowOn(Dispatchers.IO)
+        emit(
+            errorHandler
+                .safeApiCall { apiService.getStyles() }
+                .mapResource { StylesMapper.map(it) }
+        )
+    }.onStart { emit(Resource.Loading) }.flowOn(Dispatchers.IO)
 
     override fun requestGeneration(
         prompt: String,
         negativePrompt: String?,
         styleName: String?
     ): Flow<Resource<GenerationResult>> = flow {
-        emit(Resource.Loading)
         if (cachedModeId.isBlank()) {
             when (val modelIdResource = getLatestModelId()) {
                 is Resource.Success -> cachedModeId = modelIdResource.data
@@ -61,13 +62,13 @@ class GenerationRepositoryImpl @Inject constructor(
             .safeApiCall { apiService.requestGeneration(modelIdBody, paramsBody) }
             .mapResource { GenerationResultMapper.map(it) }
         emit(result)
-    }.flowOn(Dispatchers.IO)
+    }.onStart { emit(Resource.Loading) }.flowOn(Dispatchers.IO)
 
     override suspend fun getStatusOrImage(uuid: String): Resource<GenerationResult> {
         return errorHandler.safeApiCall { apiService.getStatusOrImage(uuid) }
             .mapResource { generationResult ->
                 val imageUri = generationResult.images.firstOrNull()?.let { base64String ->
-                    fileStorage.saveBase64ImageToCache(generationResult.uuid, base64String)
+                    fileManager.saveBase64ImageToCache(generationResult.uuid, base64String)
                 }
                 GenerationResultMapper.map(generationResult, imageUri)
             }

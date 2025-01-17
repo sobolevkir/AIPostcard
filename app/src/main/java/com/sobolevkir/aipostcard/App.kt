@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard
 
 import android.app.Application
-import com.sobolevkir.aipostcard.data.storage.FileStorage
+import com.sobolevkir.aipostcard.domain.ImageFileManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,13 +12,13 @@ import javax.inject.Inject
 class App : Application() {
 
     @Inject
-    lateinit var fileStorage: FileStorage
+    lateinit var fileManager: ImageFileManager
 
     override fun onCreate() {
         super.onCreate()
 
         CoroutineScope(Dispatchers.IO).launch {
-            fileStorage.cleanCache()
+            fileManager.cleanCache()
         }
     }
 

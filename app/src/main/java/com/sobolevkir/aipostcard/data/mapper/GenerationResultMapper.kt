@@ -8,12 +8,12 @@ import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.GenerationStatus
 
 object GenerationResultMapper {
-    fun map(dto: GenerationResultDto, imageUri: String? = null): GenerationResult {
+    fun map(dto: GenerationResultDto, imageStringUri: String? = null): GenerationResult {
         val convertedStatus = convertStatus(dto.status)
         return GenerationResult(
             uuid = dto.uuid,
             status = convertedStatus,
-            generatedImageUri = imageUri,
+            imageStringUri = imageStringUri,
             censored = dto.censored
         )
     }

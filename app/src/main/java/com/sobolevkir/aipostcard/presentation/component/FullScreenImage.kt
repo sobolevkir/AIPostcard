@@ -25,10 +25,11 @@ import com.sobolevkir.aipostcard.R
 @Composable
 fun ImageFullScreenView(
     imageUri: String,
+    onShare: () -> Unit,
     onSaveToGallery: () -> Unit,
-    onAddToFaves: () -> Unit,
+    onAddToFaves: (() -> Unit)? = null,
     isVisible: Boolean = false,
-    onFullScreenToggle: (Boolean) -> Unit,
+    onFullScreenToggle: () -> Unit,
 ) {
 
     AnimatedVisibility(
@@ -48,7 +49,7 @@ fun ImageFullScreenView(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.8f))
-                .clickable { onFullScreenToggle(false) },
+                .clickable { onFullScreenToggle() },
         ) {
             ZoomableImage(
                 imageStringUri = imageUri,
@@ -63,15 +64,22 @@ fun ImageFullScreenView(
                     .padding(top = 16.dp)
             ) {
                 SmallImageButton(
+                    imageResId = R.drawable.ic_share,
+                    text = R.string.action_share,
+                    onClick = onShare
+                )
+                SmallImageButton(
                     imageResId = R.drawable.ic_save_to_gallery,
                     text = R.string.action_save_to_gallery,
                     onClick = onSaveToGallery
                 )
-                SmallImageButton(
-                    imageResId = R.drawable.ic_add_to_faves,
-                    text = R.string.action_add_to_faves,
-                    onClick = onAddToFaves
-                )
+                onAddToFaves?.let {
+                    SmallImageButton(
+                        imageResId = R.drawable.ic_add_to_faves,
+                        text = R.string.action_add_to_faves,
+                        onClick = onAddToFaves
+                    )
+                }
             }
         }
     }

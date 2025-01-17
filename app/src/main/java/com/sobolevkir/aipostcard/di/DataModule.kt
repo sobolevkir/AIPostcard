@@ -2,7 +2,10 @@ package com.sobolevkir.aipostcard.di
 
 import android.content.Context
 import com.google.gson.Gson
-import com.sobolevkir.aipostcard.data.storage.FileStorage
+import com.sobolevkir.aipostcard.data.external.ExternalNavigatorImpl
+import com.sobolevkir.aipostcard.data.storage.ImageFileManagerImpl
+import com.sobolevkir.aipostcard.domain.ExternalNavigator
+import com.sobolevkir.aipostcard.domain.ImageFileManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +23,14 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideFileStorage(@ApplicationContext context: Context): FileStorage = FileStorage(context)
+    fun provideImageFileManager(@ApplicationContext context: Context): ImageFileManager {
+        return ImageFileManagerImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExternalNavigator(@ApplicationContext context: Context): ExternalNavigator {
+        return ExternalNavigatorImpl(context)
+    }
 
 }
