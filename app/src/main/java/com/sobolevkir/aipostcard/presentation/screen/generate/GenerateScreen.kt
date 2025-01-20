@@ -1,7 +1,6 @@
 package com.sobolevkir.aipostcard.presentation.screen.generate
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,39 +9,31 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
-import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
 import com.sobolevkir.aipostcard.presentation.component.QueryTextField
-import com.sobolevkir.aipostcard.presentation.component.SmallTextButton
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 import com.sobolevkir.aipostcard.presentation.component.SubmitButton
 
@@ -53,15 +44,12 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
     val generatedImage = uiState.generatedImage
 
-    LaunchedEffect(uiState.isImageSaved) {
-        if (uiState.isImageSaved) {
-            Toast.makeText(
-                context, context.getString(R.string.message_saved_to_gallery), Toast.LENGTH_SHORT
-            ).show()
-            viewModel.onSavedMessageShown()
-        }
+    if (uiState.isImageSaved) {
+        Toast.makeText(context, R.string.message_saved_to_gallery, Toast.LENGTH_SHORT).show()
+        viewModel.onSavedMessageShown()
     }
 
     Column(
@@ -81,6 +69,12 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
             contentAlignment = Alignment.Center
         ) {
 
+            GeneratingLoader(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(if (uiState.isGenerating) 1f else 0f)
+            )
+
             generatedImage?.let {
                 AsyncImage(
                     model = it,
@@ -93,7 +87,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                             keyboardController?.hide()
                         }
                 )
-                Image(
+                Icon(
                     painter = painterResource(R.drawable.ic_fullscreen),
                     modifier = Modifier
                         .padding(8.dp)
@@ -101,62 +95,32 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                         .align(Alignment.BottomEnd)
                         .alpha(0.6f),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(Color.White),
+                    tint = Color.White,
                 )
             }
 
-
-            if (uiState.isGenerating) {
-                DotLottieAnimation(
-                    source = DotLottieSource.Asset("animation_loading.lottie"),
-                    autoplay = true,
-                    loop = true,
-                    modifier = Modifier
-                        .heightIn(max = 256.dp)
-                        .fillMaxSize()
-                )
-                Text(
-                    text = stringResource(R.string.message_generating),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp)
-                )
-            } else if (uiState.generatedImage.isNullOrEmpty() && uiState.error == null) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_image_placeholder),
+            if (!uiState.isGenerating && uiState.generatedImage.isNullOrEmpty() && uiState.error == null) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_image_placeholder),
                     modifier = Modifier.fillMaxSize(),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface),
-                    contentScale = ContentScale.FillWidth
+                    tint = MaterialTheme.colorScheme.surface,
                 )
             }
 
             uiState.error?.let {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = when (it) {
-                            ErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
-                            ErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
-                        },
-                        color = MaterialTheme.colorScheme.tertiary,
-                        textAlign = TextAlign.Center,
-                    )
-                    SmallTextButton(
-                        textResId = R.string.action_retry,
-                        onClick = viewModel::onRetryButtonClick
-                    )
-                }
+                GenerateScreenError(
+                    message = when (it) {
+                        ErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
+                        ErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
+                    },
+                    onRetryButtonClick = viewModel::onRetryButtonClick
+                )
             }
         }
 
         QueryTextField(
             value = uiState.prompt,
-            maxChar = REQUEST_MAX_CHAR,
             onQueryChange = viewModel::onPromptChange,
             enabled = !uiState.isGenerating,
             maxLines = 2,
@@ -166,7 +130,6 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
 
         QueryTextField(
             value = uiState.negativePrompt,
-            maxChar = REQUEST_MAX_CHAR,
             onQueryChange = viewModel::onNegativePromptChange,
             enabled = !uiState.isGenerating,
             maxLines = 1,
@@ -204,5 +167,3 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
         )
     }
 }
-
-const val REQUEST_MAX_CHAR = 500
