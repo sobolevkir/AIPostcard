@@ -54,18 +54,21 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
     // DI
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     // Network
     implementation(libs.bundles.retrofit)
-    // Images & animations displaying
+    // Images & animations
     implementation(libs.coil.compose)
     implementation(libs.dotlottie.android)
+    implementation(libs.androidx.material.icons.extended)
     // KoTEA
-    implementation(libs.tinkoff.kotea.core)
-    implementation(libs.tinkoff.kotea.android)
+    // implementation(libs.tinkoff.kotea.core)
+    // implementation(libs.tinkoff.kotea.android)
     // Testing
     testImplementation(libs.junit)
     debugImplementation(libs.androidx.ui.tooling)

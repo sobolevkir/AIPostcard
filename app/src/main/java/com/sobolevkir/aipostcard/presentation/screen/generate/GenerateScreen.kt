@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -24,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -88,7 +91,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                         }
                 )
                 Icon(
-                    painter = painterResource(R.drawable.ic_fullscreen),
+                    imageVector = Icons.Filled.Fullscreen,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(40.dp)
@@ -101,7 +104,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
 
             if (!uiState.isGenerating && uiState.generatedImage.isNullOrEmpty() && uiState.error == null) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_image_placeholder),
+                    imageVector = Icons.Filled.Image,
                     modifier = Modifier.fillMaxSize(),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.surface,
@@ -123,7 +126,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
             value = uiState.prompt,
             onQueryChange = viewModel::onPromptChange,
             enabled = !uiState.isGenerating,
-            maxLines = 2,
+            linesNumber = 2,
             isError = uiState.isCensored,
             labelTextResId = R.string.label_prompt
         )
@@ -132,7 +135,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
             value = uiState.negativePrompt,
             onQueryChange = viewModel::onNegativePromptChange,
             enabled = !uiState.isGenerating,
-            maxLines = 1,
+            linesNumber = 1,
             isError = uiState.isCensored,
             labelTextResId = R.string.label_negative_prompt
         )
@@ -147,7 +150,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
         SubmitButton(
             enabled = uiState.styles.isNotEmpty() && uiState.prompt.isNotEmpty(),
             textResId = if (uiState.isGenerating) R.string.action_stop else R.string.action_go,
-            imageResId = if (!uiState.isGenerating) R.drawable.ic_generate else null,
+            iconVector = if (!uiState.isGenerating) Icons.Default.AutoAwesome else null,
             onClick = viewModel::onSubmitButtonClick,
             backgroundColor = if (uiState.isGenerating) {
                 MaterialTheme.colorScheme.tertiary

@@ -123,16 +123,10 @@ private fun SimpleDropdownMenuPreview() {
         )
     }
 
-    val items = listOf(
-        Style("https://via.placeholder.com/150", "Style 1", "Реализм"),
-        Style("https://via.placeholder.com/150", "Style 2", "Импрессионизм"),
-        Style("https://via.placeholder.com/150", "Style 3", "Аниме")
-    )
-
     MaterialTheme {
         StylesDropdownMenu(
-            styles = items,
-            selectedStyle = items.first(),
+            styles = emptyList(),
+            selectedStyle = null,
             onItemSelected = { selectedItem = it },
             enabled = true
         )

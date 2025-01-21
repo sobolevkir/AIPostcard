@@ -1,6 +1,7 @@
 package com.sobolevkir.aipostcard.presentation.component
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,7 +27,7 @@ fun QueryTextField(
     value: String,
     onQueryChange: (String) -> Unit,
     enabled: Boolean,
-    maxLines: Int,
+    linesNumber: Int,
     isError: Boolean? = null,
     @StringRes labelTextResId: Int,
 ) {
@@ -34,10 +35,12 @@ fun QueryTextField(
         value = value,
         onValueChange = { if (it.length <= REQUEST_MAX_CHAR) onQueryChange(it) },
         enabled = enabled,
-        maxLines = maxLines,
+        maxLines = linesNumber,
         isError = isError ?: false,
         label = { Text(text = stringResource(labelTextResId)) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = TextFieldDefaults.MinHeight * linesNumber),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -65,7 +68,6 @@ fun QueryTextField(
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
     )
-
 }
 
 const val REQUEST_MAX_CHAR = 500
