@@ -3,7 +3,7 @@ package com.sobolevkir.aipostcard.presentation.screen.generate
 import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.Style
 
-data class GenerateUiState(
+data class GenerateScreenState(
     val prompt: String = "",
     val negativePrompt: String = "",
     val styles: List<Style> = emptyList(),

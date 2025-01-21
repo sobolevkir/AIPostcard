@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.material3)
     // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization)
     // DI
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

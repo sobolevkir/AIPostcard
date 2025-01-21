@@ -35,24 +35,42 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.ErrorType
+import com.sobolevkir.aipostcard.presentation.component.ErrorMessage
 import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
+import com.sobolevkir.aipostcard.presentation.component.Loader
 import com.sobolevkir.aipostcard.presentation.component.QueryTextField
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 import com.sobolevkir.aipostcard.presentation.component.SubmitButton
+import com.sobolevkir.aipostcard.presentation.navigation.NavGraph
 
 @Composable
-fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
+fun GenerateScreen(onNavigateTo: (NavGraph) -> Unit = {}) {
 
+    val viewModel: GenerateViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    GenerateView(
+        onNavigateTo = onNavigateTo,
+        onEvent = viewModel::onEvent,
+        state = uiState
+    )
+}
+
+@Composable
+fun GenerateView(
+    onNavigateTo: (NavGraph) -> Unit = {},
+    onEvent: (GenerateScreenEvent) -> Unit = {},
+    state: GenerateScreenState = GenerateScreenState()
+) {
+
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val generatedImage = state.generatedImage
 
-    val generatedImage = uiState.generatedImage
-
-    if (uiState.isImageSaved) {
+    if (state.isImageSaved) {
         Toast.makeText(context, R.string.message_saved_to_gallery, Toast.LENGTH_SHORT).show()
-        viewModel.onSavedMessageShown()
+        onEvent(GenerateScreenEvent.SavedMessageShown)
     }
 
     Column(
@@ -64,18 +82,19 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+                .align(Alignment.CenterHorizontally)
                 .weight(1f)
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
 
-            GeneratingLoader(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(if (uiState.isGenerating) 1f else 0f)
+            Loader(
+                isLoading = state.isGenerating,
+                modifier = Modifier.fillMaxSize()
             )
 
             generatedImage?.let {
@@ -85,7 +104,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable {
-                            viewModel.onFullScreenToggle()
+                            onEvent(GenerateScreenEvent.FullScreenToggle)
                             focusManager.clearFocus()
                             keyboardController?.hide()
                         }
@@ -102,7 +121,7 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                 )
             }
 
-            if (!uiState.isGenerating && uiState.generatedImage.isNullOrEmpty() && uiState.error == null) {
+            if (!state.isGenerating && state.generatedImage.isNullOrEmpty() && state.error == null) {
                 Icon(
                     imageVector = Icons.Filled.Image,
                     modifier = Modifier.fillMaxSize(),
@@ -111,62 +130,61 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                 )
             }
 
-            uiState.error?.let {
-                GenerateScreenError(
-                    message = when (it) {
+            state.error?.let {
+                ErrorMessage(
+                    text = when (it) {
                         ErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
                         ErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
                     },
-                    onRetryButtonClick = viewModel::onRetryButtonClick
+                    onRetryButtonClick = { onEvent(GenerateScreenEvent.RetryButtonClick) }
                 )
             }
         }
 
         QueryTextField(
-            value = uiState.prompt,
-            onQueryChange = viewModel::onPromptChange,
-            enabled = !uiState.isGenerating,
-            linesNumber = 2,
-            isError = uiState.isCensored,
-            labelTextResId = R.string.label_prompt
+            value = state.prompt,
+            onQueryChange = { onEvent(GenerateScreenEvent.PromptChange(it)) },
+            enabled = !state.isGenerating,
+            isError = state.isCensored,
+            labelTextResId = if (state.isCensored) R.string.message_censored else R.string.label_prompt
         )
 
         QueryTextField(
-            value = uiState.negativePrompt,
-            onQueryChange = viewModel::onNegativePromptChange,
-            enabled = !uiState.isGenerating,
-            linesNumber = 1,
-            isError = uiState.isCensored,
+            value = state.negativePrompt,
+            onQueryChange = { onEvent(GenerateScreenEvent.NegativePromptChange(it)) },
+            enabled = !state.isGenerating,
             labelTextResId = R.string.label_negative_prompt
         )
 
         StylesDropdownMenu(
-            styles = uiState.styles,
-            selectedStyle = uiState.selectedStyle,
-            onItemSelected = { newStyle -> viewModel.onStyleSelect(newStyle) },
-            enabled = !uiState.isGenerating,
+            styles = state.styles,
+            selectedStyle = state.selectedStyle,
+            onItemSelected = { newStyle -> onEvent(GenerateScreenEvent.StyleSelect(newStyle.name)) },
+            enabled = !state.isGenerating,
         )
 
         SubmitButton(
-            enabled = uiState.styles.isNotEmpty() && uiState.prompt.isNotEmpty(),
-            textResId = if (uiState.isGenerating) R.string.action_stop else R.string.action_go,
-            iconVector = if (!uiState.isGenerating) Icons.Default.AutoAwesome else null,
-            onClick = viewModel::onSubmitButtonClick,
-            backgroundColor = if (uiState.isGenerating) {
+            enabled = state.styles.isNotEmpty() && state.prompt.isNotEmpty(),
+            textResId = if (state.isGenerating) R.string.action_stop else R.string.action_go,
+            iconVector = if (!state.isGenerating) Icons.Default.AutoAwesome else null,
+            onClick = { onEvent(GenerateScreenEvent.SubmitButtonClick) },
+            backgroundColor = if (state.isGenerating) {
                 MaterialTheme.colorScheme.tertiary
             } else {
                 MaterialTheme.colorScheme.primary
             }
         )
     }
+
     generatedImage?.let {
         ImageFullScreenView(
-            isVisible = uiState.isFullScreen,
+            isVisible = state.isFullScreen,
             imageUri = generatedImage,
-            onShare = viewModel::onShareClick,
-            onSaveToGallery = viewModel::onSaveToGalleryClick,
-            onAddToFaves = {},
-            onFullScreenToggle = viewModel::onFullScreenToggle,
+            onShare = { onEvent(GenerateScreenEvent.ShareClick) },
+            onSaveToGallery = { onEvent(GenerateScreenEvent.SaveToGalleryClick) },
+            onAddToAlbum = { onNavigateTo(NavGraph.Album) },
+            onFullScreenToggle = { onEvent(GenerateScreenEvent.FullScreenToggle) },
         )
     }
+
 }

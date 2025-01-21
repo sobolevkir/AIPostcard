@@ -31,7 +31,7 @@ fun ImageFullScreenView(
     imageUri: String,
     onShare: () -> Unit,
     onSaveToGallery: () -> Unit,
-    onAddToFaves: (() -> Unit)? = null,
+    onAddToAlbum: (() -> Unit)? = null,
     isVisible: Boolean = false,
     onFullScreenToggle: () -> Unit,
 ) {
@@ -77,11 +77,11 @@ fun ImageFullScreenView(
                     text = R.string.action_save_to_gallery,
                     onClick = onSaveToGallery
                 )
-                onAddToFaves?.let {
+                onAddToAlbum?.let {
                     SmallImageButton(
                         iconVector = Icons.Filled.LibraryAdd,
                         text = R.string.action_add_to_faves,
-                        onClick = onAddToFaves
+                        onClick = onAddToAlbum
                     )
                 }
             }

@@ -38,8 +38,8 @@ fun SubmitButton(
         onClick = onClick,
         enabled = enabled,
         modifier = Modifier
-            .padding(top = 24.dp)
             .fillMaxWidth()
+            .padding(top = 12.dp)
             .height(64.dp),
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
     ) {

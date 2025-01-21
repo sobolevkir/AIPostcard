@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.screen.generate
+package com.sobolevkir.aipostcard.presentation.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,11 +12,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sobolevkir.aipostcard.R
-import com.sobolevkir.aipostcard.presentation.component.SmallTextButton
 
 @Composable
-fun GenerateScreenError(
-    message: String,
+fun ErrorMessage(
+    text: String,
     onRetryButtonClick: (() -> Unit)? = null
 ) {
     Column(
@@ -24,7 +23,7 @@ fun GenerateScreenError(
         modifier = Modifier.padding(16.dp)
     ) {
         Text(
-            text = message,
+            text = text,
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,

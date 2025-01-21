@@ -5,10 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.sobolevkir.aipostcard.presentation.screen.generate.GenerationScreen
+import androidx.navigation.compose.rememberNavController
+import com.sobolevkir.aipostcard.presentation.navigation.BottomNavigationBar
+import com.sobolevkir.aipostcard.presentation.navigation.AIPostcardNavigation
 import com.sobolevkir.aipostcard.presentation.theme.AIPostcardTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,12 +21,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             AIPostcardTheme {
-                Surface(
+                Scaffold(
+                    bottomBar = { BottomNavigationBar(navController) },
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    GenerationScreen()
+                ) { innerPadding ->
+                    AIPostcardNavigation(
+                        navHostController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }

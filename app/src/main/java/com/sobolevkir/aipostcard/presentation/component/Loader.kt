@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.screen.generate
+package com.sobolevkir.aipostcard.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,9 +20,12 @@ import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import com.sobolevkir.aipostcard.R
 
 @Composable
-fun GeneratingLoader(modifier: Modifier) {
+fun Loader(
+    isLoading: Boolean,
+    modifier: Modifier
+) {
     Column(
-        modifier = modifier,
+        modifier = modifier.alpha(if (isLoading) 1f else 0f),
         verticalArrangement = Arrangement.Center
     ) {
         DotLottieAnimation(
