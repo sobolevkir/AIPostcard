@@ -2,7 +2,7 @@ package com.sobolevkir.aipostcard.domain
 
 interface ImageFileManager {
 
-    suspend fun saveBase64ImageToCache(fileName: String, base64String: String): String?
+    suspend fun saveBase64ToCache(fileName: String, base64String: String): String?
 
     suspend fun saveToGallery(imageStringUri: String): Boolean
 

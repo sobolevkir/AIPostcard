@@ -68,7 +68,7 @@ class GenerationRepositoryImpl @Inject constructor(
         return errorHandler.safeApiCall { apiService.getStatusOrImage(uuid) }
             .mapResource { generationResult ->
                 val imageUri = generationResult.images.firstOrNull()?.let { base64String ->
-                    fileManager.saveBase64ImageToCache(generationResult.uuid, base64String)
+                    fileManager.saveBase64ToCache(generationResult.uuid, base64String)
                 }
                 GenerationResultMapper.map(generationResult, imageUri)
             }

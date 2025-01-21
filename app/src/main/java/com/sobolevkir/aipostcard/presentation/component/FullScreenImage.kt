@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LibraryAdd
+import androidx.compose.material.icons.filled.SaveAlt
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +31,7 @@ fun ImageFullScreenView(
     imageUri: String,
     onShare: () -> Unit,
     onSaveToGallery: () -> Unit,
-    onAddToFaves: (() -> Unit)? = null,
+    onAddToAlbum: (() -> Unit)? = null,
     isVisible: Boolean = false,
     onFullScreenToggle: () -> Unit,
 ) {
@@ -64,20 +68,20 @@ fun ImageFullScreenView(
                     .padding(top = 16.dp)
             ) {
                 SmallImageButton(
-                    imageResId = R.drawable.ic_share,
+                    iconVector = Icons.Filled.Share,
                     text = R.string.action_share,
                     onClick = onShare
                 )
                 SmallImageButton(
-                    imageResId = R.drawable.ic_save_to_gallery,
+                    iconVector = Icons.Filled.SaveAlt,
                     text = R.string.action_save_to_gallery,
                     onClick = onSaveToGallery
                 )
-                onAddToFaves?.let {
+                onAddToAlbum?.let {
                     SmallImageButton(
-                        imageResId = R.drawable.ic_add_to_faves,
+                        iconVector = Icons.Filled.LibraryAdd,
                         text = R.string.action_add_to_faves,
-                        onClick = onAddToFaves
+                        onClick = onAddToAlbum
                     )
                 }
             }

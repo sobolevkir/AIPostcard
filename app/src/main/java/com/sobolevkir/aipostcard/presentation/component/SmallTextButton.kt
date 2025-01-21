@@ -1,5 +1,6 @@
 package com.sobolevkir.aipostcard.presentation.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -15,7 +16,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SmallTextButton(
-    textResId: Int,
+    @StringRes textResId: Int,
     onClick: () -> Unit,
 ) {
     Button(

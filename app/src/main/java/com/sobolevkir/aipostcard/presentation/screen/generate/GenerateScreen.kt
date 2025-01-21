@@ -1,7 +1,6 @@
 package com.sobolevkir.aipostcard.presentation.screen.generate
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,58 +9,68 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
-import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.ErrorType
+import com.sobolevkir.aipostcard.presentation.component.ErrorMessage
 import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
+import com.sobolevkir.aipostcard.presentation.component.Loader
 import com.sobolevkir.aipostcard.presentation.component.QueryTextField
-import com.sobolevkir.aipostcard.presentation.component.SmallTextButton
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 import com.sobolevkir.aipostcard.presentation.component.SubmitButton
+import com.sobolevkir.aipostcard.presentation.navigation.NavGraph
 
 @Composable
-fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
+fun GenerateScreen(onNavigateTo: (NavGraph) -> Unit = {}) {
 
+    val viewModel: GenerateViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    GenerateView(
+        onNavigateTo = onNavigateTo,
+        onEvent = viewModel::onEvent,
+        state = uiState
+    )
+}
+
+@Composable
+fun GenerateView(
+    onNavigateTo: (NavGraph) -> Unit = {},
+    onEvent: (GenerateScreenEvent) -> Unit = {},
+    state: GenerateScreenState = GenerateScreenState()
+) {
+
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val generatedImage = uiState.generatedImage
+    val generatedImage = state.generatedImage
 
-    LaunchedEffect(uiState.isImageSaved) {
-        if (uiState.isImageSaved) {
-            Toast.makeText(
-                context, context.getString(R.string.message_saved_to_gallery), Toast.LENGTH_SHORT
-            ).show()
-            viewModel.onSavedMessageShown()
-        }
+    if (state.isImageSaved) {
+        Toast.makeText(context, R.string.message_saved_to_gallery, Toast.LENGTH_SHORT).show()
+        onEvent(GenerateScreenEvent.SavedMessageShown)
     }
 
     Column(
@@ -73,13 +82,20 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+                .align(Alignment.CenterHorizontally)
                 .weight(1f)
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
+
+            Loader(
+                isLoading = state.isGenerating,
+                modifier = Modifier.fillMaxSize()
+            )
 
             generatedImage?.let {
                 AsyncImage(
@@ -88,121 +104,87 @@ fun GenerationScreen(viewModel: GenerateViewModel = hiltViewModel()) {
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable {
-                            viewModel.onFullScreenToggle()
+                            onEvent(GenerateScreenEvent.FullScreenToggle)
                             focusManager.clearFocus()
                             keyboardController?.hide()
                         }
                 )
-                Image(
-                    painter = painterResource(R.drawable.ic_fullscreen),
+                Icon(
+                    imageVector = Icons.Filled.Fullscreen,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(40.dp)
                         .align(Alignment.BottomEnd)
                         .alpha(0.6f),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(Color.White),
+                    tint = Color.White,
                 )
             }
 
-
-            if (uiState.isGenerating) {
-                DotLottieAnimation(
-                    source = DotLottieSource.Asset("animation_loading.lottie"),
-                    autoplay = true,
-                    loop = true,
-                    modifier = Modifier
-                        .heightIn(max = 256.dp)
-                        .fillMaxSize()
-                )
-                Text(
-                    text = stringResource(R.string.message_generating),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp)
-                )
-            } else if (uiState.generatedImage.isNullOrEmpty() && uiState.error == null) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_image_placeholder),
+            if (!state.isGenerating && state.generatedImage.isNullOrEmpty() && state.error == null) {
+                Icon(
+                    imageVector = Icons.Filled.Image,
                     modifier = Modifier.fillMaxSize(),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface),
-                    contentScale = ContentScale.FillWidth
+                    tint = MaterialTheme.colorScheme.surface,
                 )
             }
 
-            uiState.error?.let {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = when (it) {
-                            ErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
-                            ErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
-                        },
-                        color = MaterialTheme.colorScheme.tertiary,
-                        textAlign = TextAlign.Center,
-                    )
-                    SmallTextButton(
-                        textResId = R.string.action_retry,
-                        onClick = viewModel::onRetryButtonClick
-                    )
-                }
+            state.error?.let {
+                ErrorMessage(
+                    text = when (it) {
+                        ErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
+                        ErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
+                    },
+                    onRetryButtonClick = { onEvent(GenerateScreenEvent.RetryButtonClick) }
+                )
             }
         }
 
         QueryTextField(
-            value = uiState.prompt,
-            maxChar = REQUEST_MAX_CHAR,
-            onQueryChange = viewModel::onPromptChange,
-            enabled = !uiState.isGenerating,
-            maxLines = 2,
-            isError = uiState.isCensored,
-            labelTextResId = R.string.label_prompt
+            value = state.prompt,
+            onQueryChange = { onEvent(GenerateScreenEvent.PromptChange(it)) },
+            enabled = !state.isGenerating,
+            isError = state.isCensored,
+            labelTextResId = if (state.isCensored) R.string.message_censored else R.string.label_prompt
         )
 
         QueryTextField(
-            value = uiState.negativePrompt,
-            maxChar = REQUEST_MAX_CHAR,
-            onQueryChange = viewModel::onNegativePromptChange,
-            enabled = !uiState.isGenerating,
-            maxLines = 1,
-            isError = uiState.isCensored,
+            value = state.negativePrompt,
+            onQueryChange = { onEvent(GenerateScreenEvent.NegativePromptChange(it)) },
+            enabled = !state.isGenerating,
             labelTextResId = R.string.label_negative_prompt
         )
 
         StylesDropdownMenu(
-            styles = uiState.styles,
-            selectedStyle = uiState.selectedStyle,
-            onItemSelected = { newStyle -> viewModel.onStyleSelect(newStyle) },
-            enabled = !uiState.isGenerating,
+            styles = state.styles,
+            selectedStyle = state.selectedStyle,
+            onItemSelected = { newStyle -> onEvent(GenerateScreenEvent.StyleSelect(newStyle.name)) },
+            enabled = !state.isGenerating,
         )
 
         SubmitButton(
-            enabled = uiState.styles.isNotEmpty() && uiState.prompt.isNotEmpty(),
-            textResId = if (uiState.isGenerating) R.string.action_stop else R.string.action_go,
-            imageResId = if (!uiState.isGenerating) R.drawable.ic_generate else null,
-            onClick = viewModel::onSubmitButtonClick,
-            backgroundColor = if (uiState.isGenerating) {
+            enabled = state.styles.isNotEmpty() && state.prompt.isNotEmpty(),
+            textResId = if (state.isGenerating) R.string.action_stop else R.string.action_go,
+            iconVector = if (!state.isGenerating) Icons.Default.AutoAwesome else null,
+            onClick = { onEvent(GenerateScreenEvent.SubmitButtonClick) },
+            backgroundColor = if (state.isGenerating) {
                 MaterialTheme.colorScheme.tertiary
             } else {
                 MaterialTheme.colorScheme.primary
             }
         )
     }
+
     generatedImage?.let {
         ImageFullScreenView(
-            isVisible = uiState.isFullScreen,
+            isVisible = state.isFullScreen,
             imageUri = generatedImage,
-            onShare = viewModel::onShareClick,
-            onSaveToGallery = viewModel::onSaveToGalleryClick,
-            onAddToFaves = {},
-            onFullScreenToggle = viewModel::onFullScreenToggle,
+            onShare = { onEvent(GenerateScreenEvent.ShareClick) },
+            onSaveToGallery = { onEvent(GenerateScreenEvent.SaveToGalleryClick) },
+            onAddToAlbum = { onNavigateTo(NavGraph.Album) },
+            onFullScreenToggle = { onEvent(GenerateScreenEvent.FullScreenToggle) },
         )
     }
-}
 
-const val REQUEST_MAX_CHAR = 500
+}

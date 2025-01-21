@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
-import com.sobolevkir.aipostcard.domain.model.Style
 import com.sobolevkir.aipostcard.domain.usecase.GenerateUseCase
 import com.sobolevkir.aipostcard.domain.usecase.GetStylesUseCase
 import com.sobolevkir.aipostcard.domain.usecase.SaveToGalleryUseCase
@@ -26,8 +25,8 @@ class GenerateViewModel @Inject constructor(
     private val shareImageUseCase: ShareImageUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GenerateUiState())
-    val uiState: StateFlow<GenerateUiState> = _uiState
+    private val _uiState = MutableStateFlow(GenerateScreenState())
+    val uiState: StateFlow<GenerateScreenState> = _uiState
 
     private var generateJob: Job? = null
 
@@ -35,65 +34,60 @@ class GenerateViewModel @Inject constructor(
         loadImageStyles()
     }
 
-    fun onSubmitButtonClick() {
-        if (uiState.value.isGenerating) {
-            generateJob?.cancel()
-            _uiState.update { it.copy(isGenerating = false, error = null) }
-        } else {
-            startGeneration()
-        }
-    }
+    fun onEvent(event: GenerateScreenEvent) {
+        when (event) {
+            is GenerateScreenEvent.PromptChange -> _uiState.update {
+                it.copy(
+                    prompt = event.prompt,
+                    isCensored = false,
+                    error = if (it.styles.isNotEmpty()) null else it.error
+                )
+            }
 
-    fun onRetryButtonClick() {
-        when {
-            _uiState.value.styles.isEmpty() -> loadImageStyles()
-            _uiState.value.prompt.isNotEmpty() -> startGeneration()
-        }
-    }
+            is GenerateScreenEvent.NegativePromptChange -> _uiState.update {
+                it.copy(negativePrompt = event.negativePrompt)
+            }
 
-    fun onStyleSelect(style: Style) {
-        _uiState.update { it.copy(selectedStyle = style) }
-    }
+            is GenerateScreenEvent.StyleSelect -> _uiState.update {
+                val selectedStyle = it.styles.firstOrNull { style -> style.name == event.styleName }
+                it.copy(selectedStyle = selectedStyle)
+            }
 
-    fun onPromptChange(text: String) {
-        _uiState.update {
-            it.copy(
-                prompt = text,
-                isCensored = false,
-                error = if (it.styles.isNotEmpty()) null else it.error
-            )
-        }
-    }
+            is GenerateScreenEvent.SavedMessageShown -> _uiState.update {
+                it.copy(isImageSaved = false)
+            }
 
-    fun onNegativePromptChange(text: String) {
-        _uiState.update { it.copy(negativePrompt = text) }
-    }
+            is GenerateScreenEvent.FullScreenToggle -> _uiState.update {
+                it.copy(isFullScreen = !it.isFullScreen)
+            }
 
-    fun onFullScreenToggle() {
-        _uiState.update { it.copy(isFullScreen = !it.isFullScreen) }
-    }
+            is GenerateScreenEvent.RetryButtonClick -> when {
+                _uiState.value.styles.isEmpty() -> loadImageStyles()
+                _uiState.value.prompt.isNotEmpty() -> startGeneration()
+            }
 
-    fun onSaveToGalleryClick() {
-        uiState.value.generatedImage?.let {
-            viewModelScope.launch {
-                val isSuccess = saveToGalleryUseCase(it)
-                if (isSuccess) {
-                    _uiState.update { it.copy(isImageSaved = true) }
-                } else {
-                    _uiState.update { it.copy(isImageSaved = false) }
+            is GenerateScreenEvent.SubmitButtonClick -> if (uiState.value.isGenerating) {
+                generateJob?.cancel()
+                _uiState.update { it.copy(isGenerating = false, error = null) }
+            } else {
+                startGeneration()
+            }
+
+            is GenerateScreenEvent.SaveToGalleryClick -> uiState.value.generatedImage?.let {
+                viewModelScope.launch {
+                    val isSuccess = saveToGalleryUseCase(it)
+                    if (isSuccess) {
+                        _uiState.update { it.copy(isImageSaved = true) }
+                    } else {
+                        _uiState.update { it.copy(isImageSaved = false) }
+                    }
                 }
             }
-        }
-    }
 
-    fun onShareClick() {
-        uiState.value.generatedImage?.let {
-            shareImageUseCase(it)
+            is GenerateScreenEvent.ShareClick -> uiState.value.generatedImage?.let {
+                shareImageUseCase(it)
+            }
         }
-    }
-
-    fun onSavedMessageShown() {
-        _uiState.update { it.copy(isImageSaved = false) }
     }
 
     private fun startGeneration() {

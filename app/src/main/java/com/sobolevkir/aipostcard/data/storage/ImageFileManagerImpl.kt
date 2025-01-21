@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
-import androidx.core.net.toUri
 import com.sobolevkir.aipostcard.domain.ImageFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,7 +17,7 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
 
     private val cacheDir: File = context.cacheDir
 
-    override suspend fun saveBase64ImageToCache(fileName: String, base64String: String): String? {
+    override suspend fun saveBase64ToCache(fileName: String, base64String: String): String? {
         return withContext(Dispatchers.IO) {
             try {
                 val file = File(cacheDir, "$fileName.jpg")
@@ -50,7 +49,7 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
             val galleryUri =
                 contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
                     ?: return@withContext false
-            contentResolver.openInputStream(imageStringUri.toUri())?.use { inputStream ->
+            contentResolver.openInputStream(Uri.parse(imageStringUri))?.use { inputStream ->
                 contentResolver.openOutputStream(galleryUri)?.use { outputStream ->
                     inputStream.copyTo(outputStream)
                 } ?: return@withContext false
