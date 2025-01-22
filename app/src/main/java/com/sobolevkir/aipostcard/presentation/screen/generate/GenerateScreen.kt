@@ -41,10 +41,10 @@ import com.sobolevkir.aipostcard.presentation.component.Loader
 import com.sobolevkir.aipostcard.presentation.component.QueryTextField
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 import com.sobolevkir.aipostcard.presentation.component.SubmitButton
-import com.sobolevkir.aipostcard.presentation.navigation.NavGraph
+import com.sobolevkir.aipostcard.presentation.navigation.Routes
 
 @Composable
-fun GenerateScreen(onNavigateTo: (NavGraph) -> Unit = {}) {
+fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
 
     val viewModel: GenerateViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -58,7 +58,7 @@ fun GenerateScreen(onNavigateTo: (NavGraph) -> Unit = {}) {
 
 @Composable
 fun GenerateView(
-    onNavigateTo: (NavGraph) -> Unit = {},
+    onNavigateTo: (Routes) -> Unit = {},
     onEvent: (GenerateScreenEvent) -> Unit = {},
     state: GenerateScreenState = GenerateScreenState()
 ) {
@@ -182,7 +182,7 @@ fun GenerateView(
             imageUri = generatedImage,
             onShare = { onEvent(GenerateScreenEvent.ShareClick) },
             onSaveToGallery = { onEvent(GenerateScreenEvent.SaveToGalleryClick) },
-            onAddToAlbum = { onNavigateTo(NavGraph.Album) },
+            onAddToAlbum = { onNavigateTo(Routes.Album) },
             onFullScreenToggle = { onEvent(GenerateScreenEvent.FullScreenToggle) },
         )
     }

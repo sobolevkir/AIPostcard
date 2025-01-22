@@ -35,11 +35,11 @@ fun SmallImageButton(
             .widthIn(max = 128.dp)
             .clickable { onClick.invoke() },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Icon(
             imageVector = iconVector,
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(40.dp),
             contentDescription = null,
             tint = Color.White
         )

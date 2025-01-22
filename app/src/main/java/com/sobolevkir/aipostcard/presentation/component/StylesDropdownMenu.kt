@@ -49,7 +49,7 @@ fun StylesDropdownMenu(
         .clip(RoundedCornerShape(8.dp))
         .background(MaterialTheme.colorScheme.surfaceVariant)
         .fillMaxSize()
-        .alpha(if (enabled) 1f else 0.3f)
+        .alpha(if (enabled) 1f else 0.35f)
 
     ExposedDropdownMenuBox(
         expanded = expanded,
