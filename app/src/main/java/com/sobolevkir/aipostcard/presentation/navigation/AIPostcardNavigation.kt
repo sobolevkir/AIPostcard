@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sobolevkir.aipostcard.presentation.screen.album.AlbumScreen
 import com.sobolevkir.aipostcard.presentation.screen.generate.GenerateScreen
-import com.sobolevkir.aipostcard.presentation.screen.info.InfoScreen
+import com.sobolevkir.aipostcard.presentation.screen.about.AboutScreen
 
 
 @Composable
@@ -17,22 +17,22 @@ fun AIPostcardNavigation(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = NavGraph.Generate.name,
+        startDestination = Routes.Generate.name,
         modifier = modifier
     ) {
 
-        val navigateAction: (NavGraph) -> Unit = { navigateTo ->
-            navHostController.navigate(navigateTo)
+        val navigateAction: (Routes) -> Unit = { route ->
+            navHostController.navigate(route.name)
         }
 
-        composable(NavGraph.Generate.name) {
+        composable(Routes.Generate.name) {
             GenerateScreen(onNavigateTo = navigateAction)
         }
-        composable(NavGraph.Album.name) {
+        composable(Routes.Album.name) {
             AlbumScreen()
         }
-        composable(NavGraph.Info.name) {
-            InfoScreen()
+        composable(Routes.About.name) {
+            AboutScreen()
         }
     }
 }

@@ -11,6 +11,7 @@ private val DarkColorScheme = darkColorScheme(
     secondary = Grey,
     onPrimary = SoftBlack,
     tertiary = Red,
+    onPrimaryContainer = AbsoluteWhite,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -18,6 +19,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = LightGrey,
     onPrimary = AbsoluteWhite,
     tertiary = LightRed,
+    onPrimaryContainer = SoftBlack
 )
 
 @Composable
