@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -19,6 +20,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "com.sobolevkir.aipostcard.HiltCustomTestRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] =
+                    "$projectDir/schemas"
+            }
+        }
     }
 
     buildTypes {
@@ -42,6 +49,9 @@ android {
     hilt {
         enableAggregatingTask = true
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -56,12 +66,16 @@ dependencies {
     implementation(libs.androidx.material3)
     // Navigation
     implementation(libs.androidx.navigation.compose)
-    // DI
+    // Dependency injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     // Network
     implementation(libs.bundles.retrofit)
+    // Database
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
     // Images & animations
     implementation(libs.coil.compose)
     implementation(libs.dotlottie.android)
@@ -81,5 +95,4 @@ dependencies {
     kspAndroidTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
     androidTestImplementation(libs.hilt.android.testing)
-
 }

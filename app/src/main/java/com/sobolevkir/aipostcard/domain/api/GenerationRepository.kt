@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.domain
+package com.sobolevkir.aipostcard.domain.api
 
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.Style

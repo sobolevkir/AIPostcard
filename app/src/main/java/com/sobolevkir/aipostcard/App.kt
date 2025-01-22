@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard
 
 import android.app.Application
-import com.sobolevkir.aipostcard.domain.ImageFileManager
+import com.sobolevkir.aipostcard.domain.api.ImageFileManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

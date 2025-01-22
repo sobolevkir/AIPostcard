@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.domain
+package com.sobolevkir.aipostcard.domain.api
 
 interface ExternalNavigator {
 
