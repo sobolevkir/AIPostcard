@@ -5,7 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.content.FileProvider
 import com.sobolevkir.aipostcard.R
-import com.sobolevkir.aipostcard.domain.ExternalNavigator
+import com.sobolevkir.aipostcard.domain.api.ExternalNavigator
 import java.io.File
 import java.net.URI
 import javax.inject.Inject

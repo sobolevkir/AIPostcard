@@ -7,8 +7,8 @@ import com.sobolevkir.aipostcard.data.network.FBApiService
 import com.sobolevkir.aipostcard.data.network.NetworkErrorHandler
 import com.sobolevkir.aipostcard.data.network.dto.GenerateParamsRequest
 import com.sobolevkir.aipostcard.data.network.dto.GenerationRequest
-import com.sobolevkir.aipostcard.domain.GenerationRepository
-import com.sobolevkir.aipostcard.domain.ImageFileManager
+import com.sobolevkir.aipostcard.domain.api.GenerationRepository
+import com.sobolevkir.aipostcard.domain.api.ImageFileManager
 import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.Style

@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard.domain.usecase
 
 import android.util.Log
-import com.sobolevkir.aipostcard.domain.GenerationRepository
+import com.sobolevkir.aipostcard.domain.api.GenerationRepository
 import com.sobolevkir.aipostcard.domain.model.ErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.GenerationStatus

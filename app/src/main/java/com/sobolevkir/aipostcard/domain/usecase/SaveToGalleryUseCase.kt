@@ -1,6 +1,6 @@
 package com.sobolevkir.aipostcard.domain.usecase
 
-import com.sobolevkir.aipostcard.domain.ImageFileManager
+import com.sobolevkir.aipostcard.domain.api.ImageFileManager
 import javax.inject.Inject
 
 class SaveToGalleryUseCase @Inject constructor(private val fileManager: ImageFileManager) {

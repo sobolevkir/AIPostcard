@@ -5,13 +5,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.sobolevkir.aipostcard.presentation.screen.about.AboutScreen
 import com.sobolevkir.aipostcard.presentation.screen.album.AlbumScreen
 import com.sobolevkir.aipostcard.presentation.screen.generate.GenerateScreen
-import com.sobolevkir.aipostcard.presentation.screen.about.AboutScreen
-
 
 @Composable
-fun AIPostcardNavigation(
+fun AppNavigation(
     modifier: Modifier = Modifier,
     navHostController: NavHostController
 ) {

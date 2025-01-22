@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
-import com.sobolevkir.aipostcard.domain.ImageFileManager
+import com.sobolevkir.aipostcard.domain.api.ImageFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
