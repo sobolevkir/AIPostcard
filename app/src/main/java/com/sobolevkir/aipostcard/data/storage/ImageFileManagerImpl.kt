@@ -33,6 +33,27 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
         }
     }
 
+    override suspend fun copyImageToAlbum(stringUri: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val sourceFile = File(Uri.parse(stringUri).path ?: return@withContext null)
+                if (!sourceFile.exists()) return@withContext null
+                val albumDir = File(context.getExternalFilesDir(null), ALBUM_DIRECTORY_NAME)
+                if (!albumDir.exists()) albumDir.mkdirs()
+                val destinationFile = File(albumDir, sourceFile.name)
+                sourceFile.inputStream().use { input ->
+                    destinationFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                Uri.fromFile(destinationFile).toString()
+            } catch (e: IOException) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
     override suspend fun saveToGallery(imageStringUri: String): Boolean {
         return withContext(Dispatchers.IO) {
             val contentResolver = context.contentResolver
@@ -59,8 +80,10 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
     }
 
     override suspend fun deleteFile(uri: String) {
-        Uri.parse(uri).path?.let {
-            File(it).delete()
+        withContext(Dispatchers.IO) {
+            Uri.parse(uri).path?.let {
+                File(it).delete()
+            }
         }
     }
 
@@ -81,6 +104,7 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
 
     companion object {
         private const val MAX_CACHE_FILE_AGE_MILLIS = 7 * 24 * 60 * 60 * 1000L
+        private const val ALBUM_DIRECTORY_NAME = "album"
     }
 
 }

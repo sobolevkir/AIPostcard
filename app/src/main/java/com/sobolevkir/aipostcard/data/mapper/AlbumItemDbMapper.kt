@@ -5,7 +5,7 @@ import com.sobolevkir.aipostcard.domain.model.AlbumItem
 
 object AlbumItemDbMapper {
 
-    fun fromEntityToDomain(entity: AlbumItemEntity): AlbumItem {
+    fun map(entity: AlbumItemEntity): AlbumItem {
         return AlbumItem(
             id = entity.id,
             imageStringUri = entity.imageStringUri,
@@ -15,13 +15,4 @@ object AlbumItemDbMapper {
         )
     }
 
-    fun fromDomainToEntity(domain: AlbumItem): AlbumItemEntity {
-        return AlbumItemEntity(
-            id = domain.id,
-            imageStringUri = domain.imageStringUri,
-            prompt = domain.prompt,
-            negativePrompt = domain.negativePrompt,
-            timeStamp = domain.timeStamp
-        )
-    }
 }
