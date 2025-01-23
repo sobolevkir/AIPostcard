@@ -19,4 +19,7 @@ interface AlbumDao {
     @Query("SELECT * FROM album_items_table ORDER BY time_stamp DESC")
     fun getAlbumItems(): Flow<List<AlbumItemEntity>>
 
+    @Query("SELECT COUNT(*) FROM album_items_table WHERE uuid = :uuid")
+    suspend fun isAlbumItemExists(uuid: String): Boolean
+
 }

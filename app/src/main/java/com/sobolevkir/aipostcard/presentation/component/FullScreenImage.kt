@@ -29,11 +29,11 @@ import com.sobolevkir.aipostcard.R
 @Composable
 fun ImageFullScreenView(
     imageUri: String,
-    onShare: () -> Unit,
+    onClick: () -> Unit,
     onSaveToDeviceGallery: () -> Unit,
     onAddToAlbum: (() -> Unit)? = null,
+    onShare: () -> Unit,
     isVisible: Boolean = false,
-    onFullScreenToggle: () -> Unit,
 ) {
 
     AnimatedVisibility(
@@ -53,7 +53,7 @@ fun ImageFullScreenView(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.8f))
-                .clickable { onFullScreenToggle() },
+                .clickable { onClick() },
         ) {
             ZoomableImage(
                 imageStringUri = imageUri,

@@ -19,21 +19,25 @@ class AlbumRepositoryImpl @Inject constructor(
 ) : AlbumRepository {
 
     override suspend fun addToAlbum(
+        uuid: String,
         cachedImageStringUri: String,
         prompt: String,
         negativePrompt: String?
     ): Boolean {
         return withContext(Dispatchers.IO) {
-            val albumImageStringUri = fileManager.copyImageToAlbum(cachedImageStringUri)
-            albumImageStringUri?.let { albumImage ->
-                val albumItemEntity = AlbumItemEntity(
-                    imageStringUri = albumImage,
-                    prompt = prompt,
-                    negativePrompt = negativePrompt,
-                )
-                return@withContext albumDao.addAlbumItem(albumItemEntity) > 0
+            if (!albumDao.isAlbumItemExists(uuid)) {
+                val imageStringUri = fileManager.copyImageToAlbum(cachedImageStringUri)
+                imageStringUri?.let { albumImage ->
+                    val albumItemEntity = AlbumItemEntity(
+                        uuid = uuid,
+                        imageStringUri = albumImage,
+                        prompt = prompt,
+                        negativePrompt = negativePrompt
+                    )
+                    return@withContext albumDao.addAlbumItem(albumItemEntity) > 0
+                }
             }
-            false
+            return@withContext false
         }
     }
 

@@ -6,11 +6,12 @@ import javax.inject.Inject
 class AddToAlbumUseCase @Inject constructor(private val repository: AlbumRepository) {
 
     suspend operator fun invoke(
+        uuid: String,
         cachedImageStringUri: String,
         prompt: String,
         negativePrompt: String?
     ): Boolean {
-        return repository.addToAlbum(cachedImageStringUri, prompt, negativePrompt)
+        return repository.addToAlbum(uuid, cachedImageStringUri, prompt, negativePrompt)
     }
 
 }

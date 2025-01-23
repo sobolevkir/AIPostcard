@@ -57,7 +57,8 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
     override suspend fun saveToDeviceGallery(imageStringUri: String): Boolean {
         return withContext(Dispatchers.IO) {
             val contentResolver = context.contentResolver
-            val fileName = "generated_${System.currentTimeMillis()}.jpg"
+            val fileName = Uri.parse(imageStringUri).lastPathSegment
+                ?: "generated_${System.currentTimeMillis()}.jpg"
             val appName = context.applicationInfo.loadLabel(context.packageManager).toString()
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)

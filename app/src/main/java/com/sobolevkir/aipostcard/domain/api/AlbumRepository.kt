@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface AlbumRepository {
 
     suspend fun addToAlbum(
+        uuid: String,
         cachedImageStringUri: String,
         prompt: String,
         negativePrompt: String?

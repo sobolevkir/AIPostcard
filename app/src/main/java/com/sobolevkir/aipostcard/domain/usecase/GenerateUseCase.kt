@@ -2,7 +2,7 @@ package com.sobolevkir.aipostcard.domain.usecase
 
 import android.util.Log
 import com.sobolevkir.aipostcard.domain.api.GenerationRepository
-import com.sobolevkir.aipostcard.domain.model.ErrorType
+import com.sobolevkir.aipostcard.domain.model.GenerationErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.GenerationStatus
 import com.sobolevkir.aipostcard.util.Resource
@@ -39,11 +39,11 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
                 return when (result.data.status) {
                     GenerationStatus.IN_PROGRESS -> return@repeat
                     GenerationStatus.DONE -> Resource.Success(result.data)
-                    GenerationStatus.FAIL -> Resource.Error(ErrorType.UNKNOWN_ERROR)
+                    GenerationStatus.FAIL -> Resource.Error(GenerationErrorType.UNKNOWN_ERROR)
                 }
             }
         }
-        return Resource.Error(ErrorType.UNKNOWN_ERROR)
+        return Resource.Error(GenerationErrorType.UNKNOWN_ERROR)
     }
 
     companion object {

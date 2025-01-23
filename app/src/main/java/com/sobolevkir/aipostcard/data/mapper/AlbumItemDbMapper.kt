@@ -8,6 +8,7 @@ object AlbumItemDbMapper {
     fun map(entity: AlbumItemEntity): AlbumItem {
         return AlbumItem(
             id = entity.id,
+            uuid = entity.uuid,
             imageStringUri = entity.imageStringUri,
             prompt = entity.prompt,
             negativePrompt = entity.negativePrompt,

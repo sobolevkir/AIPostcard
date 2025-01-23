@@ -16,7 +16,7 @@ fun AlbumScreen() {
 
 @Composable
 fun AlbumView(
-    //onEvent: (AlbumScreenEvent) -> Unit = {},
+    //onEvent: (AlbumUiEvent) -> Unit = {},
     //state: AlbumScreenState = AlbumScreenState()
 ) {
 
