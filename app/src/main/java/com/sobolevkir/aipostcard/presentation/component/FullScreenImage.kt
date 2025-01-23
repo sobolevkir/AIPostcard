@@ -30,7 +30,7 @@ import com.sobolevkir.aipostcard.R
 fun ImageFullScreenView(
     imageUri: String,
     onShare: () -> Unit,
-    onSaveToGallery: () -> Unit,
+    onSaveToDeviceGallery: () -> Unit,
     onAddToAlbum: (() -> Unit)? = null,
     isVisible: Boolean = false,
     onFullScreenToggle: () -> Unit,
@@ -75,7 +75,7 @@ fun ImageFullScreenView(
                 SmallImageButton(
                     iconVector = Icons.Filled.SaveAlt,
                     text = R.string.action_save_to_gallery,
-                    onClick = onSaveToGallery
+                    onClick = onSaveToDeviceGallery
                 )
                 onAddToAlbum?.let {
                     SmallImageButton(

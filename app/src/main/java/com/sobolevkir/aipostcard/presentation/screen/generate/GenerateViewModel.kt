@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.usecase.GenerateUseCase
 import com.sobolevkir.aipostcard.domain.usecase.GetStylesUseCase
-import com.sobolevkir.aipostcard.domain.usecase.SaveToGalleryUseCase
+import com.sobolevkir.aipostcard.domain.usecase.SaveToDeviceGalleryUseCase
 import com.sobolevkir.aipostcard.domain.usecase.ShareImageUseCase
 import com.sobolevkir.aipostcard.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class GenerateViewModel @Inject constructor(
     private val getStylesUseCase: GetStylesUseCase,
     private val generateUseCase: GenerateUseCase,
-    private val saveToGalleryUseCase: SaveToGalleryUseCase,
+    private val saveToDeviceGalleryUseCase: SaveToDeviceGalleryUseCase,
     private val shareImageUseCase: ShareImageUseCase,
 ) : ViewModel() {
 
@@ -53,8 +53,8 @@ class GenerateViewModel @Inject constructor(
                 it.copy(selectedStyle = selectedStyle)
             }
 
-            is GenerateScreenEvent.SavedMessageShown -> _uiState.update {
-                it.copy(isImageSaved = false)
+            is GenerateScreenEvent.MessageShown -> _uiState.update {
+                it.copy(showMessage = false)
             }
 
             is GenerateScreenEvent.FullScreenToggle -> _uiState.update {
@@ -73,13 +73,13 @@ class GenerateViewModel @Inject constructor(
                 startGeneration()
             }
 
-            is GenerateScreenEvent.SaveToGalleryClick -> uiState.value.generatedImage?.let {
+            is GenerateScreenEvent.SaveToDeviceGalleryClick -> uiState.value.generatedImage?.let {
                 viewModelScope.launch {
-                    val isSuccess = saveToGalleryUseCase(it)
+                    val isSuccess = saveToDeviceGalleryUseCase(it)
                     if (isSuccess) {
-                        _uiState.update { it.copy(isImageSaved = true) }
+                        _uiState.update { it.copy(showMessage = true) }
                     } else {
-                        _uiState.update { it.copy(isImageSaved = false) }
+                        _uiState.update { it.copy(showMessage = false) }
                     }
                 }
             }

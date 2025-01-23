@@ -68,9 +68,9 @@ fun GenerateView(
     val focusManager = LocalFocusManager.current
     val generatedImage = state.generatedImage
 
-    if (state.isImageSaved) {
+    if (state.showMessage) {
         Toast.makeText(context, R.string.message_saved_to_gallery, Toast.LENGTH_SHORT).show()
-        onEvent(GenerateScreenEvent.SavedMessageShown)
+        onEvent(GenerateScreenEvent.MessageShown)
     }
 
     Column(
@@ -181,7 +181,7 @@ fun GenerateView(
             isVisible = state.isFullScreen,
             imageUri = generatedImage,
             onShare = { onEvent(GenerateScreenEvent.ShareClick) },
-            onSaveToGallery = { onEvent(GenerateScreenEvent.SaveToGalleryClick) },
+            onSaveToDeviceGallery = { onEvent(GenerateScreenEvent.SaveToDeviceGalleryClick) },
             onAddToAlbum = { onNavigateTo(Routes.Album) },
             onFullScreenToggle = { onEvent(GenerateScreenEvent.FullScreenToggle) },
         )

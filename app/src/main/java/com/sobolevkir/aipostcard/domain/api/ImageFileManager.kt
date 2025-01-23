@@ -6,7 +6,7 @@ interface ImageFileManager {
 
     suspend fun copyImageToAlbum(stringUri: String): String?
 
-    suspend fun saveToGallery(imageStringUri: String): Boolean
+    suspend fun saveToDeviceGallery(imageStringUri: String): Boolean
 
     suspend fun deleteFile(uri: String)
 
