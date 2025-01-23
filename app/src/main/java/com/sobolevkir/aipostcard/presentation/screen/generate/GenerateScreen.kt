@@ -1,5 +1,6 @@
 package com.sobolevkir.aipostcard.presentation.screen.generate
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.sobolevkir.aipostcard.R
-import com.sobolevkir.aipostcard.domain.model.ErrorType
+import com.sobolevkir.aipostcard.domain.model.GenerationErrorType
 import com.sobolevkir.aipostcard.presentation.component.ErrorMessage
 import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
 import com.sobolevkir.aipostcard.presentation.component.Loader
@@ -42,36 +44,55 @@ import com.sobolevkir.aipostcard.presentation.component.QueryTextField
 import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
 import com.sobolevkir.aipostcard.presentation.component.SubmitButton
 import com.sobolevkir.aipostcard.presentation.navigation.Routes
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
-
     val viewModel: GenerateViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    val savingErrorMessage = stringResource(R.string.message_saving_error)
+    val addedToAlbumMessage = stringResource(R.string.message_added_to_album)
+    val existsInAlbumMessage = stringResource(R.string.message_exists_in_album)
+    val savedToGalleryMessage = stringResource(R.string.message_saved_to_gallery)
+    val censoredMessage = stringResource(R.string.message_censored)
+
+    LaunchedEffect(Unit) {
+        viewModel.news.collectLatest { news ->
+            when (news) {
+                is GenerateNews.ShowMessage -> {
+                    val messageText = when (news.message) {
+                        GenerateMessage.ImageSavingError -> savingErrorMessage
+                        GenerateMessage.ImageAddedToAlbum -> addedToAlbumMessage
+                        GenerateMessage.ImageExistsInAlbum -> existsInAlbumMessage
+                        GenerateMessage.ImageSavedToGallery -> savedToGalleryMessage
+                        GenerateMessage.Censored -> censoredMessage
+                    }
+                    Toast.makeText(context, messageText, Toast.LENGTH_SHORT).show()
+                }
+
+                is GenerateNews.NavigateTo -> onNavigateTo(news.route)
+            }
+        }
+    }
 
     GenerateView(
-        onNavigateTo = onNavigateTo,
         onEvent = viewModel::onEvent,
         state = uiState
     )
 }
 
+
 @Composable
 fun GenerateView(
-    onNavigateTo: (Routes) -> Unit = {},
-    onEvent: (GenerateScreenEvent) -> Unit = {},
-    state: GenerateScreenState = GenerateScreenState()
+    onEvent: (GenerateUiEvent) -> Unit = {},
+    state: GenerateUiState = GenerateUiState()
 ) {
 
-    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val generatedImage = state.generatedImage
-
-    if (state.isImageSaved) {
-        Toast.makeText(context, R.string.message_saved_to_gallery, Toast.LENGTH_SHORT).show()
-        onEvent(GenerateScreenEvent.SavedMessageShown)
-    }
+    val generationResult = state.result
 
     Column(
         modifier = Modifier
@@ -97,14 +118,14 @@ fun GenerateView(
                 modifier = Modifier.fillMaxSize()
             )
 
-            generatedImage?.let {
+            generationResult?.let {
                 AsyncImage(
-                    model = it,
+                    model = Uri.parse(it.imageStringUri),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable {
-                            onEvent(GenerateScreenEvent.FullScreenToggle)
+                            onEvent(GenerateUiEvent.FullScreenToggle)
                             focusManager.clearFocus()
                             keyboardController?.hide()
                         }
@@ -121,7 +142,7 @@ fun GenerateView(
                 )
             }
 
-            if (!state.isGenerating && state.generatedImage.isNullOrEmpty() && state.error == null) {
+            if (!state.isGenerating && state.result == null && state.error == null) {
                 Icon(
                     imageVector = Icons.Filled.Image,
                     modifier = Modifier.fillMaxSize(),
@@ -130,28 +151,27 @@ fun GenerateView(
                 )
             }
 
-            state.error?.let {
+            state.error?.let { error ->
                 ErrorMessage(
-                    text = when (it) {
-                        ErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
-                        ErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
+                    text = when (error) {
+                        GenerationErrorType.CONNECTION_PROBLEM -> stringResource(R.string.message_connection_problem)
+                        GenerationErrorType.UNKNOWN_ERROR -> stringResource(R.string.message_unknown_error)
                     },
-                    onRetryButtonClick = { onEvent(GenerateScreenEvent.RetryButtonClick) }
+                    onRetryButtonClick = { onEvent(GenerateUiEvent.RetryButtonClick) }
                 )
             }
         }
 
         QueryTextField(
             value = state.prompt,
-            onQueryChange = { onEvent(GenerateScreenEvent.PromptChange(it)) },
+            onQueryChange = { onEvent(GenerateUiEvent.PromptChange(it)) },
             enabled = !state.isGenerating,
-            isError = state.isCensored,
-            labelTextResId = if (state.isCensored) R.string.message_censored else R.string.label_prompt
+            labelTextResId = R.string.label_prompt
         )
 
         QueryTextField(
             value = state.negativePrompt,
-            onQueryChange = { onEvent(GenerateScreenEvent.NegativePromptChange(it)) },
+            onQueryChange = { onEvent(GenerateUiEvent.NegativePromptChange(it)) },
             enabled = !state.isGenerating,
             labelTextResId = R.string.label_negative_prompt
         )
@@ -159,7 +179,7 @@ fun GenerateView(
         StylesDropdownMenu(
             styles = state.styles,
             selectedStyle = state.selectedStyle,
-            onItemSelected = { newStyle -> onEvent(GenerateScreenEvent.StyleSelect(newStyle.name)) },
+            onItemSelected = { newStyle -> onEvent(GenerateUiEvent.StyleSelect(newStyle.name)) },
             enabled = !state.isGenerating,
         )
 
@@ -167,7 +187,7 @@ fun GenerateView(
             enabled = state.styles.isNotEmpty() && state.prompt.isNotEmpty(),
             textResId = if (state.isGenerating) R.string.action_stop else R.string.action_go,
             iconVector = if (!state.isGenerating) Icons.Default.AutoAwesome else null,
-            onClick = { onEvent(GenerateScreenEvent.SubmitButtonClick) },
+            onClick = { onEvent(GenerateUiEvent.SubmitButtonClick) },
             backgroundColor = if (state.isGenerating) {
                 MaterialTheme.colorScheme.tertiary
             } else {
@@ -176,14 +196,14 @@ fun GenerateView(
         )
     }
 
-    generatedImage?.let {
+    generationResult?.imageStringUri?.let {
         ImageFullScreenView(
-            isVisible = state.isFullScreen,
-            imageUri = generatedImage,
-            onShare = { onEvent(GenerateScreenEvent.ShareClick) },
-            onSaveToGallery = { onEvent(GenerateScreenEvent.SaveToGalleryClick) },
-            onAddToAlbum = { onNavigateTo(Routes.Album) },
-            onFullScreenToggle = { onEvent(GenerateScreenEvent.FullScreenToggle) },
+            imageUri = it,
+            onClick = { onEvent(GenerateUiEvent.FullScreenToggle) },
+            onSaveToDeviceGallery = { onEvent(GenerateUiEvent.SaveToDeviceGalleryClick) },
+            onAddToAlbum = { onEvent(GenerateUiEvent.AddToAlbumClick) },
+            onShare = { onEvent(GenerateUiEvent.ShareClick) },
+            isVisible = state.isFullScreenOpened,
         )
     }
 

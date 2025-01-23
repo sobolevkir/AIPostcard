@@ -21,6 +21,9 @@ data class AlbumItemEntity(
     val negativePrompt: String? = null,
 
     @ColumnInfo(name = "time_stamp")
-    val timeStamp: Long
+    val timeStamp: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "uuid")
+    val uuid: String
 
 )

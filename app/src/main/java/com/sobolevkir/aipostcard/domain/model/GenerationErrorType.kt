@@ -1,6 +1,6 @@
 package com.sobolevkir.aipostcard.domain.model
 
-enum class ErrorType {
+enum class GenerationErrorType {
     CONNECTION_PROBLEM,
     UNKNOWN_ERROR
 }

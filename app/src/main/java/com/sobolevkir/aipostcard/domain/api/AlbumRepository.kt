@@ -5,7 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface AlbumRepository {
 
-    suspend fun addToAlbum(albumItem: AlbumItem): Boolean
+    suspend fun addToAlbum(
+        uuid: String,
+        cachedImageStringUri: String,
+        prompt: String,
+        negativePrompt: String?
+    ): Boolean
 
     suspend fun removeFromAlbum(itemId: Long): Boolean
 

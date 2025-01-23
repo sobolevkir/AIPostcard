@@ -2,6 +2,7 @@ package com.sobolevkir.aipostcard.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,7 +22,11 @@ fun AppNavigation(
     ) {
 
         val navigateAction: (Routes) -> Unit = { route ->
-            navHostController.navigate(route.name)
+            navHostController.navigate(route.name) {
+                popUpTo(navHostController.graph.findStartDestination().id) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
 
         composable(Routes.Generate.name) {

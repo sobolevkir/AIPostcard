@@ -9,7 +9,7 @@ import com.sobolevkir.aipostcard.data.network.dto.GenerateParamsRequest
 import com.sobolevkir.aipostcard.data.network.dto.GenerationRequest
 import com.sobolevkir.aipostcard.domain.api.GenerationRepository
 import com.sobolevkir.aipostcard.domain.api.ImageFileManager
-import com.sobolevkir.aipostcard.domain.model.ErrorType
+import com.sobolevkir.aipostcard.domain.model.GenerationErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.model.Style
 import com.sobolevkir.aipostcard.util.Resource
@@ -53,7 +53,7 @@ class GenerationRepositoryImpl @Inject constructor(
                     return@flow
                 }
 
-                else -> emit(Resource.Error(ErrorType.UNKNOWN_ERROR))
+                else -> emit(Resource.Error(GenerationErrorType.UNKNOWN_ERROR))
             }
         }
         val modelIdBody = cachedModeId.toRequestBody(MEDIA_TYPE_TEXT.toMediaType())

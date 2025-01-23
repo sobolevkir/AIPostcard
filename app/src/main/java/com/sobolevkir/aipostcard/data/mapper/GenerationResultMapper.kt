@@ -13,7 +13,7 @@ object GenerationResultMapper {
         return GenerationResult(
             uuid = dto.uuid,
             status = convertedStatus,
-            imageStringUri = imageStringUri,
+            imageStringUri = imageStringUri ?: "",
             censored = dto.censored
         )
     }
