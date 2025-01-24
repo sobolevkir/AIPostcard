@@ -2,8 +2,8 @@
     <string name="app_name">AI Postcard</string>
     <string name="title_generate">Сгенерировать</string>
     <string name="title_album">Альбом</string>
-    <string name="title_info">Инфо</string>
-    <string name="action_go">Сгенерировать</string>
+    <string name="title_about">О приложении</string>
+    <string name="action_go">Начать генерацию</string>
     <string name="action_stop">Остановить</string>
     <string name="action_retry">Обновить</string>
     <string name="label_prompt">Опишите ваш запрос</string>

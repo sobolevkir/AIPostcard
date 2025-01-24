@@ -27,7 +27,7 @@ fun ErrorMessage(
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.SemiBold
         )
         onRetryButtonClick?.let {
             SmallTextButton(
