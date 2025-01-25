@@ -46,13 +46,13 @@ fun BottomNavigationBar(
             ),
         )
 
-    NavigationBar(modifier = Modifier.height(72.dp)) {
+    NavigationBar(modifier = Modifier.height(64.dp)) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
         barItems.forEach { item ->
             val isSelected = currentRoute == item.route
             val iconSize by animateDpAsState(
-                targetValue = if (isSelected) 36.dp else 22.dp,
+                targetValue = if (isSelected) 32.dp else 24.dp,
                 animationSpec = tween(
                     durationMillis = 200,
                     easing = LinearOutSlowInEasing

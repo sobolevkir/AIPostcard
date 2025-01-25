@@ -1,7 +1,9 @@
 package com.sobolevkir.aipostcard.presentation.screen.generate
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
 import com.sobolevkir.aipostcard.domain.usecase.AddToAlbumUseCase
 import com.sobolevkir.aipostcard.domain.usecase.GenerateUseCase
@@ -69,20 +71,16 @@ class GenerateViewModel @Inject constructor(
             is GenerateUiEvent.SubmitButtonClick -> if (uiState.value.isGenerating) {
                 generateJob?.cancel()
                 _uiState.update { it.copy(isGenerating = false, error = null) }
-            } else {
-                startGeneration()
-            }
+            } else startGeneration()
 
             is GenerateUiEvent.SaveToDeviceGalleryClick -> viewModelScope.launch {
                 val isSuccess = saveToDeviceGalleryUseCase(
                     uiState.value.result?.imageStringUri ?: ""
                 )
                 showMessage(
-                    if (isSuccess)
-                        GenerateMessage.ImageSavedToGallery else GenerateMessage.ImageSavingError
+                    if (isSuccess) R.string.message_saved_to_gallery else R.string.message_saving_error
                 )
             }
-
 
             is GenerateUiEvent.AddToAlbumClick -> uiState.value.result?.let {
                 viewModelScope.launch {
@@ -93,9 +91,10 @@ class GenerateViewModel @Inject constructor(
                         negativePrompt = uiState.value.negativePrompt
                     )
                     if (isSuccess) {
-                        showMessage(GenerateMessage.ImageAddedToAlbum)
+                        showMessage(R.string.message_added_to_album)
                         _news.emit(GenerateNews.NavigateTo(Routes.Album))
-                    } else showMessage(GenerateMessage.ImageExistsInAlbum)
+                        _uiState.update { it.copy(isFullScreenOpened = !it.isFullScreenOpened) }
+                    } else showMessage(R.string.message_exists_in_album)
                 }
             }
 
@@ -127,7 +126,7 @@ class GenerateViewModel @Inject constructor(
                 )
             }
         }
-        if (result is Resource.Success && result.data.censored) showMessage(GenerateMessage.Censored)
+        if (result is Resource.Success && result.data.censored) showMessage(R.string.message_censored)
     }
 
     private fun loadImageStyles() {
@@ -156,7 +155,7 @@ class GenerateViewModel @Inject constructor(
         }
     }
 
-    private fun showMessage(message: GenerateMessage) {
+    private fun showMessage(@StringRes message: Int) {
         viewModelScope.launch {
             _news.emit(GenerateNews.ShowMessage(message))
         }

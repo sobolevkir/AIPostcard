@@ -35,7 +35,7 @@ fun SmallImageButton(
             .widthIn(max = 128.dp)
             .clickable { onClick.invoke() },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Icon(
             imageVector = iconVector,
@@ -45,8 +45,8 @@ fun SmallImageButton(
         )
         Text(
             text = stringResource(text),
-            fontSize = 13.sp,
-            lineHeight = 14.sp,
+            fontSize = 11.sp,
+            lineHeight = 12.sp,
             softWrap = true,
             textAlign = TextAlign.Center,
             color = Color.White,

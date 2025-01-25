@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sobolevkir.aipostcard.R
 
@@ -35,7 +36,13 @@ fun QueryTextField(
         enabled = enabled,
         singleLine = true,
         isError = isError ?: false,
-        label = { Text(text = stringResource(labelTextResId)) },
+        label = {
+            Text(
+                text = stringResource(labelTextResId),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
         modifier = Modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
