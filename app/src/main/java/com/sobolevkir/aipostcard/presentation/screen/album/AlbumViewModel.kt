@@ -1,13 +1,18 @@
 package com.sobolevkir.aipostcard.presentation.screen.album
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sobolevkir.aipostcard.domain.usecase.GetAlbumItemsUseCase
+import com.sobolevkir.aipostcard.domain.usecase.RemoveFromAlbumUseCase
 import com.sobolevkir.aipostcard.domain.usecase.SaveToDeviceGalleryUseCase
 import com.sobolevkir.aipostcard.domain.usecase.ShareImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,10 +23,13 @@ class AlbumViewModel @Inject constructor(
     private val getAlbumItemsUseCase: GetAlbumItemsUseCase,
     private val saveToDeviceGalleryUseCase: SaveToDeviceGalleryUseCase,
     private val shareImageUseCase: ShareImageUseCase,
+    private val removeFromAlbumUseCase: RemoveFromAlbumUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AlbumUiState())
     val uiState: StateFlow<AlbumUiState> = _uiState
+    private val _news = MutableSharedFlow<AlbumNews>()
+    val news = _news.asSharedFlow()
 
     init {
         loadAlbumItems()
@@ -29,42 +37,54 @@ class AlbumViewModel @Inject constructor(
 
     fun onEvent(event: AlbumUiEvent) {
         when (event) {
-            is AlbumUiEvent.OpenItem -> _uiState.update { it.copy(selectedItemId = event.itemId) }
-            AlbumUiEvent.CloseItem -> _uiState.update { it.copy(selectedItemId = null) }
-            AlbumUiEvent.SaveToDeviceGalleryClick -> uiState.value.selectedItemId?.let { itemId ->
-                val image = uiState.value.items.first { it.id == itemId }.imageStringUri
-                viewModelScope.launch {
-                    val isSuccess = saveToDeviceGalleryUseCase(image)
+            is AlbumUiEvent.OpenItem -> _uiState.update { it.copy(selectedItem = event.item) }
+            is AlbumUiEvent.RemoveItemClick -> viewModelScope.launch {
+                val isSuccess = removeFromAlbumUseCase(event.itemId)
+                showMessage(
                     if (isSuccess) {
-                        _uiState.update { it.copy(showMessage = true) }
-                    } else {
-                        _uiState.update { it.copy(showMessage = false) }
-                    }
+                        AlbumMessage.ImageRemovedFromAlbum
+                    } else AlbumMessage.ImageRemovingError
+                )
+            }
+
+            is AlbumUiEvent.CloseItem -> _uiState.update { it.copy(selectedItem = null) }
+            is AlbumUiEvent.SaveToDeviceGalleryClick -> uiState.value.selectedItem?.let { item ->
+                viewModelScope.launch {
+                    val isSuccess = saveToDeviceGalleryUseCase(item.imageStringUri)
+                    showMessage(
+                        if (isSuccess) {
+                            AlbumMessage.ImageSavedToGallery
+                        } else AlbumMessage.ImageSavingError
+                    )
                 }
             }
 
-            AlbumUiEvent.ShareClick -> uiState.value.selectedItemId?.let { itemId ->
-                val image = uiState.value.items.first { it.id == itemId }.imageStringUri
-                shareImageUseCase(image)
+            is AlbumUiEvent.ShareClick -> uiState.value.selectedItem?.let { item ->
+                shareImageUseCase(item.imageStringUri)
             }
         }
     }
 
     private fun loadAlbumItems() {
-        viewModelScope.launch {
-            getAlbumItemsUseCase().onEach { items ->
-                if (items.isEmpty()) {
-                    _uiState.update {
-                        it.copy(
-                            isAlbumEmpty = true,
-                            items = items,
-                            selectedItemId = null
-                        )
-                    }
-                } else {
-                    _uiState.update { it.copy(isAlbumEmpty = false, items = items) }
+        getAlbumItemsUseCase().onEach { items ->
+            Log.d("VIEWMODEL_ALBUMS", items.toString())
+            if (items.isEmpty()) {
+                _uiState.update {
+                    it.copy(
+                        items = items,
+                        selectedItem = null
+                    )
                 }
+            } else {
+                _uiState.update { it.copy(items = items) }
             }
+        }.launchIn(viewModelScope)
+    }
+
+
+    private fun showMessage(message: AlbumMessage) {
+        viewModelScope.launch {
+            _news.emit(AlbumNews.ShowMessage(message))
         }
     }
 

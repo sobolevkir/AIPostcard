@@ -12,10 +12,13 @@
     <string name="message_generating">Подождите, идёт генерация…</string>
     <string name="message_connection_problem">Проверьте подключение\nк интернету</string>
     <string name="message_unknown_error">Что-то пошло не так :(\nПопробуйте повторить\nзапрос позднее</string>
+    <string name="message_empty_album">В альбоме пока нет\nни одного изображения</string>
     <string name="message_saved_to_gallery">Изображение сохранено в галерею устройства</string>
     <string name="message_censored">Запрос не соответствует политике в отношении контента</string>
     <string name="message_saving_error">Ошибка! Не удалось сохранить изображение на устройство</string>
+    <string name="message_removing_error">Ошибка! Не удалось удалить изображение из альбома</string>
     <string name="message_added_to_album">Изображение добавлено в альбом</string>
+    <string name="message_removed_from_album">Изображение удалено из альбома</string>
     <string name="message_exists_in_album">Изображение уже есть в альбоме</string>
     <string name="action_save_to_gallery">Сохранить\nв галерею</string>
     <string name="action_share">Поделиться</string>

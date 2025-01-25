@@ -48,29 +48,17 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
+
     val viewModel: GenerateViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    val savingErrorMessage = stringResource(R.string.message_saving_error)
-    val addedToAlbumMessage = stringResource(R.string.message_added_to_album)
-    val existsInAlbumMessage = stringResource(R.string.message_exists_in_album)
-    val savedToGalleryMessage = stringResource(R.string.message_saved_to_gallery)
-    val censoredMessage = stringResource(R.string.message_censored)
-
     LaunchedEffect(Unit) {
         viewModel.news.collectLatest { news ->
             when (news) {
-                is GenerateNews.ShowMessage -> {
-                    val messageText = when (news.message) {
-                        GenerateMessage.ImageSavingError -> savingErrorMessage
-                        GenerateMessage.ImageAddedToAlbum -> addedToAlbumMessage
-                        GenerateMessage.ImageExistsInAlbum -> existsInAlbumMessage
-                        GenerateMessage.ImageSavedToGallery -> savedToGalleryMessage
-                        GenerateMessage.Censored -> censoredMessage
-                    }
-                    Toast.makeText(context, messageText, Toast.LENGTH_SHORT).show()
-                }
+                is GenerateNews.ShowMessage -> Toast.makeText(
+                    context, news.message, Toast.LENGTH_SHORT
+                ).show()
 
                 is GenerateNews.NavigateTo -> onNavigateTo(news.route)
             }
@@ -111,10 +99,7 @@ fun GenerateView(
             contentAlignment = Alignment.Center
         ) {
 
-            Loader(
-                isLoading = state.isGenerating,
-                modifier = Modifier.fillMaxSize()
-            )
+            Loader(isLoading = state.isGenerating, modifier = Modifier.fillMaxSize())
 
             generationResult?.let {
                 AsyncImage(

@@ -20,7 +20,6 @@ fun AppNavigation(
         startDestination = Routes.Generate.name,
         modifier = modifier
     ) {
-
         val navigateAction: (Routes) -> Unit = { route ->
             navHostController.navigate(route.name) {
                 popUpTo(navHostController.graph.findStartDestination().id) { saveState = true }
