@@ -24,6 +24,8 @@ import com.sobolevkir.aipostcard.R
 @Composable
 fun Loader(isLoading: Boolean, modifier: Modifier) {
 
+    // TODO: Исправить баг с остановкой анимации при переключении экранов
+
     val animationController = remember { DotLottieController() }
     if (isLoading) animationController.play() else animationController.stop()
 

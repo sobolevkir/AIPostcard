@@ -25,7 +25,7 @@ import com.sobolevkir.aipostcard.R
 
 @Composable
 fun ImageFullScreenView(
-    imageUri: String,
+    imageUri: String?,
     onClick: () -> Unit,
     onSaveToDeviceGallery: () -> Unit,
     onAddToAlbum: (() -> Unit)? = null,
@@ -33,7 +33,7 @@ fun ImageFullScreenView(
     isVisible: Boolean = false,
 ) {
 
-    if (isVisible) {
+    if (isVisible && imageUri != null) {
         Dialog(
             onDismissRequest = { onClick() },
             properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -76,7 +76,7 @@ fun ImageFullScreenView(
                         onAddToAlbum?.let {
                             SmallImageButton(
                                 iconVector = Icons.Filled.LibraryAdd,
-                                text = R.string.action_add_to_faves,
+                                text = R.string.action_add_to_album,
                                 onClick = onAddToAlbum
                             )
                         }

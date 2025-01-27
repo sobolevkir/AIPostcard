@@ -6,20 +6,30 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
+// TODO: Привести цвета темы к общему стилю
+
 private val DarkColorScheme = darkColorScheme(
+    onBackground = AbsoluteWhite,
     primary = Mint,
     secondary = Grey,
     onPrimary = SoftBlack,
     tertiary = Red,
     onPrimaryContainer = AbsoluteWhite,
+    onSurface = AbsoluteWhite,
+    error = Red,
+    onError = AbsoluteWhite
 )
 
 private val LightColorScheme = lightColorScheme(
+    onBackground = SoftBlack,
     primary = LightMint,
     secondary = LightGrey,
     onPrimary = AbsoluteWhite,
     tertiary = LightRed,
-    onPrimaryContainer = SoftBlack
+    onPrimaryContainer = SoftBlack,
+    onSurface = SoftBlack,
+    error = LightRed,
+    onError = AbsoluteWhite
 )
 
 @Composable

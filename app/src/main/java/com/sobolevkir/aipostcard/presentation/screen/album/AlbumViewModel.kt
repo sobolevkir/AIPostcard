@@ -1,6 +1,5 @@
 package com.sobolevkir.aipostcard.presentation.screen.album
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sobolevkir.aipostcard.domain.usecase.GetAlbumItemsUseCase
@@ -38,7 +37,7 @@ class AlbumViewModel @Inject constructor(
     fun onEvent(event: AlbumUiEvent) {
         when (event) {
             is AlbumUiEvent.OpenItem -> _uiState.update { it.copy(selectedItem = event.item) }
-            is AlbumUiEvent.RemoveItemClick -> viewModelScope.launch {
+            is AlbumUiEvent.RemoveItem -> viewModelScope.launch {
                 val isSuccess = removeFromAlbumUseCase(event.itemId)
                 showMessage(
                     if (isSuccess) {
@@ -67,7 +66,6 @@ class AlbumViewModel @Inject constructor(
 
     private fun loadAlbumItems() {
         getAlbumItemsUseCase().onEach { items ->
-            Log.d("VIEWMODEL_ALBUMS", items.toString())
             if (items.isEmpty()) {
                 _uiState.update {
                     it.copy(

@@ -40,7 +40,7 @@ fun SubmitButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 12.dp)
-            .height(56.dp),
+            .height(60.dp),
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

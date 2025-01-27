@@ -6,6 +6,7 @@
     <string name="action_go">Начать генерацию</string>
     <string name="action_stop">Остановить</string>
     <string name="action_retry">Обновить</string>
+    <string name="action_delete">Удалить</string>
     <string name="label_prompt">Опишите ваш запрос</string>
     <string name="label_negative_prompt">Что вы бы хотели исключить?</string>
     <string name="loading">Загрузка…</string>
@@ -22,6 +23,6 @@
     <string name="message_exists_in_album">Изображение уже есть в альбоме</string>
     <string name="action_save_to_gallery">Сохранить\nв галерею</string>
     <string name="action_share">Поделиться</string>
-    <string name="action_add_to_faves">Добавить\nв избранное</string>
+    <string name="action_add_to_album">Добавить\nв альбом</string>
     <string name="action_clear_input">Очистить ввод</string>
 </resources>

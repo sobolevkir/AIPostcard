@@ -24,11 +24,11 @@ class NetworkErrorHandler(private val context: Context) {
                 } ?: Resource.Error(GenerationErrorType.UNKNOWN_ERROR)
             } else {
                 val errorCode = response.code()
-                Log.d("ERROR_HANDLER", "Api error code: $errorCode")
+                Log.e("NETWORK_ERROR_HANDLER", "Api error code: $errorCode")
                 Resource.Error(GenerationErrorType.UNKNOWN_ERROR)
             }
         } catch (e: Exception) {
-            Log.d("ERROR_HANDLER", "Error: $e :: In: $api")
+            Log.e("NETWORK_ERROR_HANDLER", "Error: $e :: In: $api")
             when (e) {
                 is SocketException,
                 is UnknownHostException,

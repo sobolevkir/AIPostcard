@@ -1,6 +1,5 @@
 package com.sobolevkir.aipostcard.domain.usecase
 
-import android.util.Log
 import com.sobolevkir.aipostcard.domain.api.GenerationRepository
 import com.sobolevkir.aipostcard.domain.model.GenerationErrorType
 import com.sobolevkir.aipostcard.domain.model.GenerationResult
@@ -20,7 +19,6 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
     ): Flow<Resource<GenerationResult>> {
         return repository.requestGeneration(prompt, negativePrompt, styleName)
             .map { result ->
-                Log.d("USECASE", "requestGeneration: $result")
                 when (result) {
                     is Resource.Success -> getGenerationResult(result.data.uuid)
                     is Resource.Error -> Resource.Error(result.error)
@@ -33,7 +31,6 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
         repeat(ATTEMPTS_MAX_NUMBER) {
             delay(ATTEMPT_TIME_MILLIS)
             val result = repository.getStatusOrImage(uuid)
-            Log.d("USECASE", "getGenerationResult: $result")
             if (result is Resource.Error) return Resource.Error(result.error)
             if (result is Resource.Success) {
                 return when (result.data.status) {
