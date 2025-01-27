@@ -1,8 +1,8 @@
 package com.sobolevkir.aipostcard.presentation.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,11 +20,12 @@ fun ErrorMessage(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         Text(
             text = text,
-            color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold

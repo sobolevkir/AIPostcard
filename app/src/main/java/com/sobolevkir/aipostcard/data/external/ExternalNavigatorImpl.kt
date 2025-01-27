@@ -29,7 +29,7 @@ class ExternalNavigatorImpl @Inject constructor(private val context: Context) : 
                 startIntent(shareIntent)
             }
         } catch (e: Exception) {
-            Log.e("ExternalNavigator", "Ошибка: ${e.message}", e)
+            Log.e("EXTERNAL_NAVIGATOR", e.message.toString())
         }
     }
 

@@ -179,15 +179,13 @@ fun GenerateView(
         )
     }
 
-    generationResult?.imageStringUri?.let {
-        ImageFullScreenView(
-            imageUri = it,
-            onClick = { onEvent(GenerateUiEvent.FullScreenToggle) },
-            onSaveToDeviceGallery = { onEvent(GenerateUiEvent.SaveToDeviceGalleryClick) },
-            onAddToAlbum = { onEvent(GenerateUiEvent.AddToAlbumClick) },
-            onShare = { onEvent(GenerateUiEvent.ShareClick) },
-            isVisible = state.isFullScreenOpened,
-        )
-    }
+    ImageFullScreenView(
+        imageUri = generationResult?.imageStringUri,
+        onClick = { onEvent(GenerateUiEvent.FullScreenToggle) },
+        onSaveToDeviceGallery = { onEvent(GenerateUiEvent.SaveToDeviceGalleryClick) },
+        onAddToAlbum = { onEvent(GenerateUiEvent.AddToAlbumClick) },
+        onShare = { onEvent(GenerateUiEvent.ShareClick) },
+        isVisible = state.isFullScreenOpened,
+    )
 
 }
