@@ -28,6 +28,9 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,11 +39,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.AlbumItem
+import com.sobolevkir.aipostcard.presentation.component.ConfirmDialog
 import com.sobolevkir.aipostcard.presentation.component.ErrorMessage
 import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
 import com.sobolevkir.aipostcard.presentation.navigation.Routes
@@ -52,33 +57,21 @@ fun AlbumScreen(onNavigateTo: (Routes) -> Unit = {}) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    val messageMap = mapOf(
-        AlbumMessage.ImageSavedToGallery to stringResource(R.string.message_saved_to_gallery),
-        AlbumMessage.ImageSavingError to stringResource(R.string.message_saving_error),
-        AlbumMessage.ImageRemovedFromAlbum to stringResource(R.string.message_removed_from_album),
-        AlbumMessage.ImageRemovingError to stringResource(R.string.message_removing_error),
-
-        )
-
     // TODO: Использовать уменьшенные preview изображения!
 
     LaunchedEffect(Unit) {
         viewModel.news.collectLatest { news ->
             when (news) {
-                is AlbumNews.ShowMessage -> {
-                    val messageText = messageMap[news.message]
-                    Toast.makeText(context, messageText, Toast.LENGTH_SHORT).show()
-                }
+                is AlbumNews.ShowMessage -> Toast.makeText(
+                    context, news.messageResId, Toast.LENGTH_SHORT
+                ).show()
 
                 is AlbumNews.NavigateTo -> onNavigateTo(news.route)
             }
         }
     }
 
-    AlbumView(
-        onEvent = viewModel::onEvent,
-        state = uiState
-    )
+    AlbumView(onEvent = viewModel::onEvent, state = uiState)
 }
 
 @Composable
@@ -87,20 +80,27 @@ fun AlbumView(
     state: AlbumUiState = AlbumUiState()
 ) {
 
-    if (state.items.isNotEmpty()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(state.items, key = { it.id }) { albumItem ->
-                SwipeToDismissItem(
-                    item = albumItem,
-                    onItemClick = { onEvent(AlbumUiEvent.OpenItem(albumItem)) },
-                    onDismiss = { onEvent(AlbumUiEvent.RemoveItem(albumItem.id)) }
-                )
-            }
+    if (state.items.isEmpty()) {
+        ErrorMessage(text = stringResource(R.string.message_empty_album))
+        return
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(
+            items = state.items,
+            key = { it.id }
+        ) { albumItem ->
+            SwipeableAlbumItem(
+                item = albumItem,
+                onClick = { onEvent(AlbumUiEvent.OpenItem(albumItem)) },
+                onRemove = { onEvent(AlbumUiEvent.RemoveItem(albumItem.id)) },
+                modifier = Modifier.animateItem()
+            )
         }
-    } else ErrorMessage(text = stringResource(R.string.message_empty_album))
+    }
 
     ImageFullScreenView(
         imageUri = state.selectedItem?.imageStringUri,
@@ -109,27 +109,41 @@ fun AlbumView(
         onShare = { onEvent(AlbumUiEvent.ShareClick) },
         isVisible = state.selectedItem != null,
     )
+
 }
 
 @Composable
-fun SwipeToDismissItem(
+fun SwipeableAlbumItem(
     item: AlbumItem,
-    onItemClick: () -> Unit,
-    onDismiss: () -> Unit
+    onClick: () -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = {
-            if (it == SwipeToDismissBoxValue.EndToStart) {
-                onDismiss()
-                true
-            } else false
+    var showRemoveDialog by rememberSaveable { mutableStateOf(false) }
+    if (showRemoveDialog) {
+        ConfirmDialog(
+            messageResId = R.string.message_removing_confirm,
+            onConfirm = {
+                onRemove()
+                showRemoveDialog = false
+            },
+            onCancel = { showRemoveDialog = false }
+        )
+    }
+    val dismissState = rememberSwipeToDismissBoxState()
+    LaunchedEffect(showRemoveDialog) {
+        if (!showRemoveDialog) dismissState.reset()
+    }
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue != SwipeToDismissBoxValue.Settled) {
+            showRemoveDialog = true
         }
-    )
+    }
 
     SwipeToDismissBox(
         state = dismissState,
         enableDismissFromStartToEnd = false,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(8.dp)),
         backgroundContent = {
@@ -154,7 +168,10 @@ fun SwipeToDismissItem(
             }
         },
         content = {
-            AlbumItemRow(item = item, onItemClick = onItemClick)
+            AlbumItemRow(
+                item = item,
+                modifier = Modifier.clickable { onClick() },
+            )
         }
     )
 }
@@ -162,14 +179,12 @@ fun SwipeToDismissItem(
 @Composable
 fun AlbumItemRow(
     item: AlbumItem,
-    onItemClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .clickable { onItemClick() },
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         verticalAlignment = Alignment.Top
     ) {
         AsyncImage(
@@ -189,6 +204,7 @@ fun AlbumItemRow(
             Text(
                 text = item.prompt,
                 maxLines = 2,
+                fontSize = 16.sp,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -198,6 +214,7 @@ fun AlbumItemRow(
                 Text(
                     text = it,
                     maxLines = 1,
+                    fontSize = 14.sp,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.error
                 )

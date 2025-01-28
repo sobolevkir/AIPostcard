@@ -43,6 +43,8 @@ class AlbumRepositoryImpl @Inject constructor(
 
     override suspend fun removeFromAlbum(itemId: Long): Boolean {
         return withContext(Dispatchers.IO) {
+            val itemImageUri = albumDao.getAlbumItemById(itemId)?.imageStringUri
+            itemImageUri?.let { fileManager.deleteFile(itemImageUri) }
             albumDao.removeAlbumItem(itemId) > 0
         }
     }

@@ -4,5 +4,5 @@ import com.sobolevkir.aipostcard.domain.model.AlbumItem
 
 data class AlbumUiState(
     val items: List<AlbumItem> = emptyList(),
-    val selectedItem: AlbumItem? = null
+    val selectedItem: AlbumItem? = null,
 )

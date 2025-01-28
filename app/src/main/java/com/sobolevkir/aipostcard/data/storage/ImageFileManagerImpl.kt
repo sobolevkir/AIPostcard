@@ -82,8 +82,12 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
 
     override suspend fun deleteFile(uri: String) {
         withContext(Dispatchers.IO) {
-            Uri.parse(uri).path?.let {
-                File(it).delete()
+            try {
+                Uri.parse(uri).path?.let {
+                    File(it).delete()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
     }
@@ -104,7 +108,7 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
     }
 
     companion object {
-        private const val MAX_CACHE_FILE_AGE_MILLIS = 7 * 24 * 60 * 60 * 1000L
+        private const val MAX_CACHE_FILE_AGE_MILLIS = 3 * 24 * 60 * 60 * 1000L
         private const val ALBUM_DIRECTORY_NAME = "album"
     }
 

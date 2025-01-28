@@ -1,7 +1,10 @@
 package com.sobolevkir.aipostcard.presentation.screen.album
 
+import android.util.Log
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.usecase.GetAlbumItemsUseCase
 import com.sobolevkir.aipostcard.domain.usecase.RemoveFromAlbumUseCase
 import com.sobolevkir.aipostcard.domain.usecase.SaveToDeviceGalleryUseCase
@@ -37,13 +40,14 @@ class AlbumViewModel @Inject constructor(
     fun onEvent(event: AlbumUiEvent) {
         when (event) {
             is AlbumUiEvent.OpenItem -> _uiState.update { it.copy(selectedItem = event.item) }
-            is AlbumUiEvent.RemoveItem -> viewModelScope.launch {
-                val isSuccess = removeFromAlbumUseCase(event.itemId)
-                showMessage(
-                    if (isSuccess) {
-                        AlbumMessage.ImageRemovedFromAlbum
-                    } else AlbumMessage.ImageRemovingError
-                )
+            is AlbumUiEvent.RemoveItem -> {
+                Log.d("VIEWMODEL", "RemoveItem, id: ${event.itemId}")
+                viewModelScope.launch {
+                    val isSuccess = removeFromAlbumUseCase(event.itemId)
+                    showMessage(
+                        if (isSuccess) R.string.message_removed_from_album else R.string.message_removing_error
+                    )
+                }
             }
 
             is AlbumUiEvent.CloseItem -> _uiState.update { it.copy(selectedItem = null) }
@@ -51,9 +55,7 @@ class AlbumViewModel @Inject constructor(
                 viewModelScope.launch {
                     val isSuccess = saveToDeviceGalleryUseCase(item.imageStringUri)
                     showMessage(
-                        if (isSuccess) {
-                            AlbumMessage.ImageSavedToGallery
-                        } else AlbumMessage.ImageSavingError
+                        if (isSuccess) R.string.message_saved_to_gallery else R.string.message_saving_error
                     )
                 }
             }
@@ -80,9 +82,9 @@ class AlbumViewModel @Inject constructor(
     }
 
 
-    private fun showMessage(message: AlbumMessage) {
+    private fun showMessage(@StringRes messageResId: Int) {
         viewModelScope.launch {
-            _news.emit(AlbumNews.ShowMessage(message))
+            _news.emit(AlbumNews.ShowMessage(messageResId))
         }
     }
 
