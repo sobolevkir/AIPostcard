@@ -47,6 +47,7 @@ import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.AlbumItem
 import com.sobolevkir.aipostcard.presentation.component.ConfirmDialog
 import com.sobolevkir.aipostcard.presentation.component.ErrorMessage
+import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
 import com.sobolevkir.aipostcard.presentation.navigation.Routes
 import kotlinx.coroutines.flow.collectLatest
 
@@ -100,6 +101,14 @@ fun AlbumView(
             )
         }
     }
+
+    ImageFullScreenView(
+        imageUri = state.selectedItem?.imageStringUri,
+        onClick = { onEvent(AlbumUiEvent.CloseItem) },
+        onSaveToDeviceGallery = { onEvent(AlbumUiEvent.SaveToDeviceGalleryClick) },
+        onShare = { onEvent(AlbumUiEvent.ShareClick) },
+        isVisible = state.selectedItem != null,
+    )
 
 }
 
