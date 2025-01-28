@@ -91,8 +91,8 @@ class GenerateViewModel @Inject constructor(
                         negativePrompt = uiState.value.negativePrompt
                     )
                     if (isSuccess) {
-                        showMessage(R.string.message_added_to_album)
                         _news.emit(GenerateNews.NavigateTo(Routes.Album))
+                        showMessage(R.string.message_added_to_album)
                         _uiState.update { it.copy(isFullScreenOpened = !it.isFullScreenOpened) }
                     } else showMessage(R.string.message_exists_in_album)
                 }
@@ -155,9 +155,9 @@ class GenerateViewModel @Inject constructor(
         }
     }
 
-    private fun showMessage(@StringRes message: Int) {
+    private fun showMessage(@StringRes messageRedId: Int) {
         viewModelScope.launch {
-            _news.emit(GenerateNews.ShowMessage(message))
+            _news.emit(GenerateNews.ShowMessage(messageRedId))
         }
     }
 

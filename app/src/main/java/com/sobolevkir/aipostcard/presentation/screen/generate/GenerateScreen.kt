@@ -57,7 +57,7 @@ fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
         viewModel.news.collectLatest { news ->
             when (news) {
                 is GenerateNews.ShowMessage -> Toast.makeText(
-                    context, news.message, Toast.LENGTH_SHORT
+                    context, news.messageResId, Toast.LENGTH_SHORT
                 ).show()
 
                 is GenerateNews.NavigateTo -> onNavigateTo(news.route)
@@ -94,7 +94,7 @@ fun GenerateView(
                 .weight(1f)
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {

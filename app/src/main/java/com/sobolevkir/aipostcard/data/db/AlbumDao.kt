@@ -22,4 +22,7 @@ interface AlbumDao {
     @Query("SELECT COUNT(*) FROM album_items_table WHERE uuid = :uuid")
     suspend fun isAlbumItemExists(uuid: String): Boolean
 
+    @Query("SELECT * FROM album_items_table WHERE id = :itemId")
+    suspend fun getAlbumItemById(itemId: Long): AlbumItemEntity?
+
 }

@@ -21,7 +21,10 @@
     <string name="message_added_to_album">Изображение добавлено в альбом</string>
     <string name="message_removed_from_album">Изображение удалено из альбома</string>
     <string name="message_exists_in_album">Изображение уже есть в альбоме</string>
+    <string name="message_removing_confirm">Удалить изображение из альбома?</string>
     <string name="action_save_to_gallery">Сохранить\nв галерею</string>
+    <string name="action_yes">Да</string>
+    <string name="action_cancel">Отменить</string>
     <string name="action_share">Поделиться</string>
     <string name="action_add_to_album">Добавить\nв альбом</string>
     <string name="action_clear_input">Очистить ввод</string>

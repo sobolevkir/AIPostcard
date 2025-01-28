@@ -6,6 +6,6 @@ import com.sobolevkir.aipostcard.presentation.navigation.Routes
 sealed interface GenerateNews {
 
     data class NavigateTo(val route: Routes) : GenerateNews
-    data class ShowMessage(@StringRes val message: Int) : GenerateNews
+    data class ShowMessage(@StringRes val messageResId: Int) : GenerateNews
 
 }

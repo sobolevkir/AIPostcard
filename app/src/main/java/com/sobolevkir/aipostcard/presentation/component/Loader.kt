@@ -2,12 +2,14 @@ package com.sobolevkir.aipostcard.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,24 +26,30 @@ import com.sobolevkir.aipostcard.R
 @Composable
 fun Loader(isLoading: Boolean, modifier: Modifier) {
 
-    // TODO: Исправить баг с остановкой анимации при переключении экранов
-
     val animationController = remember { DotLottieController() }
-    if (isLoading) animationController.play() else animationController.stop()
+    LaunchedEffect(isLoading) {
+        if (isLoading) {
+            animationController.play()
+        } else {
+            animationController.pause()
+        }
+    }
 
     Column(
         modifier = modifier.alpha(if (isLoading) 1f else 0f),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DotLottieAnimation(
             source = DotLottieSource.Asset("animation_loading.lottie"),
-            autoplay = false,
+            autoplay = isLoading,
             loop = true,
             playMode = Mode.FORWARD,
             modifier = Modifier
-                .weight(1f)
-                .heightIn(max = 256.dp)
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .wrapContentHeight(Alignment.CenterVertically)
+                .heightIn(max = 400.dp)
+                .weight(1f),
             controller = animationController
         )
         Text(
@@ -49,8 +57,9 @@ fun Loader(isLoading: Boolean, modifier: Modifier) {
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(16.dp)
+                .fillMaxWidth()
+                .padding(16.dp),
+            softWrap = true
         )
     }
 

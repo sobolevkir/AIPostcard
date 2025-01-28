@@ -3,6 +3,7 @@ package com.sobolevkir.aipostcard.presentation.navigation
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -46,7 +47,11 @@ fun BottomNavigationBar(
             ),
         )
 
-    NavigationBar(modifier = Modifier.height(64.dp)) {
+    NavigationBar(
+        modifier = Modifier
+            .height(64.dp)
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+    ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
         barItems.forEach { item ->
@@ -71,7 +76,7 @@ fun BottomNavigationBar(
                 icon = {
                     Icon(
                         imageVector = item.icon,
-                        contentDescription = item.toString(),
+                        contentDescription = item.route,
                         modifier = Modifier.size(iconSize)
                     )
                 },
