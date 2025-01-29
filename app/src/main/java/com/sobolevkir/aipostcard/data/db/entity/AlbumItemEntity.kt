@@ -24,6 +24,12 @@ data class AlbumItemEntity(
     val timeStamp: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "uuid")
-    val uuid: String
+    val uuid: String,
+
+    @ColumnInfo(name = "thumb_string_uri")
+    val thumbStringUri: String,
+
+    @ColumnInfo(name = "style_title", defaultValue = "Свой стиль")
+    val styleTitle: String,
 
 )

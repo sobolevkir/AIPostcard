@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,11 +57,10 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AlbumScreen(onNavigateTo: (Routes) -> Unit = {}) {
+
     val viewModel: AlbumViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-
-    // TODO: Использовать уменьшенные preview изображения!
 
     LaunchedEffect(Unit) {
         viewModel.news.collectLatest { news ->
@@ -184,26 +187,28 @@ fun AlbumItemRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(128.dp)
             .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         verticalAlignment = Alignment.Top
     ) {
         AsyncImage(
-            model = Uri.parse(item.imageStringUri),
+            model = Uri.parse(item.thumbStringUri),
             contentDescription = null,
             modifier = Modifier
-                .size(120.dp)
+                .fillMaxHeight()
+                .aspectRatio(1f)
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surface)
         )
 
         Column(
             modifier = Modifier
-                .weight(1f)
                 .padding(16.dp)
+                .weight(1f)
         ) {
             Text(
                 text = item.prompt,
-                maxLines = 2,
+                maxLines = 3,
                 fontSize = 16.sp,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSurface
@@ -213,12 +218,37 @@ fun AlbumItemRow(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = it,
-                    maxLines = 1,
-                    fontSize = 14.sp,
+                    maxLines = 2,
+                    lineHeight = 13.sp,
+                    fontSize = 12.sp,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.error
                 )
             }
         }
+
+        Column(
+            modifier = Modifier
+                .wrapContentWidth()
+                .fillMaxHeight()
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = item.styleTitle,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                fontSize = 12.sp,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onPrimary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .rotateLayout(Rotation.ROT_270)
+                    .fillMaxWidth()
+            )
+        }
+
     }
 }
+

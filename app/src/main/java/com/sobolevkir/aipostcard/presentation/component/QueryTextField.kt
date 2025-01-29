@@ -61,7 +61,7 @@ fun QueryTextField(
         },
         trailingIcon = {
             if (value.isNotEmpty()) {
-                IconButton(onClick = { onQueryChange(EMPTY_STRING) }, enabled = enabled) {
+                IconButton(onClick = { onQueryChange("") }, enabled = enabled) {
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = stringResource(R.string.action_clear_input)
@@ -74,4 +74,3 @@ fun QueryTextField(
 }
 
 const val REQUEST_MAX_CHAR = 500
-private const val EMPTY_STRING = ""

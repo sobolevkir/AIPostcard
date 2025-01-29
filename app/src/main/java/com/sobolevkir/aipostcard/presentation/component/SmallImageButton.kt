@@ -45,7 +45,7 @@ fun SmallImageButton(
         )
         Text(
             text = stringResource(text),
-            fontSize = 11.sp,
+            fontSize = 12.sp,
             lineHeight = 12.sp,
             softWrap = true,
             textAlign = TextAlign.Center,

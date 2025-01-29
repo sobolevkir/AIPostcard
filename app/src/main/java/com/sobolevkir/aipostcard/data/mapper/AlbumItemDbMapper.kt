@@ -10,9 +10,11 @@ object AlbumItemDbMapper {
             id = entity.id,
             uuid = entity.uuid,
             imageStringUri = entity.imageStringUri,
+            thumbStringUri = entity.thumbStringUri,
             prompt = entity.prompt,
             negativePrompt = entity.negativePrompt,
-            timeStamp = entity.timeStamp
+            timeStamp = entity.timeStamp,
+            styleTitle = entity.styleTitle
         )
     }
 

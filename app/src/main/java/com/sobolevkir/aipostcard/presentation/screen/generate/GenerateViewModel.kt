@@ -88,7 +88,8 @@ class GenerateViewModel @Inject constructor(
                         uuid = it.uuid,
                         cachedImageStringUri = it.imageStringUri,
                         prompt = uiState.value.prompt,
-                        negativePrompt = uiState.value.negativePrompt
+                        negativePrompt = uiState.value.negativePrompt,
+                        styleTitle = uiState.value.selectedStyle?.title ?: ""
                     )
                     if (isSuccess) {
                         _news.emit(GenerateNews.NavigateTo(Routes.Album))

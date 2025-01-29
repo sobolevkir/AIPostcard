@@ -22,19 +22,23 @@ class AlbumRepositoryImpl @Inject constructor(
         uuid: String,
         cachedImageStringUri: String,
         prompt: String,
-        negativePrompt: String?
+        negativePrompt: String?,
+        styleTitle: String
     ): Boolean {
         return withContext(Dispatchers.IO) {
             if (!albumDao.isAlbumItemExists(uuid)) {
-                val imageStringUri = fileManager.copyImageToAlbum(cachedImageStringUri)
-                imageStringUri?.let { albumImage ->
-                    val albumItemEntity = AlbumItemEntity(
-                        uuid = uuid,
-                        imageStringUri = albumImage,
-                        prompt = prompt,
-                        negativePrompt = negativePrompt
-                    )
-                    return@withContext albumDao.addAlbumItem(albumItemEntity) > 0
+                fileManager.copyImageToAlbum(cachedImageStringUri)?.let { image ->
+                    fileManager.createThumbnail(image)?.let { thumb ->
+                        val albumItemEntity = AlbumItemEntity(
+                            uuid = uuid,
+                            imageStringUri = image,
+                            prompt = prompt,
+                            negativePrompt = negativePrompt,
+                            thumbStringUri = thumb,
+                            styleTitle = styleTitle
+                        )
+                        return@withContext albumDao.addAlbumItem(albumItemEntity) > 0
+                    }
                 }
             }
             return@withContext false
@@ -43,9 +47,11 @@ class AlbumRepositoryImpl @Inject constructor(
 
     override suspend fun removeFromAlbum(itemId: Long): Boolean {
         return withContext(Dispatchers.IO) {
-            val itemImageUri = albumDao.getAlbumItemById(itemId)?.imageStringUri
-            itemImageUri?.let { fileManager.deleteFile(itemImageUri) }
-            albumDao.removeAlbumItem(itemId) > 0
+            albumDao.getAlbumItemById(itemId)?.run {
+                fileManager.deleteFile(imageStringUri)
+                fileManager.deleteFile(thumbStringUri)
+                albumDao.removeAlbumItem(itemId) > 0
+            } ?: false
         }
     }
 
