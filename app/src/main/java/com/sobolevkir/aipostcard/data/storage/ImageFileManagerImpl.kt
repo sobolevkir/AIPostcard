@@ -2,6 +2,8 @@ package com.sobolevkir.aipostcard.data.storage
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
@@ -33,19 +35,33 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
         }
     }
 
+    override suspend fun createThumbnail(imageStringUri: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val sourceFile = File(Uri.parse(imageStringUri).path ?: return@withContext null)
+                if (!sourceFile.exists()) return@withContext null
+                val bitmap =
+                    BitmapFactory.decodeFile(sourceFile.absolutePath) ?: return@withContext null
+                val thumbnail = Bitmap.createScaledBitmap(bitmap, 256, 256, true)
+                val thumbnailFile = File(getAlbumDir(), "thumb_${sourceFile.name}")
+                thumbnailFile.outputStream().use { outputStream ->
+                    thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                }
+                Uri.fromFile(thumbnailFile).toString()
+            } catch (e: IOException) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
     override suspend fun copyImageToAlbum(stringUri: String): String? {
         return withContext(Dispatchers.IO) {
             try {
                 val sourceFile = File(Uri.parse(stringUri).path ?: return@withContext null)
                 if (!sourceFile.exists()) return@withContext null
-                val albumDir = File(context.getExternalFilesDir(null), ALBUM_DIRECTORY_NAME)
-                if (!albumDir.exists()) albumDir.mkdirs()
-                val destinationFile = File(albumDir, sourceFile.name)
-                sourceFile.inputStream().use { input ->
-                    destinationFile.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
-                }
+                val destinationFile = File(getAlbumDir(), sourceFile.name)
+                sourceFile.copyTo(destinationFile, overwrite = true)
                 Uri.fromFile(destinationFile).toString()
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -105,6 +121,12 @@ class ImageFileManagerImpl @Inject constructor(private val context: Context) : I
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun getAlbumDir(): File {
+        val albumDir = File(context.getExternalFilesDir(null), ALBUM_DIRECTORY_NAME)
+        if (!albumDir.exists()) albumDir.mkdirs()
+        return albumDir
     }
 
     companion object {

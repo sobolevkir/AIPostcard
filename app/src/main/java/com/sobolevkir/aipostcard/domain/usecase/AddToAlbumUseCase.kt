@@ -9,9 +9,10 @@ class AddToAlbumUseCase @Inject constructor(private val repository: AlbumReposit
         uuid: String,
         cachedImageStringUri: String,
         prompt: String,
-        negativePrompt: String?
+        negativePrompt: String?,
+        styleTitle: String
     ): Boolean {
-        return repository.addToAlbum(uuid, cachedImageStringUri, prompt, negativePrompt)
+        return repository.addToAlbum(uuid, cachedImageStringUri, prompt, negativePrompt, styleTitle)
     }
 
 }
