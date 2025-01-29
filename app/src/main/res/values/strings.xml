@@ -28,4 +28,14 @@
     <string name="action_share">Поделиться</string>
     <string name="action_add_to_album">Добавить\nв альбом</string>
     <string name="action_clear_input">Очистить ввод</string>
+    <string name="text_stack">Стек:</string>
+    <string name="text_app_version">Версия приложения: 1.0</string>
+    <string name="text_developer">Разработчик: © 2025 Кирилл Соболев</string>
+    <string name="text_kotlin_coroutines">Kotlin Coroutines</string>
+    <string name="text_compose">Jetpack Compose</string>
+    <string name="text_retrofit">Retrofit2 + OkHttp</string>
+    <string name="text_hilt">Dagger Hilt</string>
+    <string name="text_mvi">MVI</string>
+    <string name="text_room">Room</string>
+
 </resources>

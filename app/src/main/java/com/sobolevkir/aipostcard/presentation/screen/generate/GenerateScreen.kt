@@ -46,6 +46,7 @@ import com.sobolevkir.aipostcard.presentation.component.SubmitButton
 import com.sobolevkir.aipostcard.presentation.navigation.Routes
 import kotlinx.coroutines.flow.collectLatest
 
+// TODO: Сделать Preview для экрано и элементов
 @Composable
 fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
 

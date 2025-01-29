@@ -6,8 +6,6 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-// TODO: Привести цвета темы к общему стилю
-
 private val DarkColorScheme = darkColorScheme(
     onBackground = AbsoluteWhite,
     primary = Mint,
