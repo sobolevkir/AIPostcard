@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.screen.album
+package com.sobolevkir.aipostcard.presentation.extension
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
