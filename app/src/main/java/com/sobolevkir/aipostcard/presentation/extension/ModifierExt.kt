@@ -37,7 +37,10 @@ private fun Constraints.transpose(): Constraints {
 }
 
 private object HorizontalLayoutModifier : LayoutModifier {
-    override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
+    override fun MeasureScope.measure(
+        measurable: Measurable,
+        constraints: Constraints
+    ): MeasureResult {
         val placeable = measurable.measure(constraints.transpose())
         return layout(placeable.height, placeable.width) {
             placeable.place(
@@ -47,19 +50,31 @@ private object HorizontalLayoutModifier : LayoutModifier {
         }
     }
 
-    override fun IntrinsicMeasureScope.minIntrinsicHeight(measurable: IntrinsicMeasurable, width: Int): Int {
+    override fun IntrinsicMeasureScope.minIntrinsicHeight(
+        measurable: IntrinsicMeasurable,
+        width: Int
+    ): Int {
         return measurable.maxIntrinsicWidth(width)
     }
 
-    override fun IntrinsicMeasureScope.maxIntrinsicHeight(measurable: IntrinsicMeasurable, width: Int): Int {
+    override fun IntrinsicMeasureScope.maxIntrinsicHeight(
+        measurable: IntrinsicMeasurable,
+        width: Int
+    ): Int {
         return measurable.maxIntrinsicWidth(width)
     }
 
-    override fun IntrinsicMeasureScope.minIntrinsicWidth(measurable: IntrinsicMeasurable, height: Int): Int {
+    override fun IntrinsicMeasureScope.minIntrinsicWidth(
+        measurable: IntrinsicMeasurable,
+        height: Int
+    ): Int {
         return measurable.minIntrinsicHeight(height)
     }
 
-    override fun IntrinsicMeasureScope.maxIntrinsicWidth(measurable: IntrinsicMeasurable, height: Int): Int {
+    override fun IntrinsicMeasureScope.maxIntrinsicWidth(
+        measurable: IntrinsicMeasurable,
+        height: Int
+    ): Int {
         return measurable.maxIntrinsicHeight(height)
     }
 }

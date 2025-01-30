@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LibraryAdd
-import androidx.compose.material.icons.filled.SaveAlt
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.rounded.LibraryAdd
+import androidx.compose.material.icons.rounded.SaveAlt
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +41,7 @@ fun ImageFullScreenView(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.8f))
+                    .background(Color.Black.copy(alpha = 0.6f))
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,18 +64,18 @@ fun ImageFullScreenView(
                             .padding(top = 16.dp)
                     ) {
                         SmallImageButton(
-                            iconVector = Icons.Filled.Share,
+                            iconVector = Icons.Rounded.Share,
                             text = R.string.action_share,
                             onClick = onShare
                         )
                         SmallImageButton(
-                            iconVector = Icons.Filled.SaveAlt,
+                            iconVector = Icons.Rounded.SaveAlt,
                             text = R.string.action_save_to_gallery,
                             onClick = onSaveToDeviceGallery
                         )
                         onAddToAlbum?.let {
                             SmallImageButton(
-                                iconVector = Icons.Filled.LibraryAdd,
+                                iconVector = Icons.Rounded.LibraryAdd,
                                 text = R.string.action_add_to_album,
                                 onClick = onAddToAlbum
                             )

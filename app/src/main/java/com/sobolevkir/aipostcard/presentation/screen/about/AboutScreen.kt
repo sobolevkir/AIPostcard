@@ -21,11 +21,13 @@ import com.sobolevkir.aipostcard.presentation.screen.about.component.TagBubble
 fun AboutScreen() {
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row {
-            Text(stringResource(R.string.text_stack), modifier= Modifier.padding(end = 16.dp))
+            Text(stringResource(R.string.text_stack), modifier = Modifier.padding(end = 16.dp))
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp),

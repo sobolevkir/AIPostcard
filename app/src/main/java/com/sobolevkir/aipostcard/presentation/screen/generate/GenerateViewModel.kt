@@ -144,13 +144,8 @@ class GenerateViewModel @Inject constructor(
                         }
                     }
 
-                    is Resource.Error -> _uiState.update {
-                        it.copy(error = result.error)
-                    }
-
-                    is Resource.Loading -> _uiState.update {
-                        it.copy(error = null)
-                    }
+                    is Resource.Error -> _uiState.update { it.copy(error = result.error) }
+                    is Resource.Loading -> _uiState.update { it.copy(error = null) }
                 }
             }
         }

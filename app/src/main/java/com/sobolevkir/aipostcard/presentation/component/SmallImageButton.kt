@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +46,7 @@ fun SmallImageButton(
         Text(
             text = stringResource(text),
             fontSize = 12.sp,
-            lineHeight = 12.sp,
+            lineHeight = 15.sp,
             softWrap = true,
             textAlign = TextAlign.Center,
             color = Color.White,
@@ -60,7 +60,7 @@ fun SmallImageButton(
 @Composable
 private fun SmallImageButtonPreview() {
     SmallImageButton(
-        iconVector = Icons.Filled.Image,
+        iconVector = Icons.Rounded.Image,
         text = R.string.action_save_to_gallery,
         onClick = {})
 }

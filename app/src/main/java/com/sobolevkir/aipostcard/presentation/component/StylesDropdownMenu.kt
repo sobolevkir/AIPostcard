@@ -1,5 +1,9 @@
 package com.sobolevkir.aipostcard.presentation.component
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,10 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
@@ -64,7 +72,18 @@ fun StylesDropdownMenu(
             readOnly = true,
             shape = RoundedCornerShape(16.dp),
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                AnimatedContent(
+                    targetState = expanded,
+                    transitionSpec = {
+                        fadeIn() togetherWith fadeOut()
+                    }, label = ""
+                ) { targetExpanded ->
+                    Icon(
+                        imageVector = if (targetExpanded) Icons.Rounded.ArrowDropUp else Icons.Rounded.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp),
+                    )
+                }
             },
             leadingIcon = {
                 AsyncImage(
