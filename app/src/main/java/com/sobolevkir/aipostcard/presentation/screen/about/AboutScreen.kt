@@ -27,6 +27,9 @@ fun AboutScreen() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row {
+            Text(stringResource(R.string.text_app_version))
+        }
+        Row {
             Text(stringResource(R.string.text_stack), modifier = Modifier.padding(end = 16.dp))
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -40,9 +43,6 @@ fun AboutScreen() {
                 TagBubble(R.string.text_room)
                 TagBubble(R.string.text_hilt)
             }
-        }
-        Row {
-            Text(stringResource(R.string.text_app_version))
         }
         Row {
             Text(stringResource(R.string.text_developer))
