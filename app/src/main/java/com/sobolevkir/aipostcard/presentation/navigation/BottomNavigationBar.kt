@@ -8,9 +8,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.rounded.AddPhotoAlternate
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -35,15 +35,15 @@ fun BottomNavigationBar(
         listOf(
             BarItem(
                 route = Routes.Album.name,
-                icon = Icons.Filled.PhotoLibrary,
+                icon = Icons.Rounded.PhotoLibrary,
             ),
             BarItem(
                 route = Routes.Generate.name,
-                icon = Icons.Filled.AddPhotoAlternate,
+                icon = Icons.Rounded.AddPhotoAlternate,
             ),
             BarItem(
                 route = Routes.About.name,
-                icon = Icons.Filled.Info,
+                icon = Icons.Rounded.Info,
             ),
         )
 
@@ -94,5 +94,5 @@ fun BottomNavigationBar(
 
 data class BarItem(
     val route: String,
-    val icon: ImageVector = Icons.Filled.Info,
+    val icon: ImageVector,
 )

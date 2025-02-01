@@ -35,7 +35,7 @@ fun AlbumItemRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(128.dp)
+            .height(120.dp)
             .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         verticalAlignment = Alignment.Top
     ) {
@@ -57,7 +57,8 @@ fun AlbumItemRow(
             Text(
                 text = item.prompt,
                 maxLines = 3,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
+                lineHeight = 18.sp,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -67,7 +68,7 @@ fun AlbumItemRow(
                 Text(
                     text = it,
                     maxLines = 2,
-                    lineHeight = 13.sp,
+                    lineHeight = 15.sp,
                     fontSize = 12.sp,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.error
@@ -86,7 +87,7 @@ fun AlbumItemRow(
             Text(
                 text = item.styleTitle,
                 maxLines = 2,
-                lineHeight = 12.sp,
+                lineHeight = 15.sp,
                 fontSize = 12.sp,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onPrimary,

@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.Fullscreen
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Fullscreen
+import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -46,6 +46,7 @@ import com.sobolevkir.aipostcard.presentation.component.SubmitButton
 import com.sobolevkir.aipostcard.presentation.navigation.Routes
 import kotlinx.coroutines.flow.collectLatest
 
+// TODO: Сделать Preview для экранов и элементов
 @Composable
 fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
 
@@ -114,7 +115,7 @@ fun GenerateView(
                         }
                 )
                 Icon(
-                    imageVector = Icons.Filled.Fullscreen,
+                    imageVector = Icons.Rounded.Fullscreen,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(40.dp)
@@ -127,7 +128,7 @@ fun GenerateView(
 
             if (!state.isGenerating && state.result == null && state.error == null) {
                 Icon(
-                    imageVector = Icons.Filled.Image,
+                    imageVector = Icons.Rounded.Image,
                     modifier = Modifier.fillMaxSize(),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.surface,
@@ -169,7 +170,7 @@ fun GenerateView(
         SubmitButton(
             enabled = state.styles.isNotEmpty() && state.prompt.isNotEmpty(),
             textResId = if (state.isGenerating) R.string.action_stop else R.string.action_go,
-            iconVector = if (!state.isGenerating) Icons.Default.AutoAwesome else null,
+            iconVector = if (!state.isGenerating) Icons.Rounded.AutoAwesome else null,
             onClick = { onEvent(GenerateUiEvent.SubmitButtonClick) },
             backgroundColor = if (state.isGenerating) {
                 MaterialTheme.colorScheme.tertiary

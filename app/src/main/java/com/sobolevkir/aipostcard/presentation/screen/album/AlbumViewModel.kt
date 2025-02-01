@@ -69,12 +69,7 @@ class AlbumViewModel @Inject constructor(
     private fun loadAlbumItems() {
         getAlbumItemsUseCase().onEach { items ->
             if (items.isEmpty()) {
-                _uiState.update {
-                    it.copy(
-                        items = items,
-                        selectedItem = null
-                    )
-                }
+                _uiState.update { it.copy(items = items, selectedItem = null) }
             } else {
                 _uiState.update { it.copy(items = items) }
             }
