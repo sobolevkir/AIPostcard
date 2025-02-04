@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                         navHostController = navController,
                         modifier = Modifier
                             .padding(innerPadding)
-                            .padding(16.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
             }

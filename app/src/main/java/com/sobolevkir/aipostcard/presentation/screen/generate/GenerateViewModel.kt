@@ -94,7 +94,7 @@ class GenerateViewModel @Inject constructor(
                     if (isSuccess) {
                         _news.emit(GenerateNews.NavigateTo(Routes.Album))
                         showMessage(R.string.message_added_to_album)
-                        _uiState.update { it.copy(isFullScreenOpened = !it.isFullScreenOpened) }
+                        _uiState.update { it.copy(isFullScreenOpened = false) }
                     } else showMessage(R.string.message_exists_in_album)
                 }
             }

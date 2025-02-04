@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.component
+package com.sobolevkir.aipostcard.presentation.screen.generate.component
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth

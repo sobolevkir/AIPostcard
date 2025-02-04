@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AI Postcard</string>
+    <string name="app_name" translatable="false">AI Postcard</string>
     <string name="title_generate">Сгенерировать</string>
     <string name="title_album">Альбом</string>
     <string name="title_about">О приложении</string>
@@ -27,15 +27,14 @@
     <string name="action_cancel">Отменить</string>
     <string name="action_share">Поделиться</string>
     <string name="action_add_to_album">Добавить\nв альбом</string>
-    <string name="action_clear_input">Очистить ввод</string>
+    <string name="action_clear_input">Очистить</string>
     <string name="text_stack">Стек:</string>
-    <string name="text_app_version">Версия приложения: 1.0</string>
+    <string name="text_app_version">Версия: 1.0</string>
     <string name="text_developer">© 2025 Кирилл Соболев</string>
-    <string name="text_kotlin_coroutines">Kotlin Coroutines</string>
-    <string name="text_compose">Jetpack Compose</string>
-    <string name="text_retrofit">Retrofit2 + OkHttp</string>
-    <string name="text_hilt">Dagger Hilt</string>
-    <string name="text_mvi">MVI</string>
-    <string name="text_room">Room</string>
-
+    <string name="text_kotlin_coroutines" translatable="false">Kotlin Coroutines</string>
+    <string name="text_compose" translatable="false">Jetpack Compose</string>
+    <string name="text_retrofit" translatable="false">Retrofit2 + OkHttp</string>
+    <string name="text_hilt" translatable="false">Dagger Hilt</string>
+    <string name="text_mvi" translatable="false">MVI</string>
+    <string name="text_room" translatable="false">Room</string>
 </resources>

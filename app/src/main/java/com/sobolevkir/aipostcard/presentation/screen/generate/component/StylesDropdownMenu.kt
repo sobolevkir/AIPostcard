@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.component
+package com.sobolevkir.aipostcard.presentation.screen.generate.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -67,6 +67,7 @@ fun StylesDropdownMenu(
             value = selectedStyle?.title ?: stringResource(R.string.loading),
             onValueChange = {},
             modifier = Modifier
+                .padding(bottom = 16.dp)
                 .fillMaxWidth()
                 .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, true),
             readOnly = true,
