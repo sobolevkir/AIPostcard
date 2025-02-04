@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.component
+package com.sobolevkir.aipostcard.presentation.screen.generate.component
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
@@ -38,8 +38,8 @@ fun SubmitButton(
         onClick = onClick,
         enabled = enabled,
         modifier = Modifier
+            .padding(vertical = 16.dp)
             .fillMaxWidth()
-            .padding(top = 12.dp)
             .height(60.dp),
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
     ) {
@@ -56,7 +56,7 @@ fun SubmitButton(
             }
             Text(
                 text = stringResource(textResId),
-                fontSize = 16.sp,
+                fontSize = 17.sp,
                 fontWeight = FontWeight.Normal,
                 color = contentColor
             )

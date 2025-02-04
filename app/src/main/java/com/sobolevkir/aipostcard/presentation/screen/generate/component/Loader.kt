@@ -1,4 +1,4 @@
-package com.sobolevkir.aipostcard.presentation.component
+package com.sobolevkir.aipostcard.presentation.screen.generate.component
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing

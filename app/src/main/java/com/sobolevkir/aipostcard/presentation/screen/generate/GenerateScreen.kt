@@ -4,7 +4,6 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -39,14 +38,13 @@ import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.GenerationErrorType
 import com.sobolevkir.aipostcard.presentation.component.ErrorMessage
 import com.sobolevkir.aipostcard.presentation.component.ImageFullScreenView
-import com.sobolevkir.aipostcard.presentation.component.Loader
-import com.sobolevkir.aipostcard.presentation.component.QueryTextField
-import com.sobolevkir.aipostcard.presentation.component.StylesDropdownMenu
-import com.sobolevkir.aipostcard.presentation.component.SubmitButton
 import com.sobolevkir.aipostcard.presentation.navigation.Routes
+import com.sobolevkir.aipostcard.presentation.screen.generate.component.Loader
+import com.sobolevkir.aipostcard.presentation.screen.generate.component.QueryTextField
+import com.sobolevkir.aipostcard.presentation.screen.generate.component.StylesDropdownMenu
+import com.sobolevkir.aipostcard.presentation.screen.generate.component.SubmitButton
 import kotlinx.coroutines.flow.collectLatest
 
-// TODO: Сделать Preview для экранов и элементов
 @Composable
 fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
 
@@ -72,7 +70,6 @@ fun GenerateScreen(onNavigateTo: (Routes) -> Unit = {}) {
     )
 }
 
-
 @Composable
 fun GenerateView(
     onEvent: (GenerateUiEvent) -> Unit = {},
@@ -83,14 +80,9 @@ fun GenerateView(
     val focusManager = LocalFocusManager.current
     val generationResult = state.result
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-
+    Column(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
-                .padding(bottom = 16.dp)
                 .align(Alignment.CenterHorizontally)
                 .weight(1f)
                 .aspectRatio(1f)
@@ -99,7 +91,6 @@ fun GenerateView(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-
             Loader(isLoading = state.isGenerating, modifier = Modifier.fillMaxSize())
 
             generationResult?.let {
@@ -146,6 +137,25 @@ fun GenerateView(
             }
         }
 
+        SubmitButton(
+            enabled = state.styles.isNotEmpty() && state.prompt.isNotEmpty(),
+            textResId = if (state.isGenerating) R.string.action_stop else R.string.action_go,
+            iconVector = if (!state.isGenerating) Icons.Rounded.AutoAwesome else null,
+            onClick = { onEvent(GenerateUiEvent.SubmitButtonClick) },
+            backgroundColor = if (state.isGenerating) {
+                MaterialTheme.colorScheme.tertiary
+            } else {
+                MaterialTheme.colorScheme.primary
+            }
+        )
+
+        StylesDropdownMenu(
+            styles = state.styles,
+            selectedStyle = state.selectedStyle,
+            onItemSelected = { newStyle -> onEvent(GenerateUiEvent.StyleSelect(newStyle.name)) },
+            enabled = !state.isGenerating,
+        )
+
         QueryTextField(
             value = state.prompt,
             onQueryChange = { onEvent(GenerateUiEvent.PromptChange(it)) },
@@ -158,25 +168,6 @@ fun GenerateView(
             onQueryChange = { onEvent(GenerateUiEvent.NegativePromptChange(it)) },
             enabled = !state.isGenerating,
             labelTextResId = R.string.label_negative_prompt
-        )
-
-        StylesDropdownMenu(
-            styles = state.styles,
-            selectedStyle = state.selectedStyle,
-            onItemSelected = { newStyle -> onEvent(GenerateUiEvent.StyleSelect(newStyle.name)) },
-            enabled = !state.isGenerating,
-        )
-
-        SubmitButton(
-            enabled = state.styles.isNotEmpty() && state.prompt.isNotEmpty(),
-            textResId = if (state.isGenerating) R.string.action_stop else R.string.action_go,
-            iconVector = if (!state.isGenerating) Icons.Rounded.AutoAwesome else null,
-            onClick = { onEvent(GenerateUiEvent.SubmitButtonClick) },
-            backgroundColor = if (state.isGenerating) {
-                MaterialTheme.colorScheme.tertiary
-            } else {
-                MaterialTheme.colorScheme.primary
-            }
         )
     }
 
