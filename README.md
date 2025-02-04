@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/sobolevkir/AIPostcard/blob/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="200" />
+<img src="https://github.com/sobolevkir/AIPostcard/blob/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="192" height="192" />
 </div>
 <h1 align="center">AI Postcard</h1>
 <p align="center">
