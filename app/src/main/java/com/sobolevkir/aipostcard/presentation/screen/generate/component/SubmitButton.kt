@@ -3,7 +3,6 @@ package com.sobolevkir.aipostcard.presentation.screen.generate.component
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -38,12 +37,14 @@ fun SubmitButton(
         onClick = onClick,
         enabled = enabled,
         modifier = Modifier
-            .padding(vertical = 16.dp)
-            .fillMaxWidth()
-            .height(60.dp),
+            .padding(vertical = 20.dp)
+            .fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 12.dp)
+        ) {
             iconVector?.let {
                 Icon(
                     imageVector = iconVector,

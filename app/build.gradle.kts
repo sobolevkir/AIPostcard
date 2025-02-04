@@ -80,9 +80,6 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.dotlottie.android)
     implementation(libs.androidx.material.icons.extended)
-    // KoTEA
-    // implementation(libs.tinkoff.kotea.core)
-    // implementation(libs.tinkoff.kotea.android)
     // Testing
     testImplementation(libs.junit)
     debugImplementation(libs.androidx.ui.tooling)

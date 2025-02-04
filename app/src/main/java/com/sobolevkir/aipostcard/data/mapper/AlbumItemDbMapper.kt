@@ -14,7 +14,8 @@ object AlbumItemDbMapper {
             prompt = entity.prompt,
             negativePrompt = entity.negativePrompt,
             timeStamp = entity.timeStamp,
-            styleTitle = entity.styleTitle
+            styleTitleRu = entity.styleTitleRu,
+            styleTitleEn = entity.styleTitleEn
         )
     }
 

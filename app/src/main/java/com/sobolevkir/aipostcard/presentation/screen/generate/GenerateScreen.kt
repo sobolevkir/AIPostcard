@@ -6,9 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -138,7 +140,7 @@ fun GenerateView(
         }
 
         SubmitButton(
-            enabled = state.styles.isNotEmpty() && state.prompt.isNotEmpty(),
+            enabled = state.styles.isNotEmpty() && state.prompt.trim().isNotEmpty(),
             textResId = if (state.isGenerating) R.string.action_stop else R.string.action_go,
             iconVector = if (!state.isGenerating) Icons.Rounded.AutoAwesome else null,
             onClick = { onEvent(GenerateUiEvent.SubmitButtonClick) },
@@ -169,6 +171,8 @@ fun GenerateView(
             enabled = !state.isGenerating,
             labelTextResId = R.string.label_negative_prompt
         )
+
+        Spacer(Modifier.height(4.dp))
     }
 
     ImageFullScreenView(

@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,9 @@ fun AlbumItemRow(
     item: AlbumItem,
     modifier: Modifier = Modifier
 ) {
+
+    val language = LocalContext.current.resources.configuration.locales[0].language
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -85,7 +89,7 @@ fun AlbumItemRow(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = item.styleTitle,
+                text = if (language == "ru") item.styleTitleRu else item.styleTitleEn,
                 maxLines = 2,
                 lineHeight = 15.sp,
                 fontSize = 12.sp,

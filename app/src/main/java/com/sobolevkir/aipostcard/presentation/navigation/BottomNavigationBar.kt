@@ -3,14 +3,15 @@ package com.sobolevkir.aipostcard.presentation.navigation
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddPhotoAlternate
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PhotoLibrary
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -47,10 +48,16 @@ fun BottomNavigationBar(
             ),
         )
 
+    HorizontalDivider(
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
+    )
+
     NavigationBar(
         modifier = Modifier
-            .height(64.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            .navigationBarsPadding()
+            .height(52.dp),
+        containerColor = Color.Transparent
     ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route

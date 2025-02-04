@@ -23,7 +23,8 @@ class AlbumRepositoryImpl @Inject constructor(
         cachedImageStringUri: String,
         prompt: String,
         negativePrompt: String?,
-        styleTitle: String
+        styleTitleRu: String,
+        styleTitleEn: String
     ): Boolean {
         return withContext(Dispatchers.IO) {
             if (!albumDao.isAlbumItemExists(uuid)) {
@@ -35,7 +36,8 @@ class AlbumRepositoryImpl @Inject constructor(
                             prompt = prompt,
                             negativePrompt = negativePrompt,
                             thumbStringUri = thumb,
-                            styleTitle = styleTitle
+                            styleTitleRu = styleTitleRu,
+                            styleTitleEn = styleTitleEn
                         )
                         return@withContext albumDao.addAlbumItem(albumItemEntity) > 0
                     }

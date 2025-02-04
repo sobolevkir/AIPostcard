@@ -10,7 +10,8 @@ interface AlbumRepository {
         cachedImageStringUri: String,
         prompt: String,
         negativePrompt: String?,
-        styleTitle: String
+        styleTitleRu: String,
+        styleTitleEn: String
     ): Boolean
 
     suspend fun removeFromAlbum(itemId: Long): Boolean

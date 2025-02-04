@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,8 +50,8 @@ fun StylesDropdownMenu(
     onItemSelected: (Style) -> Unit,
     enabled: Boolean
 ) {
-    var expanded by remember { mutableStateOf(false) }
 
+    var expanded by remember { mutableStateOf(false) }
     val imageModifier = Modifier
         .padding(start = 16.dp, end = 16.dp)
         .size(80.dp, 40.dp)
@@ -58,16 +59,18 @@ fun StylesDropdownMenu(
         .background(MaterialTheme.colorScheme.surfaceVariant)
         .fillMaxSize()
         .alpha(if (enabled) 1f else 0.35f)
+    val language = LocalContext.current.resources.configuration.locales[0].language
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
+        modifier = Modifier.padding(bottom = 16.dp)
     ) {
         TextField(
-            value = selectedStyle?.title ?: stringResource(R.string.loading),
+            value = (if (language == "ru") selectedStyle?.titleRu else selectedStyle?.titleEn)
+                ?: stringResource(R.string.loading),
             onValueChange = {},
             modifier = Modifier
-                .padding(bottom = 16.dp)
                 .fillMaxWidth()
                 .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, true),
             readOnly = true,
@@ -75,9 +78,8 @@ fun StylesDropdownMenu(
             trailingIcon = {
                 AnimatedContent(
                     targetState = expanded,
-                    transitionSpec = {
-                        fadeIn() togetherWith fadeOut()
-                    }, label = ""
+                    transitionSpec = { fadeIn() togetherWith fadeOut() },
+                    label = ""
                 ) { targetExpanded ->
                     Icon(
                         imageVector = if (targetExpanded) Icons.Rounded.ArrowDropUp else Icons.Rounded.ArrowDropDown,
@@ -105,6 +107,9 @@ fun StylesDropdownMenu(
         ExposedDropdownMenu(
             expanded = expanded && enabled && styles.isNotEmpty(),
             onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+            shape = RoundedCornerShape(16.dp),
         ) {
             styles.forEach { item ->
                 DropdownMenuItem(
@@ -116,7 +121,7 @@ fun StylesDropdownMenu(
                                 modifier = imageModifier,
                                 contentScale = ContentScale.Crop
                             )
-                            Text(text = item.title)
+                            Text(text = if (language == "ru") item.titleRu else item.titleEn)
                         }
                     },
                     onClick = {
@@ -137,8 +142,9 @@ private fun SimpleDropdownMenuPreview() {
         mutableStateOf(
             Style(
                 "https://via.placeholder.com/150",
-                "Style 1",
-                "Реализм"
+                "REALISM",
+                "Реализм",
+                titleEn = "Realism"
             )
         )
     }

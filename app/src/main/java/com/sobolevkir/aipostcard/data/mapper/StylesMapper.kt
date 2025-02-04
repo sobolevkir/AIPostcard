@@ -9,7 +9,8 @@ object StylesMapper {
             Style(
                 styleImageUrl = it.image,
                 name = it.name,
-                title = it.title
+                titleRu = it.title,
+                titleEn = it.titleEn
             )
         }
     }
