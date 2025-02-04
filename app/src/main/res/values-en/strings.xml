@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_generate">Generate</string>
+    <string name="title_album">Album</string>
+    <string name="title_about">About the app</string>
+    <string name="action_go">Start generation</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_retry">Refresh</string>
+    <string name="action_delete">Delete</string>
+    <string name="label_prompt">Describe the prompt</string>
+    <string name="label_negative_prompt">Describe the negative prompt</string>
+    <string name="loading">Loading…</string>
+    <string name="message_generating">Wait, the generation is underway.…</string>
+    <string name="message_connection_problem">Check your\nInternet connection</string>
+    <string name="message_unknown_error">Something went wrong :(\nPlease try to repeat\nthe request later.</string>
+    <string name="message_empty_album">There are no images\nin the album yet.</string>
+    <string name="message_saved_to_gallery">The image is saved to the device\'s gallery</string>
+    <string name="message_censored">The request does not comply with the content policy</string>
+    <string name="message_saving_error">Error! Couldn\'t save image to device</string>
+    <string name="message_removing_error">Error! Couldn\'t delete image from album</string>
+    <string name="message_added_to_album">Image added to album</string>
+    <string name="message_removed_from_album">Image removed from album</string>
+    <string name="message_exists_in_album">The image is already in the album</string>
+    <string name="message_removing_confirm">Delete an image from an album?</string>
+    <string name="action_save_to_gallery">Save\nto gallery</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_share">Share</string>
+    <string name="action_add_to_album">Add\nto Album</string>
+    <string name="action_clear_input">Clear</string>
+    <string name="text_stack">Stack:</string>
+    <string name="text_app_version">Version: 1.0</string>
+    <string name="text_developer">© 2025 Kirill Sobolev</string>
+</resources>
