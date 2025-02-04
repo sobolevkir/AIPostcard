@@ -21,9 +21,7 @@ import com.sobolevkir.aipostcard.presentation.screen.about.component.TagBubble
 fun AboutScreen() {
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 8.dp),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Row {
@@ -37,6 +35,8 @@ fun AboutScreen() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 TagBubble(R.string.text_mvi)
+                TagBubble(R.string.text_clean_arch)
+                TagBubble(R.string.text_single_activity)
                 TagBubble(R.string.text_compose)
                 TagBubble(R.string.text_kotlin_coroutines)
                 TagBubble(R.string.text_retrofit)

@@ -8,5 +8,6 @@ data class AlbumItem(
     val prompt: String,
     val negativePrompt: String?,
     val timeStamp: Long,
-    val styleTitle: String,
+    val styleTitleRu: String,
+    val styleTitleEn: String,
 )

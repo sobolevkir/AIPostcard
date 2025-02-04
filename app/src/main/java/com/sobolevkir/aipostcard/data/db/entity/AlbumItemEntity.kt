@@ -29,7 +29,10 @@ data class AlbumItemEntity(
     @ColumnInfo(name = "thumb_string_uri")
     val thumbStringUri: String,
 
-    @ColumnInfo(name = "style_title")
-    val styleTitle: String,
+    @ColumnInfo(name = "style_title_ru")
+    val styleTitleRu: String,
 
-)
+    @ColumnInfo(name = "style_title_en")
+    val styleTitleEn: String,
+
+    )

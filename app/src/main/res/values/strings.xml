@@ -36,5 +36,7 @@
     <string name="text_retrofit" translatable="false">Retrofit2 + OkHttp</string>
     <string name="text_hilt" translatable="false">Dagger Hilt</string>
     <string name="text_mvi" translatable="false">MVI</string>
+    <string name="text_clean_arch" translatable="false">Clean Architecture</string>
+    <string name="text_single_activity" translatable="false">Single Activity</string>
     <string name="text_room" translatable="false">Room</string>
 </resources>
