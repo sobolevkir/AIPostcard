@@ -1,6 +1,5 @@
 package com.sobolevkir.aipostcard.presentation.screen.album
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,7 +40,6 @@ class AlbumViewModel @Inject constructor(
         when (event) {
             is AlbumUiEvent.OpenItem -> _uiState.update { it.copy(selectedItem = event.item) }
             is AlbumUiEvent.RemoveItem -> {
-                Log.d("VIEWMODEL", "RemoveItem, id: ${event.itemId}")
                 viewModelScope.launch {
                     val isSuccess = removeFromAlbumUseCase(event.itemId)
                     showMessage(
