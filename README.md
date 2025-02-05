@@ -17,36 +17,40 @@
 </p>
 
 <h4 align="center">Convenient and simple image generation with Fusion Brain API</h4>
-
-## Available languages 🌍
-- Russian 🇷🇺
-- English 🇬🇧
-
+  
 <table>
   <tr>
-    <td valign="top">![AIPostcard_demo_optimized](https://github.com/user-attachments/assets/3065608c-3d7b-45ca-96a2-96804b610585)
-</td>
     <td valign="top">
-      <h2 align="left">Features 📱</h2> </br>
-      - Сhoosing different styles from the ready-made set ✅ </br>
-      - Saving favourites to the special app album ❤️ </br>
-      - Saving images to the device's gallery 💾 </br>
-      - Theme: Dark | Light 🖤🤍
+      <img alt="AIPostcard_demo" src="https://github.com/user-attachments/assets/3065608c-3d7b-45ca-96a2-96804b610585" width="300">
+    </td>
+    <td valign="top">
+      <h2>Features 📱</h2>
+      <ul>
+        <li>Сhoosing different styles from the ready-made set ✅ </li>
+        <li>Saving favourites to the special app album ❤️ </li>
+        <li>Saving images to the device's gallery 💾 </li>
+        <li>Theme: Dark | Light 🖤🤍</li>
+      </ul>
+      <h2>Technologies stack 🚀</h2>
+      <ul>
+        <li>Single Activity
+        <li>MVI Architecture</li>
+        <li>Clean Architecture</li>
+        <li>Jetpack Compose & Material Design 3</li>
+        <li>Kotlin Coroutines & Flow</li>
+        <li>Compose Navigation</li>
+        <li>Retrofit2 + OkHttp</li>
+        <li>Room Database</li>
+        <li>Dagger Hilt</li>
+        <li>Android test</li>
+      </ul>
    </td>
   </tr>
 </table>
 
-## Technologies stack 🚀
-- Single Activity
-- MVI Architecture
-- Clean Architecture
-- Jetpack Compose & Material Design 3
-- Kotlin Coroutines & Flow
-- Compose Navigation
-- Retrofit2 + OkHttp
-- Room Database
-- Dagger Hilt
-- Android test
+## Available languages 🌍
+- Russian 🇷🇺
+- English 🇬🇧
 
 ## Screenshots 📸
 <table>
