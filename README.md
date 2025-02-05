@@ -26,14 +26,14 @@
     <td valign="top">
       <h2>Features 📱</h2>
       <ul>
-        <li>Сhoosing different styles from the ready-made set ✅ </li>
-        <li>Saving favourites to the special app album ❤️ </li>
-        <li>Saving images to the device's gallery 💾 </li>
+        <li>Сhoosing different styles from the ready-made set ✅</li>
+        <li>Saving favourites to the special app album ❤️</li>
+        <li>Saving images to the device's gallery 💾</li>
         <li>Theme: Dark | Light 🖤🤍</li>
       </ul>
       <h2>Technologies stack 🚀</h2>
       <ul>
-        <li>Single Activity
+        <li>Single Activity</li>
         <li>MVI Architecture</li>
         <li>Clean Architecture</li>
         <li>Jetpack Compose & Material Design 3</li>
@@ -42,6 +42,7 @@
         <li>Retrofit2 + OkHttp</li>
         <li>Room Database</li>
         <li>Dagger Hilt</li>
+        <li>Lottie animation</li>
         <li>Android test</li>
       </ul>
    </td>
