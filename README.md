@@ -31,7 +31,7 @@
         <li>Saving images to the device's gallery 💾</li>
         <li>Theme: Dark | Light 🖤🤍</li>
       </ul>
-      <h2>Technologies stack 🚀</h2>
+      <h2>Technologies stack ⚙</h2>
       <ul>
         <li>Single Activity</li>
         <li>MVI Architecture</li>
@@ -56,15 +56,16 @@
 ## Screenshots 📸
 <table>
   <tr>
-    <td valign="top"><img src="https://github.com/user-attachments/assets/06ec5822-64ce-4d3b-82fb-9d091a2ec1d0" width="250dp"></td>
-    <td valign="top"><img src="https://github.com/user-attachments/assets/58c5cb04-6c4a-4417-b109-a7404dfa2e8a" width="250dp"></td>
-    <td valign="top"><img src="https://github.com/user-attachments/assets/81d7f8d8-910c-4949-aeb6-8584ec4e91c2" width="250dp"></td>
-    <td valign="top"><img src="https://github.com/user-attachments/assets/c3fdf776-0715-4a0a-a936-5751c211444a" width="250dp"></td>
+    <td><img src="https://github.com/user-attachments/assets/06ec5822-64ce-4d3b-82fb-9d091a2ec1d0" width="240dp"></td>
+    <td><img src="https://github.com/user-attachments/assets/58c5cb04-6c4a-4417-b109-a7404dfa2e8a" width="240dp"></td>
+    <td><img src="https://github.com/user-attachments/assets/81d7f8d8-910c-4949-aeb6-8584ec4e91c2" width="240dp"></td>
+    <td><img src="https://github.com/user-attachments/assets/c3fdf776-0715-4a0a-a936-5751c211444a" width="240dp"></td>
   </tr>
-  
  </table>
 
-## Project structure ⚙
-<p>
-<img src="" width="100%"></img>
-</p>
+## Project structure 🏗️
+
+## Upcoming Features 🚀
+- Creating postcards from generated images
+- Adding text labels in postcards
+- Adding frames for postcards
