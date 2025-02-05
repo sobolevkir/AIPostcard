@@ -56,15 +56,12 @@
 ## Screenshots 📸
 <table>
   <tr>
-    <td valign="top"><img src="" align="left" width="350dp"></td>
-    <td valign="top"><img src="" align="center" width="350dp"></td>
-    <td valign="top"><img src="" align="right" width="350dp"></td>
+    <td valign="top"><img src="https://github.com/user-attachments/assets/06ec5822-64ce-4d3b-82fb-9d091a2ec1d0" width="250dp"></td>
+    <td valign="top"><img src="https://github.com/user-attachments/assets/58c5cb04-6c4a-4417-b109-a7404dfa2e8a" width="250dp"></td>
+    <td valign="top"><img src="https://github.com/user-attachments/assets/81d7f8d8-910c-4949-aeb6-8584ec4e91c2" width="250dp"></td>
+    <td valign="top"><img src="https://github.com/user-attachments/assets/c3fdf776-0715-4a0a-a936-5751c211444a" width="250dp"></td>
   </tr>
-  <tr>
-    <td valign="top"><img src="" align="left" width="350dp"></td>
-    <td valign="top"><img src="" align="right" width="350dp"></td>
-    <td valign="top"><img src="" align="right" width="350dp"></td>
-  </tr>
+  
  </table>
 
 ## Project structure ⚙
