@@ -22,11 +22,19 @@
 - Russian 🇷🇺
 - English 🇬🇧
 
-## Features 📱
-- Сhoosing different styles from the ready-made set ✅
-- Saving favourites to the special app album ❤️
-- Saving images to the device's gallery 💾
-- Theme: Dark | Light 🖤🤍
+<table>
+  <tr>
+    <td valign="top">![AIPostcard_demo_optimized](https://github.com/user-attachments/assets/3065608c-3d7b-45ca-96a2-96804b610585)
+</td>
+    <td valign="top">
+      <h2 align="left">Features 📱</h2> </br>
+      - Сhoosing different styles from the ready-made set ✅ </br>
+      - Saving favourites to the special app album ❤️ </br>
+      - Saving images to the device's gallery 💾 </br>
+      - Theme: Dark | Light 🖤🤍
+   </td>
+  </tr>
+</table>
 
 ## Technologies stack 🚀
 - Single Activity
