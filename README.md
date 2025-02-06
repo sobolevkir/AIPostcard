@@ -29,6 +29,7 @@
         <li>Сhoosing different styles from the ready-made set ✅</li>
         <li>Saving favourites to the special app album ❤️</li>
         <li>Saving images to the device's gallery 💾</li>
+        <li>Image caching and automatic cache cleanup 📂</li>
         <li>Theme: Dark | Light 🖤🤍</li>
       </ul>
       <h2>Technologies stack ⚙</h2>
@@ -64,6 +65,7 @@
  </table>
 
 ## Project structure 🏗️
+<img width="539" alt="Project structure-Project structure-AI Reorganized (1)" src="https://github.com/user-attachments/assets/0b0242f6-81da-4065-aa08-4bd096253d3c" />
 
 ## Upcoming Features 🚀
 - Creating postcards from generated images
