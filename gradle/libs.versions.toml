@@ -20,7 +20,7 @@ okhttp = "4.12.0"
 room = "2.6.1"
 # Images & animations displaying
 coil = "2.7.0"
-dotlottie = "0.6.2"
+lottieCompose = "6.6.2"
 materialIconsExtended = "1.7.7"
 # Testing
 junit = "4.13.2"
@@ -46,16 +46,16 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 # Network
-retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref = "retrofit" }
-retrofit-converterJson = { group = "com.squareup.retrofit2", name="converter-gson", version.ref = "retrofit" }
-okhttp = { group = "com.squareup.okhttp3", name="okhttp", version.ref = "okhttp" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converterJson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 # Database
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 # Images & animations displaying
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
-dotlottie-android = { module = "com.github.LottieFiles:dotlottie-android", version.ref = "dotlottie" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 # Testing
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }

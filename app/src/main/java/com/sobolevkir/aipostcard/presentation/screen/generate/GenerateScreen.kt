@@ -93,7 +93,9 @@ fun GenerateView(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Loader(isLoading = state.isGenerating, modifier = Modifier.fillMaxSize())
+            if (state.isGenerating) {
+                Loader(modifier = Modifier.fillMaxSize())
+            }
 
             generationResult?.let {
                 AsyncImage(

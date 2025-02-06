@@ -30,8 +30,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            //isShrinkResources = true
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -78,7 +78,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     // Images & animations
     implementation(libs.coil.compose)
-    implementation(libs.dotlottie.android)
+    implementation(libs.lottie.compose)
     implementation(libs.androidx.material.icons.extended)
     // Testing
     testImplementation(libs.junit)
