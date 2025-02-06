@@ -29,10 +29,11 @@ fun QueryTextField(
     enabled: Boolean,
     isError: Boolean? = null,
     @StringRes labelTextResId: Int,
+    maxChar: Int = 1000,
 ) {
     TextField(
         value = value,
-        onValueChange = { if (it.length <= REQUEST_MAX_CHAR) onQueryChange(it) },
+        onValueChange = { if (it.length <= maxChar) onQueryChange(it) },
         enabled = enabled,
         singleLine = true,
         isError = isError ?: false,
@@ -53,7 +54,7 @@ fun QueryTextField(
         shape = RoundedCornerShape(16.dp),
         supportingText = {
             Text(
-                text = "${value.length} / $REQUEST_MAX_CHAR",
+                text = "${value.length} / $maxChar",
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.End,
@@ -72,5 +73,3 @@ fun QueryTextField(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
     )
 }
-
-const val REQUEST_MAX_CHAR = 500

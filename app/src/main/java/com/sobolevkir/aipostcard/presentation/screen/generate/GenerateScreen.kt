@@ -162,14 +162,16 @@ fun GenerateView(
             value = state.prompt,
             onQueryChange = { onEvent(GenerateUiEvent.PromptChange(it)) },
             enabled = !state.isGenerating,
-            labelTextResId = R.string.label_prompt
+            labelTextResId = R.string.label_prompt,
+            maxChar = PROMPT_MAX_CHAR
         )
 
         QueryTextField(
             value = state.negativePrompt,
             onQueryChange = { onEvent(GenerateUiEvent.NegativePromptChange(it)) },
             enabled = !state.isGenerating,
-            labelTextResId = R.string.label_negative_prompt
+            labelTextResId = R.string.label_negative_prompt,
+            maxChar = NEGATIVE_PROMPT_MAX_CHAR
         )
 
         Spacer(Modifier.height(4.dp))
@@ -185,3 +187,6 @@ fun GenerateView(
     )
 
 }
+
+const val PROMPT_MAX_CHAR = 1000
+const val NEGATIVE_PROMPT_MAX_CHAR = 500
