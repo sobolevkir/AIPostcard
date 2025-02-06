@@ -41,7 +41,7 @@ fun ImageFullScreenView(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.8f))
+                    .background(Color.Black.copy(alpha = 0.5f))
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
