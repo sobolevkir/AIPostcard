@@ -1,7 +1,10 @@
 package com.sobolevkir.aipostcard.presentation.screen.generate.component
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,9 +39,15 @@ fun Loader(modifier: Modifier) {
         isPlaying = true,
         iterations = LottieConstants.IterateForever
     )
-    val alpha by animateFloatAsState(
-        targetValue = if (progress < 1f) 1f else 0.4f,
-        animationSpec = tween(durationMillis = 500, easing = LinearEasing), label = ""
+    val infiniteTransition = rememberInfiniteTransition(label = "")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.4f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = ""
     )
 
     Column(

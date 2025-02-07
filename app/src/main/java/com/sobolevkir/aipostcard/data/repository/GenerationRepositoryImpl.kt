@@ -35,7 +35,10 @@ class GenerationRepositoryImpl @Inject constructor(
     override fun getStyles(): Flow<Resource<List<Style>>> = flow {
         emit(
             errorHandler
-                .safeApiCall { apiService.getStyles() }
+                .safeApiCall {
+                    val styles = apiService.getStyles()
+                    styles
+                }
                 .mapResource { StylesMapper.map(it) }
         )
     }.onStart { emit(Resource.Loading) }.flowOn(Dispatchers.IO)

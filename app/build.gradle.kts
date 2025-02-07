@@ -27,7 +27,6 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -71,6 +70,7 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     // Network
+    implementation(libs.gson)
     implementation(libs.bundles.retrofit)
     // Database
     implementation(libs.androidx.room.runtime)
