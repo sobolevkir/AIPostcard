@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+gson = "2.12.1"
 kotlin = "2.1.10"
 coreKtx = "1.15.0"
 lifecycleRuntimeKtx = "2.8.7"
@@ -46,6 +47,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 # Network
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converterJson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

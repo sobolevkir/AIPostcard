@@ -7,10 +7,10 @@ object StylesMapper {
     fun map(dto: List<StyleDto>): List<Style> {
         return dto.map {
             Style(
-                styleImageUrl = it.image,
-                name = it.name,
-                titleRu = it.title,
-                titleEn = it.titleEn
+                styleImageUrl = it.image ?: "",
+                name = it.name ?: "",
+                titleRu = it.title ?: "",
+                titleEn = it.titleEn ?: ""
             )
         }
     }
