@@ -57,7 +57,7 @@ fun BottomNavigationBar(
         modifier = Modifier
             .navigationBarsPadding()
             .height(52.dp),
-        containerColor = Color.Transparent
+        containerColor = Color.Transparent,
     ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route

@@ -20,6 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object NetworkModule {
 
     @Provides
+    @BaseUrl
     fun provideBaseUrl(): String = ApiConstants.BASE_URL
 
     @Provides
@@ -35,7 +36,7 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideFBApiService(baseUrl: String, httpClient: OkHttpClient): FBApiService {
+    fun provideFBApiService(@BaseUrl baseUrl: String, httpClient: OkHttpClient): FBApiService {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(httpClient)

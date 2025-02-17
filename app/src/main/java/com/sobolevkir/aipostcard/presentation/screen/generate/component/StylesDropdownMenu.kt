@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -149,12 +151,25 @@ private fun SimpleDropdownMenuPreview() {
         )
     }
 
+    val style = Style(
+        styleImageUrl = "",
+        name = "123",
+        titleRu = "123",
+        titleEn = "123"
+    )
+
+    val styles = MutableList(5) { style }
+
     MaterialTheme {
-        StylesDropdownMenu(
-            styles = emptyList(),
-            selectedStyle = null,
-            onItemSelected = { selectedItem = it },
-            enabled = true
-        )
+        Scaffold { paddings ->
+            Box(modifier = Modifier.padding(paddings)) {
+                StylesDropdownMenu(
+                    styles = styles,
+                    selectedStyle = null,
+                    onItemSelected = { selectedItem = it },
+                    enabled = true
+                )
+            }
+        }
     }
 }

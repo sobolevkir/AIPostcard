@@ -51,7 +51,6 @@ fun AlbumView(
 
     if (state.items.isEmpty()) {
         ErrorMessage(text = stringResource(R.string.message_empty_album))
-        return
     }
 
     LazyColumn(
