@@ -39,15 +39,19 @@ class AlbumViewModel @Inject constructor(
     fun onEvent(event: AlbumUiEvent) {
         when (event) {
             is AlbumUiEvent.OpenItem -> _uiState.update { it.copy(selectedItem = event.item) }
-            is AlbumUiEvent.RemoveItem -> {
+            is AlbumUiEvent.SwipeItemToRemove -> _uiState.update { it.copy(itemToRemove = event.item) }
+            is AlbumUiEvent.ConfirmRemoving -> {
                 viewModelScope.launch {
-                    val isSuccess = removeFromAlbumUseCase(event.itemId)
+                    val isSuccess =
+                        uiState.value.itemToRemove?.let { removeFromAlbumUseCase(it.id) } ?: false
                     showMessage(
                         if (isSuccess) R.string.message_removed_from_album else R.string.message_removing_error
                     )
+                    _uiState.update { it.copy(itemToRemove = null) }
                 }
             }
 
+            is AlbumUiEvent.CancelRemoving -> _uiState.update { it.copy(itemToRemove = null) }
             is AlbumUiEvent.CloseItem -> _uiState.update { it.copy(selectedItem = null) }
             is AlbumUiEvent.SaveToDeviceGalleryClick -> uiState.value.selectedItem?.let { item ->
                 viewModelScope.launch {
@@ -67,9 +71,9 @@ class AlbumViewModel @Inject constructor(
     private fun loadAlbumItems() {
         getAlbumItemsUseCase().onEach { items ->
             if (items.isEmpty()) {
-                _uiState.update { it.copy(items = items, selectedItem = null) }
+                _uiState.update { it.copy(items = items, selectedItem = null, isEmpty = true) }
             } else {
-                _uiState.update { it.copy(items = items) }
+                _uiState.update { it.copy(items = items, isEmpty = false) }
             }
         }.launchIn(viewModelScope)
     }

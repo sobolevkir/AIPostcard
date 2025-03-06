@@ -12,52 +12,23 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
-import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sobolevkir.aipostcard.R
 import com.sobolevkir.aipostcard.domain.model.AlbumItem
-import com.sobolevkir.aipostcard.presentation.component.ConfirmDialog
 
 @Composable
 fun SwipeableAlbumItem(
+    dismissState: SwipeToDismissBoxState,
     item: AlbumItem,
     onClick: () -> Unit,
-    onRemove: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showRemoveDialog by rememberSaveable { mutableStateOf(false) }
-    if (showRemoveDialog) {
-        ConfirmDialog(
-            messageResId = R.string.message_removing_confirm,
-            onConfirm = {
-                onRemove()
-                showRemoveDialog = false
-            },
-            onCancel = { showRemoveDialog = false }
-        )
-    }
-    val dismissState = rememberSwipeToDismissBoxState()
-    LaunchedEffect(showRemoveDialog) {
-        if (!showRemoveDialog) dismissState.reset()
-    }
-    LaunchedEffect(dismissState.currentValue) {
-        if (dismissState.currentValue != SwipeToDismissBoxValue.Settled) {
-            showRemoveDialog = true
-        }
-    }
-
     SwipeToDismissBox(
         state = dismissState,
         enableDismissFromStartToEnd = false,
@@ -65,14 +36,10 @@ fun SwipeableAlbumItem(
             .fillMaxSize()
             .clip(RoundedCornerShape(8.dp)),
         backgroundContent = {
-            val color = when (dismissState.dismissDirection) {
-                SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
-                else -> Color.Transparent
-            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color)
+                    .background(MaterialTheme.colorScheme.error)
                     .padding(16.dp)
             ) {
                 Icon(

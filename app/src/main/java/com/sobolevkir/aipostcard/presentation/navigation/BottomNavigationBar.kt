@@ -57,7 +57,7 @@ fun BottomNavigationBar(
         modifier = Modifier
             .navigationBarsPadding()
             .height(52.dp),
-        containerColor = Color.Transparent
+        containerColor = Color.Transparent,
     ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
@@ -75,7 +75,7 @@ fun BottomNavigationBar(
                 selected = isSelected,
                 onClick = {
                     navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
                         restoreState = true
                     }
