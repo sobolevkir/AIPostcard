@@ -8,6 +8,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.sobolevkir.aipostcard.R
 
 @Composable
@@ -18,6 +19,7 @@ fun ConfirmDialog(
 ) {
     AlertDialog(
         onDismissRequest = onCancel,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         text = {
             Text(text = stringResource(messageResId))
         },
