@@ -5,7 +5,7 @@ import com.sobolevkir.aipostcard.data.network.ApiConstants.GENERATION_REQUEST_EN
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_MODELS_ENDPOINT
 import com.sobolevkir.aipostcard.data.network.ApiConstants.GET_STYLES_URL
 import com.sobolevkir.aipostcard.data.network.dto.GenerationModelDto
-import com.sobolevkir.aipostcard.data.network.dto.GenerationResultDto
+import com.sobolevkir.aipostcard.data.network.dto.GenerationResponseDto
 import com.sobolevkir.aipostcard.data.network.dto.StyleDto
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -26,11 +26,11 @@ interface FBApiService {
     @Multipart
     @POST(GENERATION_REQUEST_ENDPOINT)
     suspend fun requestGeneration(
-        @Part("model_id") modelId: RequestBody,
+        @Part("pipeline_id") modelId: RequestBody,
         @Part("params") params: RequestBody
-    ): Response<GenerationResultDto>
+    ): Response<GenerationResponseDto>
 
     @GET(CHECK_GENERATION_RESULT_ENDPOINT)
-    suspend fun getStatusOrImage(@Path("id") id: String): Response<GenerationResultDto>
+    suspend fun getStatusOrImage(@Path("id") id: String): Response<GenerationResponseDto>
 
 }

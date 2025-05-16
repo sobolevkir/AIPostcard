@@ -10,7 +10,7 @@ import com.sobolevkir.aipostcard.data.network.dto.GenerationRequest
 import com.sobolevkir.aipostcard.domain.api.GenerationRepository
 import com.sobolevkir.aipostcard.domain.api.ImageFileManager
 import com.sobolevkir.aipostcard.domain.model.GenerationErrorType
-import com.sobolevkir.aipostcard.domain.model.GenerationResult
+import com.sobolevkir.aipostcard.domain.model.GenerationResponse
 import com.sobolevkir.aipostcard.domain.model.Style
 import com.sobolevkir.aipostcard.util.Resource
 import kotlinx.coroutines.Dispatchers
@@ -35,10 +35,7 @@ class GenerationRepositoryImpl @Inject constructor(
     override fun getStyles(): Flow<Resource<List<Style>>> = flow {
         emit(
             errorHandler
-                .safeApiCall {
-                    val styles = apiService.getStyles()
-                    styles
-                }
+                .safeApiCall { apiService.getStyles() }
                 .mapResource { StylesMapper.map(it) }
         )
     }.onStart { emit(Resource.Loading) }.flowOn(Dispatchers.IO)
@@ -47,7 +44,7 @@ class GenerationRepositoryImpl @Inject constructor(
         prompt: String,
         negativePrompt: String?,
         styleName: String?
-    ): Flow<Resource<GenerationResult>> = flow {
+    ): Flow<Resource<GenerationResponse>> = flow {
         if (cachedModeId.isBlank()) {
             when (val modelIdResource = getLatestModelId()) {
                 is Resource.Success -> cachedModeId = modelIdResource.data
@@ -67,19 +64,19 @@ class GenerationRepositoryImpl @Inject constructor(
         emit(result)
     }.onStart { emit(Resource.Loading) }.flowOn(Dispatchers.IO)
 
-    override suspend fun getStatusOrImage(uuid: String): Resource<GenerationResult> {
+    override suspend fun getStatusOrImage(uuid: String): Resource<GenerationResponse> {
         return errorHandler.safeApiCall { apiService.getStatusOrImage(uuid) }
-            .mapResource { generationResult ->
-                val imageUri = generationResult.images.firstOrNull()?.let { base64String ->
-                    fileManager.saveBase64ToCache(generationResult.uuid, base64String)
+            .mapResource { response ->
+                val imageUri = response.result?.files?.firstOrNull()?.let { base64String ->
+                    fileManager.saveBase64ToCache(response.uuid, base64String)
                 }
-                GenerationResultMapper.map(generationResult, imageUri)
+                GenerationResultMapper.map(response, imageUri)
             }
     }
 
     private suspend fun getLatestModelId(): Resource<String> {
         return errorHandler.safeApiCall { apiService.getGenerationModels() }
-            .mapResource { resource -> resource.maxBy { it.version }.id.toString() }
+            .mapResource { resource -> resource.maxBy { it.version }.id }
     }
 
     private fun createParamsBody(
@@ -90,7 +87,7 @@ class GenerationRepositoryImpl @Inject constructor(
         return gson.toJson(
             GenerationRequest(
                 style = styleName,
-                negativePromptUnclip = negativePrompt,
+                negativePromptDecoder = negativePrompt,
                 generateParams = GenerateParamsRequest(query = prompt)
             )
         ).toRequestBody(MEDIA_TYPE_JSON.toMediaType())

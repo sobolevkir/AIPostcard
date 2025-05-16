@@ -59,11 +59,11 @@ fun ZoomableImage(
                     }
                 }
             }
-            .graphicsLayer(
-                scaleX = animatedScale,
-                scaleY = animatedScale,
-                translationX = animatedOffsetX,
+            .graphicsLayer {
+                scaleX = animatedScale
+                scaleY = animatedScale
+                translationX = animatedOffsetX
                 translationY = animatedOffsetY
-            )
+            }
     )
 }

@@ -190,5 +190,5 @@ fun GenerateView(
 
 }
 
-const val PROMPT_MAX_CHAR = 1000
-const val NEGATIVE_PROMPT_MAX_CHAR = 500
+private const val PROMPT_MAX_CHAR = 1000
+private const val NEGATIVE_PROMPT_MAX_CHAR = 500

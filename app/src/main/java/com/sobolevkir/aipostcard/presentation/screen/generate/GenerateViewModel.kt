@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sobolevkir.aipostcard.R
-import com.sobolevkir.aipostcard.domain.model.GenerationResult
+import com.sobolevkir.aipostcard.domain.model.GenerationResponse
 import com.sobolevkir.aipostcard.domain.usecase.AddToAlbumUseCase
 import com.sobolevkir.aipostcard.domain.usecase.GenerateUseCase
 import com.sobolevkir.aipostcard.domain.usecase.GetStylesUseCase
@@ -116,7 +116,7 @@ class GenerateViewModel @Inject constructor(
         }
     }
 
-    private fun processResult(result: Resource<GenerationResult>) {
+    private fun processResult(result: Resource<GenerationResponse>) {
         _uiState.update {
             when (result) {
                 is Resource.Error -> it.copy(isGenerating = false, error = result.error)

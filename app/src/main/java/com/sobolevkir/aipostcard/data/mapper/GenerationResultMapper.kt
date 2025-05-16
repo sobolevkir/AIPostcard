@@ -3,18 +3,18 @@ package com.sobolevkir.aipostcard.data.mapper
 import com.sobolevkir.aipostcard.data.network.ApiConstants.STATUS_DONE
 import com.sobolevkir.aipostcard.data.network.ApiConstants.STATUS_INITIAL
 import com.sobolevkir.aipostcard.data.network.ApiConstants.STATUS_PROCESSING
-import com.sobolevkir.aipostcard.data.network.dto.GenerationResultDto
-import com.sobolevkir.aipostcard.domain.model.GenerationResult
+import com.sobolevkir.aipostcard.data.network.dto.GenerationResponseDto
+import com.sobolevkir.aipostcard.domain.model.GenerationResponse
 import com.sobolevkir.aipostcard.domain.model.GenerationStatus
 
 object GenerationResultMapper {
-    fun map(dto: GenerationResultDto, imageStringUri: String? = null): GenerationResult {
+    fun map(dto: GenerationResponseDto, imageStringUri: String? = null): GenerationResponse {
         val convertedStatus = convertStatus(dto.status)
-        return GenerationResult(
+        return GenerationResponse(
             uuid = dto.uuid,
             status = convertedStatus,
             imageStringUri = imageStringUri ?: "",
-            censored = dto.censored
+            censored = dto.result?.censored ?: false
         )
     }
 
