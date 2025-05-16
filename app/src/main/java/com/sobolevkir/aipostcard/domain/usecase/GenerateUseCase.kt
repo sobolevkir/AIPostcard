@@ -2,7 +2,7 @@ package com.sobolevkir.aipostcard.domain.usecase
 
 import com.sobolevkir.aipostcard.domain.api.GenerationRepository
 import com.sobolevkir.aipostcard.domain.model.GenerationErrorType
-import com.sobolevkir.aipostcard.domain.model.GenerationResult
+import com.sobolevkir.aipostcard.domain.model.GenerationResponse
 import com.sobolevkir.aipostcard.domain.model.GenerationStatus
 import com.sobolevkir.aipostcard.util.Resource
 import kotlinx.coroutines.delay
@@ -16,7 +16,7 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
         prompt: String,
         negativePrompt: String?,
         styleName: String?
-    ): Flow<Resource<GenerationResult>> {
+    ): Flow<Resource<GenerationResponse>> {
         return repository.requestGeneration(prompt, negativePrompt, styleName)
             .map { result ->
                 when (result) {
@@ -27,7 +27,7 @@ class GenerateUseCase @Inject constructor(private val repository: GenerationRepo
             }
     }
 
-    private suspend fun getGenerationResult(uuid: String): Resource<GenerationResult> {
+    private suspend fun getGenerationResult(uuid: String): Resource<GenerationResponse> {
         repeat(ATTEMPTS_MAX_NUMBER) {
             delay(ATTEMPT_TIME_MILLIS)
             val result = repository.getStatusOrImage(uuid)

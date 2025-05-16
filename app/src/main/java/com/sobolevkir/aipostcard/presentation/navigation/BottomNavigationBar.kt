@@ -1,7 +1,7 @@
 package com.sobolevkir.aipostcard.presentation.navigation
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
@@ -31,22 +31,20 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomNavigationBar(
     navController: NavHostController
 ) {
-
-    val barItems =
-        listOf(
-            BarItem(
-                route = Routes.Album.name,
-                icon = Icons.Rounded.PhotoLibrary,
-            ),
-            BarItem(
-                route = Routes.Generate.name,
-                icon = Icons.Rounded.AddPhotoAlternate,
-            ),
-            BarItem(
-                route = Routes.About.name,
-                icon = Icons.Rounded.Info,
-            ),
-        )
+    val barItems = listOf(
+        BarItem(
+            route = Routes.Album.name,
+            icon = Icons.Rounded.PhotoLibrary,
+        ),
+        BarItem(
+            route = Routes.Generate.name,
+            icon = Icons.Rounded.AddPhotoAlternate,
+        ),
+        BarItem(
+            route = Routes.About.name,
+            icon = Icons.Rounded.Info,
+        ),
+    )
 
     HorizontalDivider(
         thickness = 1.dp,
@@ -63,14 +61,6 @@ fun BottomNavigationBar(
         val currentRoute = backStackEntry?.destination?.route
         barItems.forEach { item ->
             val isSelected = currentRoute == item.route
-            val iconSize by animateDpAsState(
-                targetValue = if (isSelected) 32.dp else 24.dp,
-                animationSpec = tween(
-                    durationMillis = 200,
-                    easing = LinearOutSlowInEasing
-                ), label = ""
-            )
-
             NavigationBarItem(
                 selected = isSelected,
                 onClick = {
@@ -84,7 +74,14 @@ fun BottomNavigationBar(
                     Icon(
                         imageVector = item.icon,
                         contentDescription = item.route,
-                        modifier = Modifier.size(iconSize)
+                        modifier = Modifier
+                            .size(if (isSelected) 32.dp else 24.dp)
+                            .animateContentSize(
+                                animationSpec = tween(
+                                    durationMillis = 200,
+                                    easing = LinearOutSlowInEasing
+                                )
+                            )
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(

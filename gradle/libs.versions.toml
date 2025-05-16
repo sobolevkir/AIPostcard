@@ -16,7 +16,7 @@ hilt = "2.53.1"
 hiltNavigationCompose = "1.2.0"
 # Network
 retrofit = "2.11.0"
-okhttp = "4.12.0"
+okhttpBom = "4.12.0"
 # Database
 room = "2.6.1"
 # Images & animations displaying
@@ -50,7 +50,8 @@ hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", ve
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converterJson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okhttpBom" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor" }
 # Database
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
@@ -79,7 +80,6 @@ room = { id = "androidx.room", version.ref = "room" }
 [bundles]
 retrofit = [
     "retrofit",
-    "retrofit-converterJson",
-    "okhttp"
+    "retrofit-converterJson"
 ]
 

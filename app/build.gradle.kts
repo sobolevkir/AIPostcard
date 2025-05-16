@@ -71,6 +71,8 @@ dependencies {
     // Network
     implementation(libs.gson)
     implementation(libs.bundles.retrofit)
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.logging.interceptor)
     // Database
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

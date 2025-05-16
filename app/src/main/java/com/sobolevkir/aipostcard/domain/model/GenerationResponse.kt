@@ -1,6 +1,6 @@
 package com.sobolevkir.aipostcard.domain.model
 
-data class GenerationResult(
+data class GenerationResponse(
     val uuid: String,
     val status: GenerationStatus,
     val imageStringUri: String,
